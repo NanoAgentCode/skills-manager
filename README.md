@@ -2,19 +2,6 @@
 
 本仓库用于管理可复用的 Codex/Claude Skills。目前包含 Dify 相关的两个 skill，覆盖 Dify Console Admin API 自动化与 Dify DSL 应用构建。
 
-## Dify Skills 检查结果
-
-检查日期：2026-06-02
-
-| Skill | 路径 | 功能完整性 | 校验结果 |
-|---|---|---|---|
-| Dify DSL App Builder | `dify/dify-dsl-app-builder` | 基本完整。支持从需求设计 DSL、生成 workflow/advanced-chat DSL、创建应用、覆盖更新、导入后导出验证，并提供常用节点模板。 | 已通过 `quick_validate.py` |
-| Dify Console Admin API | `dify/dify-console-admin-api` | 基本完整。支持 admin key 鉴权说明、创建 workflow 应用、导出 DSL、从 YAML 内容或 URL 导入 DSL、覆盖导入、pending 导入确认和常见错误排查。 | 已通过 `quick_validate.py` |
-
-已修复的问题：
-
-- 移除 `dify-console-admin-api/SKILL.md` 中当前 skill 校验器不支持的 `disable-model-invocation` frontmatter 字段。
-- 修正 `dify-dsl-app-builder/SKILL.md` 中指向 Admin API skill 的路径，从 `skills/dify-console-admin-api/SKILL.md` 改为当前仓库实际路径 `dify/dify-console-admin-api/SKILL.md`。
 
 ## 功能覆盖
 
