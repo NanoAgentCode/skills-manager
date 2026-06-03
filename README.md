@@ -3,7 +3,7 @@
 本仓库用于管理可复用的 Codex/Claude Skills。目前包含 Dify 和 Mindmap 两类 skill：
 
 - Dify：覆盖 Dify Console Admin API 自动化与 Dify DSL 应用构建。
-- Mindmap：把 PDF、文本、大纲或文档内容转换为离线可双击打开的思维导图 HTML。
+- Mindmap：把 PDF、文本、大纲或文档内容转换为离线可双击打开的思维导图 HTML；仅在用户明确要求发布时，将静态产物发布到配置好的 Web 静态目录。
 
 ## 功能覆盖
 
@@ -54,6 +54,28 @@ PDF / 文本 / 大纲
 双击 HTML 或用浏览器打开
 ```
 
+### `mindmap/mindmap-publisher`
+
+该 skill 只在用户明确要求“发布、部署、托管、暴露、生成服务器预览 URL”时使用。它不会参与普通本地思维导图生成。
+
+发布输入必须包含：
+
+- `SourceHtml`：已生成的离线思维导图 HTML。
+- `StaticRoot`：服务器静态资源目录。
+- `PublicBaseUrl`：公网域名或访问源。
+- `PathPrefix`：强制要求的 URL 路径前缀，例如 `/mindmaps`。
+- `Slug`：发布目录名。
+
+发布结果：
+
+```text
+{StaticRoot}/{Slug}/index.html
+{StaticRoot}/{Slug}/markmap-assets/...
+{PublicBaseUrl}{PathPrefix}/{Slug}/index.html
+```
+
+注意：`PathPrefix` 不能省略，不能是 `/`，也不能由 skill 猜测。
+
 ## 使用方式
 
 把需要使用的 skill 目录安装或复制到 Codex/Claude 可发现的 skills 目录中，保持目录名与 `SKILL.md` frontmatter 的 `name` 一致：
@@ -84,6 +106,15 @@ mindmap-builder/
     render_offline_mindmap.ps1
   references/
     mindmap-service.md
+
+mindmap-publisher/
+  SKILL.md
+  agents/
+    openai.yaml
+  scripts/
+    publish_mindmap.ps1
+  references/
+    nginx-static-publish.md
 ```
 
 使用 DSL App Builder 处理涉及远程 Dify 创建或更新应用的任务时，应同时安装 `dify-console-admin-api`，因为前者会引用后者的 Admin API 流程。
@@ -131,6 +162,7 @@ markmap-assets/
 - Admin API 调用失败时先排查配置和服务状态；不要绕过 API 直接写数据库，除非用户明确授权。
 - 通过 npm 安装依赖前应征得用户授权，避免未经确认的网络下载或全局环境修改。
 - Mindmap Builder 当前按单机客户端方式生成离线 HTML 文件，不提供服务端托管或预览 URL。
+- Mindmap Publisher 只负责把已生成的静态产物复制到用户指定的静态目录，并根据用户提供的 `PublicBaseUrl` 与 `PathPrefix` 计算访问 URL；它不会自动修改 Nginx 配置。
 
 ## 扩展思路
 

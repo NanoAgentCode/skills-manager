@@ -1,0 +1,4 @@
+interface:
+  display_name: "Mindmap Publisher"
+  short_description: "Publish mindmap HTML to static hosting"
+  default_prompt: "Use $mindmap-publisher to publish this generated mindmap with my required URL path prefix."
