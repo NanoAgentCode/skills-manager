@@ -1,7 +1,9 @@
 # skills-manager
 
-本仓库用于管理可复用的 Codex/Claude Skills。目前包含 Dify 相关的两个 skill，覆盖 Dify Console Admin API 自动化与 Dify DSL 应用构建。
+本仓库用于管理可复用的 Codex/Claude Skills。目前包含 Dify 和 Mindmap 两类 skill：
 
+- Dify：覆盖 Dify Console Admin API 自动化与 Dify DSL 应用构建。
+- Mindmap：把 PDF、文本、大纲或文档内容转换为本地可双击打开的思维导图 HTML。
 
 ## 功能覆盖
 
@@ -27,6 +29,29 @@
 - 导入后重新导出远端 DSL，验证变量、节点和输出。
 - 提供常见节点参考：`start`、`end`、`answer`、`if-else`、`iteration`、`code`、`template-transform`、`parameter-extractor`、`llm`、`agent`、`http-request`、`tool`、`knowledge-retrieval`。
 
+### `mindmap/mindmap-builder`
+
+该 skill 适合把资料整理成 markmap 思维导图，并生成本地 HTML：
+
+- 从 PDF、文本、笔记、大纲或工作流输出中提炼层级结构。
+- 生成 markmap 友好的 Markdown。
+- 使用 `markmap-cli` 生成可双击打开的 `.html` 文件。
+- 自动检查 `node`、`npm`、`markmap` 是否可用。
+- 缺少 `markmap-cli` 时，在用户授权后使用 `npm install -g markmap-cli` 安装。
+- 可选支持 Dify/Web 场景：通过 Mindmap FastAPI 服务返回可分享的 HTTP 预览 URL。
+
+默认客户端流程不依赖服务端预览：
+
+```text
+PDF / 文本 / 大纲
+        ↓
+生成 markmap Markdown
+        ↓
+markmap-cli 生成 HTML
+        ↓
+双击 HTML 或用浏览器打开
+```
+
 ## 使用方式
 
 把需要使用的 skill 目录安装或复制到 Codex/Claude 可发现的 skills 目录中，保持目录名与 `SKILL.md` frontmatter 的 `name` 一致：
@@ -42,9 +67,30 @@ dify-dsl-app-builder/
 
 dify-console-admin-api/
   SKILL.md
+
+mindmap-builder/
+  SKILL.md
+  agents/
+    openai.yaml
+  references/
+    mindmap-service.md
 ```
 
 使用 DSL App Builder 处理涉及远程 Dify 创建或更新应用的任务时，应同时安装 `dify-console-admin-api`，因为前者会引用后者的 Admin API 流程。
+
+使用 Mindmap Builder 生成本地 HTML 时，需要本机具备 Node.js、npm 和 markmap-cli。Skill 会按以下命令检查依赖：
+
+```powershell
+node --version
+npm --version
+markmap --version
+```
+
+如果缺少 `markmap-cli`，在用户授权后安装：
+
+```powershell
+npm install -g markmap-cli
+```
 
 ## 安全注意事项
 
@@ -52,6 +98,8 @@ dify-console-admin-api/
 - 导出 DSL 默认使用 `include_secret=false`。
 - 覆盖更新应用前先导出旧 DSL 作为备份。
 - Admin API 调用失败时先排查配置和服务状态；不要绕过 API 直接写数据库，除非用户明确授权。
+- 通过 npm 安装依赖前应征得用户授权，避免未经确认的网络下载或全局环境修改。
+- Mindmap 本地 HTML 输出适合单机查看；需要多人访问或 Dify 返回 URL 时，再启用服务端托管路径。
 
 ## 扩展思路
 
