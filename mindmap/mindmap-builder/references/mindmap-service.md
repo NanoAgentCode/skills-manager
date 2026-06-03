@@ -1,23 +1,36 @@
-# Mindmap Local and Service Reference
+# Mindmap Offline Local Reference
 
-This reference is based on `D:\lark-projects\DifyApp\mindmap`.
+This reference uses static markmap assets copied from `D:\lark-projects\DifyApp\mindmap\htmljs`.
 
 ## Default Local Client Flow
 
-Use this path for desktop/client usage. It does not require FastAPI, `/preview`, `/html`, or a running server.
+Use this path for desktop/client usage. It does not require FastAPI, `/preview`, `/html`, a running server, or CDN access.
 
 ```text
 PDF/text/outline
   -> compact markmap Markdown
-  -> markmap-cli generates HTML
+  -> bundled script generates offline HTML
   -> user double-clicks the HTML file
 ```
 
 Command:
 
-```bash
-markmap input.md --output output.html --no-open
+```powershell
+.\scripts\render_offline_mindmap.ps1 -InputMarkdown input.md -OutputHtml output.html
 ```
+
+The script:
+
+- Runs `markmap input.md --output output.html --no-open`.
+- Copies bundled assets to an output sibling folder named `markmap-assets`.
+- Replaces jsDelivr CDN URLs with local `./markmap-assets/...` paths.
+
+Bundled assets:
+
+- `assets/markmap/d3.min.js`
+- `assets/markmap/markmap-view.js`
+- `assets/markmap/markmap-toolbar.js`
+- `assets/markmap/markmap-toolbar.css`
 
 ## Dependency Check and Install
 
@@ -54,69 +67,9 @@ Validation:
 - The output `.html` file exists.
 - The file has non-trivial size.
 - The root title appears in the generated HTML.
+- The generated HTML does not contain `cdn.jsdelivr.net`.
+- `markmap-assets/` exists next to the HTML file.
 - Opening via `file:///.../output.html` works in a browser.
-
-## Optional Service
-
-- Framework: FastAPI.
-- Default config path: `D:\lark-projects\DifyApp\mindmap\config.ini`.
-- Current configured host/port: `0.0.0.0:16066`.
-- Common local base URL: `http://127.0.0.1:16066`.
-- Renderer dependency: `markmap-cli` executable named `markmap`.
-- Markdown warning length: 30,000 characters.
-- Markdown max length: 50,000 characters.
-- Markmap timeout: 30 seconds.
-
-Use the service only when a Dify/Web workflow needs an HTTP URL, multiple users need browser access, or generated files must be hosted by a server.
-
-## Optional Mindmap Endpoints
-
-### POST /upload
-
-Generate a mindmap HTML preview from Markdown.
-
-- Content-Type: `text/plain; charset=utf-8`.
-- Body: Markdown text.
-- CDN links remain in the generated HTML.
-- Response: plain string preview URL, for example `http://127.0.0.1:16066/html/<file>.html`.
-
-### POST /upload-local
-
-Generate a mindmap HTML preview from Markdown and replace selected CDN links with local static paths.
-
-- Content-Type: `text/plain; charset=utf-8`.
-- Body: Markdown text.
-- Prefer this route for local/offline Dify workflows.
-- Response: plain string preview URL.
-
-### GET /html/{filename}
-
-Fetch the generated mindmap HTML file.
-
-- `filename` must be a direct `.html` filename.
-- Directory traversal is rejected.
-
-## Optional Dify Workflow Mapping
-
-Use this shape when generating a Dify DSL or a platform-neutral workflow IR:
-
-```text
-start
-  -> llm/template/code: convert user input to markmap Markdown
-  -> http-request: POST http://127.0.0.1:16066/upload-local
-  -> answer/end: display the returned preview URL
-```
-
-HTTP request configuration:
-
-- Method: `POST`.
-- URL: `${MINDMAP_BASE_URL}/upload-local`.
-- Headers:
-  - `Content-Type: text/plain; charset=utf-8`
-- Body: raw Markdown string.
-- Expected response: plain text URL.
-
-Use `${MINDMAP_BASE_URL}/upload` only when CDN resources are acceptable.
 
 ## Markdown Generation Rules
 
@@ -152,19 +105,11 @@ Example:
 
 ## curl Examples
 
-Generate local-resource mindmap:
-
-```bash
-curl -X POST "http://127.0.0.1:16066/upload-local" \
-  -H "Content-Type: text/plain; charset=utf-8" \
-  --data-binary @mindmap.md
-```
+Not applicable for the default local client flow. Use the PowerShell render script instead of HTTP calls.
 
 ## Common Failures
 
 - `markmap command not found`: install Node.js and `markmap-cli`, then verify `markmap --version`.
 - Local HTML is blank or too dense: reduce content length or simplify deeply nested Markdown.
-- `504 markmap生成超时`: reduce content length before calling the optional service.
-- Empty body: send raw UTF-8 Markdown, not JSON, to `/upload` or `/upload-local`.
-- Need offline local use: generate HTML with `markmap-cli` instead of calling the service.
-- Wrong URL: verify `config.ini` or the active server logs before assuming the port.
+- Browser shows blank while offline: confirm HTML contains no `cdn.jsdelivr.net` references and `markmap-assets/` is next to the HTML file.
+- HTML was emailed/copied alone: copy the sibling `markmap-assets/` folder too.

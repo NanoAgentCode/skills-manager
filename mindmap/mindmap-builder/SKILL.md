@@ -1,22 +1,22 @@
 ---
 name: mindmap-builder
-description: Create local mindmap HTML files from notes, documents, PDFs, outlines, or workflow outputs using markmap-ready Markdown. Use when the user asks to generate a mind map, convert content into a mindmap, produce a double-clickable HTML mindmap, or add optional Dify/Web workflow integration for mindmap generation.
+description: Create offline local mindmap HTML files from notes, documents, PDFs, outlines, or workflow outputs using bundled markmap assets. Use when the user asks to generate a mind map, convert content into a mindmap, produce a double-clickable HTML mindmap, or render markmap output without relying on network/CDN access.
 ---
 
 # Mindmap Builder
 
 ## Overview
 
-Use this skill to turn user intent, notes, documents, or workflow outputs into Markdown that renders well as a markmap mindmap, then generate a local `.html` file that the user can open directly.
+Use this skill to turn user intent, notes, documents, or workflow outputs into Markdown that renders well as a markmap mindmap, then generate an offline local `.html` file that the user can open directly.
 
-Prefer local HTML generation for desktop/client use. Read `references/mindmap-service.md` only when the user needs Dify/Web integration or a hosted preview URL.
+Prefer offline local HTML generation for desktop/client use. The skill bundles markmap browser assets in `assets/markmap/` so generated output does not need CDN access.
 
 ## Workflow
 
 1. Identify the desired output:
    - Markdown only: produce clean markmap-oriented Markdown.
-   - Local HTML: generate a `.html` file with `markmap-cli`; this is the default.
-   - Workflow/DSL integration: design nodes and edges only when a server URL is required.
+   - Offline local HTML: generate a `.html` file with bundled local JS/CSS assets; this is the default.
+   - Markdown only: produce clean markmap-oriented Markdown when the user does not need HTML yet.
 2. Normalize the content into a mindmap hierarchy:
    - Use one `#` root title.
    - Use `##` for primary branches and `###` / list items for details.
@@ -34,12 +34,14 @@ Prefer local HTML generation for desktop/client use. Read `references/mindmap-se
    - If Node/npm are missing, tell the user Node.js must be installed first.
 5. Generate local output:
    - Save the Markdown next to the desired output when useful for iteration.
-   - Run `markmap input.md --output output.html --no-open`.
-   - Give the user the local HTML path; they can double-click it or open it with a browser.
+   - Prefer `scripts/render_offline_mindmap.ps1 -InputMarkdown input.md -OutputHtml output.html`.
+   - This script runs `markmap`, copies bundled assets to `markmap-assets/`, and replaces CDN URLs with local paths.
+   - Give the user the local HTML path and note that the sibling `markmap-assets/` folder must stay with it.
 6. Verify outputs:
    - Confirm the `.html` file exists and has non-trivial size.
    - Check the generated HTML contains the root title.
-   - If integrating with DSL, ensure downstream nodes receive either a URL or file path string.
+   - Confirm the generated HTML no longer contains `cdn.jsdelivr.net`.
+   - Confirm `markmap-assets/` contains `d3.min.js`, `markmap-view.js`, `markmap-toolbar.js`, and `markmap-toolbar.css`.
 
 ## Markdown Shape
 
@@ -67,29 +69,15 @@ For local desktop/client use, no service is required:
 ```text
 source content
   -> mindmap Markdown
-  -> markmap-cli
-  -> local HTML file
+  -> render_offline_mindmap.ps1
+  -> local HTML file + markmap-assets/
   -> double-click/open in browser
 ```
-
-When adding mindmap generation to a Web or Dify workflow DSL, model it as:
-
-```text
-start/user input
-  -> content organizer or LLM summarizer
-  -> HTTP request: POST {MINDMAP_BASE_URL}/upload-local
-  -> answer/end: return preview_url
-```
-
-The HTTP request body should be `text/plain; charset=utf-8` containing Markdown. The response is a plain string URL.
-
-If the upstream content is unstructured or long, insert an LLM/code/template node before the HTTP request to create compact Markdown.
 
 ## Troubleshooting
 
 - Dependency checks fail: read `references/mindmap-service.md` for exact check/install commands.
 - `markmap command not found`: install `markmap-cli` and ensure `markmap` is on PATH.
+- HTML still references CDN: render with `scripts/render_offline_mindmap.ps1`, not raw `markmap`.
+- HTML moved without assets: keep the generated `markmap-assets/` folder next to the `.html` file.
 - Blank or unreadable HTML: reduce Markdown size or simplify nested content.
-- Empty/400 response: ensure the request body is non-empty UTF-8 Markdown.
-- Need a shareable URL: use the optional Mindmap FastAPI service and `/upload-local`.
-- Wrong port: read the running service config; the referenced project currently uses port `16066` in `config.ini`.

@@ -3,7 +3,7 @@
 本仓库用于管理可复用的 Codex/Claude Skills。目前包含 Dify 和 Mindmap 两类 skill：
 
 - Dify：覆盖 Dify Console Admin API 自动化与 Dify DSL 应用构建。
-- Mindmap：把 PDF、文本、大纲或文档内容转换为本地可双击打开的思维导图 HTML。
+- Mindmap：把 PDF、文本、大纲或文档内容转换为离线可双击打开的思维导图 HTML。
 
 ## 功能覆盖
 
@@ -31,14 +31,16 @@
 
 ### `mindmap/mindmap-builder`
 
-该 skill 适合把资料整理成 markmap 思维导图，并生成本地 HTML：
+该 skill 适合把资料整理成 markmap 思维导图，并生成离线 HTML：
 
 - 从 PDF、文本、笔记、大纲或工作流输出中提炼层级结构。
 - 生成 markmap 友好的 Markdown。
 - 使用 `markmap-cli` 生成可双击打开的 `.html` 文件。
+- 携带 `d3`、`markmap-view`、`markmap-toolbar` 的本地 JS/CSS 资源。
+- 通过 `scripts/render_offline_mindmap.ps1` 把 CDN 引用替换为本地 `markmap-assets/` 路径。
 - 自动检查 `node`、`npm`、`markmap` 是否可用。
 - 缺少 `markmap-cli` 时，在用户授权后使用 `npm install -g markmap-cli` 安装。
-- 可选支持 Dify/Web 场景：通过 Mindmap FastAPI 服务返回可分享的 HTTP 预览 URL。
+- 默认只生成离线 HTML，不依赖 FastAPI 服务、服务端预览接口或外部 CDN。
 
 默认客户端流程不依赖服务端预览：
 
@@ -47,7 +49,7 @@ PDF / 文本 / 大纲
         ↓
 生成 markmap Markdown
         ↓
-markmap-cli 生成 HTML
+离线渲染脚本生成 HTML + markmap-assets/
         ↓
 双击 HTML 或用浏览器打开
 ```
@@ -72,6 +74,14 @@ mindmap-builder/
   SKILL.md
   agents/
     openai.yaml
+  assets/
+    markmap/
+      d3.min.js
+      markmap-view.js
+      markmap-toolbar.js
+      markmap-toolbar.css
+  scripts/
+    render_offline_mindmap.ps1
   references/
     mindmap-service.md
 ```
@@ -92,6 +102,27 @@ markmap --version
 npm install -g markmap-cli
 ```
 
+生成离线 HTML：
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\render_offline_mindmap.ps1 `
+  -InputMarkdown .\input.md `
+  -OutputHtml .\output.html
+```
+
+输出目录中会同时生成：
+
+```text
+output.html
+markmap-assets/
+  d3.min.js
+  markmap-view.js
+  markmap-toolbar.js
+  markmap-toolbar.css
+```
+
+移动或分享 HTML 时，需要保留同级 `markmap-assets/` 目录。
+
 ## 安全注意事项
 
 - 不要把 `ADMIN_API_KEY` 写入仓库文件、README、PR 描述或长期脚本。
@@ -99,7 +130,7 @@ npm install -g markmap-cli
 - 覆盖更新应用前先导出旧 DSL 作为备份。
 - Admin API 调用失败时先排查配置和服务状态；不要绕过 API 直接写数据库，除非用户明确授权。
 - 通过 npm 安装依赖前应征得用户授权，避免未经确认的网络下载或全局环境修改。
-- Mindmap 本地 HTML 输出适合单机查看；需要多人访问或 Dify 返回 URL 时，再启用服务端托管路径。
+- Mindmap Builder 当前按单机客户端方式生成离线 HTML 文件，不提供服务端托管或预览 URL。
 
 ## 扩展思路
 

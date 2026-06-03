@@ -1,4 +1,4 @@
 interface:
   display_name: "Mindmap Builder"
-  short_description: "Generate local mindmap HTML files"
-  default_prompt: "Use $mindmap-builder to turn my outline into a double-clickable HTML mindmap."
+  short_description: "Generate offline mindmap HTML files"
+  default_prompt: "Use $mindmap-builder to turn my outline into an offline double-clickable HTML mindmap."
