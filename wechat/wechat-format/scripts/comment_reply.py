@@ -30,8 +30,10 @@ except ModuleNotFoundError:
 from pathlib import Path
 from datetime import datetime
 
+from config_loader import load_config as load_skill_config
+
 SCRIPT_DIR = Path(__file__).parent
-CONFIG_PATH = SCRIPT_DIR.parent / "config.json"
+SKILL_DIR = SCRIPT_DIR.parent
 STATE_PATH = SCRIPT_DIR.parent / "comment_state.json"
 LOG_PATH = SCRIPT_DIR.parent / "comment_reply.log"
 
@@ -103,8 +105,7 @@ def log(msg):
 
 
 def load_config():
-    with open(CONFIG_PATH, "r", encoding="utf-8") as f:
-        return json.load(f)
+    return load_skill_config(SKILL_DIR)
 
 
 def load_state():

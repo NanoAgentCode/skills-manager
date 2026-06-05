@@ -23,13 +23,18 @@ Claude Code 公众号完整发布管线：**排版** → **封面**（可选）�
 ```bash
 cd ~/.claude/skills/
 git clone https://github.com/xiaohuailabs/xiaohu-wechat-format.git
-cp xiaohu-wechat-format/config.example.json xiaohu-wechat-format/config.json
 python3 xiaohu-wechat-format/scripts/check_dependencies.py --install
 ```
 
 ## 配置
 
-编辑 `config.json`：
+纯排版无需 `config.json`。如果文件不存在，脚本会使用默认配置，并输出到 skill 目录下的 `output/`。
+
+如果要推送草稿箱、评论回复、生成封面，或自定义输出目录，复制并编辑 `config.json`：
+
+```bash
+cp config.example.json config.json
+```
 
 ```json
 {
@@ -51,7 +56,7 @@ python3 xiaohu-wechat-format/scripts/check_dependencies.py --install
 }
 ```
 
-- `wechat` 部分仅推送时需要，纯排版可以不填
+- `wechat` 部分仅推送和评论回复时需要，纯排版可以不填
 - `cover` 部分仅生成封面时需要（详见下方封面配置）
 - 获取 AppID 和 AppSecret：微信公众号后台 → 设置与开发 → 基本配置
 - **重要**：需要把你的公网 IP 加到公众号后台的 IP 白名单里，否则 API 调用会报 40164 错误

@@ -19,7 +19,13 @@
 
 ## 配置
 
-首次使用需创建 `config.json`（参考 `config.example.json`）：
+纯排版无需创建 `config.json`。如果文件不存在，脚本会使用内置默认配置：
+
+- 输出目录：`{baseDir}/output`
+- Vault 根目录：当前用户主目录
+- 默认主题：`newspaper`
+
+发布草稿箱、评论回复、封面生成或自定义输出目录时，再创建 `config.json`（参考 `config.example.json`）：
 
 ```json
 {
@@ -41,7 +47,7 @@
 }
 ```
 
-- `wechat` 部分仅推送时需要，纯排版可不填
+- `wechat` 部分仅推送或评论回复时需要，纯排版可不填
 - `cover` 部分仅生成封面时需要
 - `config.json` 已在 `.gitignore` 中，不会被提交
 

@@ -22,7 +22,6 @@ A Claude Code skill for the full WeChat Official Account (公众号) publishing 
 # Install
 cd ~/.claude/skills/
 git clone https://github.com/xiaohuailabs/xiaohu-wechat-format.git
-cp xiaohu-wechat-format/config.example.json xiaohu-wechat-format/config.json
 python3 xiaohu-wechat-format/scripts/check_dependencies.py --install
 
 # Format an article (opens gallery in browser)
@@ -107,7 +106,13 @@ Bob: Hi, how are you?
 
 ## Configuration
 
-Edit `config.json`:
+Formatting works without `config.json`. If the file does not exist, the scripts use built-in defaults and write output to `output/` inside the skill directory.
+
+For publishing, comment replies, cover generation, or custom output paths, copy and edit `config.json`:
+
+```bash
+cp config.example.json config.json
+```
 
 ```json
 {
@@ -129,7 +134,7 @@ Edit `config.json`:
 }
 ```
 
-- `wechat` section is only needed for publishing; formatting works without it
+- `wechat` section is only needed for publishing and comment replies; formatting works without it
 - `cover` section is only needed for cover image generation
 - Get AppID/AppSecret from: WeChat Official Account Admin → Settings → Basic Configuration
 - **Important**: Add your public IP to the WeChat IP whitelist, otherwise API calls will fail with error 40164

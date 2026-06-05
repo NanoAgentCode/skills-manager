@@ -25,6 +25,8 @@ from pathlib import Path
 import html as html_module
 import tempfile
 
+from config_loader import load_config
+
 try:
     import requests
 except ModuleNotFoundError:
@@ -37,8 +39,7 @@ except ModuleNotFoundError:
 SCRIPT_DIR = Path(__file__).parent
 SKILL_DIR = SCRIPT_DIR.parent
 
-with open(SKILL_DIR / "config.json", encoding="utf-8") as f:
-    CONFIG = json.load(f)
+CONFIG = load_config(SKILL_DIR)
 
 
 # ── 微信 API ─────────────────────────────────────────────────────────

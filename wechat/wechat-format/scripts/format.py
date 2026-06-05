@@ -21,6 +21,8 @@ import webbrowser
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 
+from config_loader import load_config
+
 try:
     import markdown
 except ModuleNotFoundError:
@@ -108,9 +110,7 @@ SKILL_DIR = SCRIPT_DIR.parent
 THEMES_DIR = SKILL_DIR / "themes"
 TEMPLATE_DIR = SKILL_DIR / "templates"
 
-with open(SKILL_DIR / "config.json", encoding="utf-8") as f:
-    CONFIG = json.load(f)
-
+CONFIG = load_config(SKILL_DIR)
 OUTPUT_DIR = Path(CONFIG["output_dir"])
 VAULT_ROOT = Path(CONFIG["vault_root"])
 DEFAULT_THEME = CONFIG["settings"]["default_theme"]
@@ -294,15 +294,9 @@ def convert_wikilinks(text: str, vault_root: Path, output_dir: Path) -> str:
     # 搜索路径：vault 目录（如需额外图片目录，在 config.json 的 image_search_paths 中配置）
     search_roots = [vault_root]
     # 支持自定义图片搜索目录
-    config_path = SKILL_DIR / "config.json"
-    if config_path.exists():
-        import json as _json
-        try:
-            _cfg = _json.load(open(config_path, encoding="utf-8"))
-            for p in _cfg.get("image_search_paths", []):
-                search_roots.append(Path(p).expanduser())
-        except Exception:
-            pass
+    for p in CONFIG.get("image_search_paths", []):
+        if p:
+            search_roots.append(Path(p).expanduser())
 
     def replace_img(match):
         filename = match.group(1).strip()
