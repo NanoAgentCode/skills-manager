@@ -1,9 +1,10 @@
 # skills-manager
 
-本仓库用于管理可复用的 Codex/Claude Skills。目前包含 Dify 和 Mindmap 两类 skill：
+本仓库用于管理可复用的 Codex/Claude Skills。目前包含 Dify、Mindmap 和 WeChat 三类 skill：
 
 - Dify：覆盖 Dify Console Admin API 自动化与 Dify DSL 应用构建。
 - Mindmap：把 PDF、文本、大纲或文档内容转换为离线可双击打开的思维导图 HTML；仅在用户明确要求发布时，将静态产物发布到配置好的 Web 静态目录。
+- WeChat：把 Markdown、纯文本或粗糙笔记排版成微信公众号兼容 HTML，可选生成封面并推送到公众号草稿箱。
 
 ## 功能覆盖
 
@@ -76,6 +77,18 @@ PDF / 文本 / 大纲
 
 注意：`PathPrefix` 不能省略，不能是 `/`，也不能由 skill 猜测。
 
+### `wechat/wechat-format`
+
+该 skill 适合完成微信公众号内容生产流程：
+
+- 将 Markdown、纯文本或格式粗糙的笔记转换为微信公众号兼容的内联样式 HTML。
+- 提供 30 个排版主题，并支持浏览器画廊预览主题效果。
+- 自动识别访谈对话、重点引用、图片序列等内容结构，并增强排版。
+- 可选生成公众号封面图。
+- 可选上传图片到微信 CDN，并把文章推送到公众号草稿箱。
+
+纯排版只需要本地 Python 依赖；推送草稿箱时需要在 `config.json` 中配置公众号 `app_id`、`app_secret` 和作者信息。`config.json` 已由该 skill 自带的 `.gitignore` 忽略，不应提交到仓库。
+
 ## 使用方式
 
 把需要使用的 skill 目录安装或复制到 Codex/Claude 可发现的 skills 目录中，保持目录名与 `SKILL.md` frontmatter 的 `name` 一致：
@@ -115,6 +128,21 @@ mindmap-publisher/
     publish_mindmap.ps1
   references/
     nginx-static-publish.md
+
+wechat-format/
+  SKILL.md
+  README.md
+  README_CN.md
+  config.example.json
+  scripts/
+    check_dependencies.py
+    format.py
+    publish.py
+    comment_reply.py
+    generate.py
+  themes/
+  templates/
+  cover/
 ```
 
 使用 DSL App Builder 处理涉及远程 Dify 创建或更新应用的任务时，应同时安装 `dify-console-admin-api`，因为前者会引用后者的 Admin API 流程。

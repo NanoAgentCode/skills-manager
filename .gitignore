@@ -21,3 +21,10 @@ rad.json
 *.flf
 #Test results file
 TestResults.xml
+
+# Python cache
+__pycache__/
+*.py[cod]
+
+# Local scratch space used while importing external skills
+.tmp/
