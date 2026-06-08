@@ -81,26 +81,9 @@ description: 根据用户需求设计并生成 Dify 应用 DSL，创建或更新
 
 最终回复只说明结果、文件路径、应用 ID 和验证结论；不要泄露 `ADMIN_API_KEY`。
 
-## Edge 结构说明
+## DSL 导入规则
 
-每条 edge 必须包含：
-
-```yaml
-- data:
-    isInIteration: false
-    isInLoop: false
-    sourceType: <源节点 type>
-    targetType: <目标节点 type>
-  id: <source>-source-<target>-target
-  source: '<source_node_id>'
-  sourceHandle: source        # if-else 分支用 'true'/'false'；iteration 出口用 source
-  target: '<target_node_id>'
-  targetHandle: target
-  type: custom
-  zIndex: 0
-```
-
-迭代容器内部 edge 额外加：`isInIteration: true`、`iteration_id`。
+生成或检查可导入 DSL 时，先阅读 [dsl-import-rules.md](dsl-import-rules.md)。该文件集中说明节点类型信息、edge 类型/连接规则、必填 edge 字段、迭代内部 edge 的特殊要求，以及可复用的通用 DSL builder 模式。
 
 ## 节点位置布局建议
 
@@ -119,3 +102,4 @@ description: 根据用户需求设计并生成 Dify 应用 DSL，创建或更新
 | [nodes-processing.md](nodes-processing.md) | `code`、`template-transform`、`parameter-extractor` |
 | [nodes-ai.md](nodes-ai.md) | `llm`、`agent`（Function Calling / MCP SSE）、将 Dify 工具暴露为 MCP 服务（mcp_compat_dify_tools） |
 | [nodes-external.md](nodes-external.md) | `http-request`、`tool`、`knowledge-retrieval` |
+| [dsl-import-rules.md](dsl-import-rules.md) | 导入规则、edge 结构、迭代内部连接、通用 DSL builder 模式 |

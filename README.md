@@ -29,6 +29,7 @@
 - 更新已有应用前导出备份。
 - 导入后重新导出远端 DSL，验证变量、节点和输出。
 - 提供常见节点参考：`start`、`end`、`answer`、`if-else`、`iteration`、`code`、`template-transform`、`parameter-extractor`、`llm`、`agent`、`http-request`、`tool`、`knowledge-retrieval`。
+- 提供专门的 [DSL 导入规则参考](dify/dify-dsl-app-builder/dsl-import-rules.md)，说明 edge 连接、迭代内部连接和通用 DSL builder 模式。
 
 ### `mindmap/mindmap-builder`
 
@@ -101,6 +102,7 @@ dify-dsl-app-builder/
   nodes-processing.md
   nodes-ai.md
   nodes-external.md
+  dsl-import-rules.md
 
 dify-console-admin-api/
   SKILL.md
