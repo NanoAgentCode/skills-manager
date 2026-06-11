@@ -1,11 +1,12 @@
 # skills-manager
 
-本仓库用于管理可复用的 Codex/Claude Skills。目前包含 Dify、Mindmap、WeChat 和 Database 四类 skill：
+本仓库用于管理可复用的 Codex/Claude Skills。目前包含 Dify、Mindmap、WeChat、Database 和 Superpowers 五类 skill：
 
 - Dify：覆盖 Dify Console Admin API 自动化与 Dify DSL 应用构建。
 - Mindmap：把 PDF、文本、大纲或文档内容转换为离线可双击打开的思维导图 HTML；仅在用户明确要求发布时，将静态产物发布到配置好的 Web 静态目录。
 - WeChat：把 Markdown、纯文本或粗糙笔记排版成微信公众号兼容 HTML，可选生成封面并推送到公众号草稿箱。
 - Database：通过 Python 脚本执行数据库查询，连接配置单独存放到本地配置文件；缺少配置时通过对话收集必要字段。
+- Superpowers：从 `obra/superpowers` 同步的软件开发方法论技能集，覆盖 brainstorm、计划编写、TDD、代码审查、并行子代理和工作树流程。
 
 ## 功能覆盖
 
@@ -101,6 +102,30 @@ PDF / 文本 / 大纲
 - 支持 SQLite 内置连接；PostgreSQL、MySQL、SQL Server、Oracle 11g、MongoDB 和 Redis 依赖相应 Python 驱动。
 - 支持表格、JSON、CSV 输出，并可导出查询结果到文件。
 
+### `superpowers/superpowers`
+
+该目录从 [obra/superpowers](https://github.com/obra/superpowers) 同步，包含一组面向 coding agent 的开发流程技能：
+
+- `brainstorming`：写代码前进行苏格拉底式需求澄清和方案讨论。
+- `writing-plans`：把已确认设计拆成可执行的小任务计划。
+- `test-driven-development`：强调 red/green/refactor 的 TDD 流程。
+- `subagent-driven-development`：用子代理逐任务实现并进行两阶段 review。
+- `requesting-code-review` / `receiving-code-review`：代码审查与反馈处理。
+- `using-git-worktrees`：为并行开发创建隔离工作树。
+- `systematic-debugging`：系统化调试和根因分析。
+
+该目录保留上游插件元数据（如 `.codex-plugin`、`.claude-plugin`），但不包含上游 `.git` 目录。
+
+目录中几个关键层级的含义：
+
+- `skills/`：真正的技能内容，每个子目录通常包含一个 `SKILL.md`，定义触发场景、执行流程和附加资源。
+- `.codex-plugin/`：Codex 插件入口，描述插件名称、版本、展示信息，并指向 `skills/` 目录。
+- `.claude-plugin/`：Claude Code 插件入口，描述 Claude 插件市场所需的名称、版本、作者和仓库信息。
+- `hooks/`：生命周期钩子，用于在会话启动、清空或压缩等时机自动执行初始化或提醒逻辑。
+- `docs/`、`tests/`、`assets/`：分别保存上游文档、测试和图标等辅助资源。
+
+因此，`skills/` 是能力本体；`.codex-plugin/` 和 `.claude-plugin/` 是不同平台的安装包装；`hooks/` 是自动触发机制。
+
 ## 使用方式
 
 把需要使用的 skill 目录安装或复制到 Codex/Claude 可发现的 skills 目录中，保持目录名与 `SKILL.md` frontmatter 的 `name` 一致：
@@ -169,6 +194,19 @@ python-db-query/
     query_db.py
   references/
     config.md
+
+superpowers/
+  superpowers/
+    README.md
+    .codex-plugin/
+    .claude-plugin/
+    hooks/
+    skills/
+      brainstorming/
+      writing-plans/
+      test-driven-development/
+      subagent-driven-development/
+      ...
 ```
 
 使用 DSL App Builder 处理涉及远程 Dify 创建或更新应用的任务时，应同时安装 `dify-console-admin-api`，因为前者会引用后者的 Admin API 流程。
