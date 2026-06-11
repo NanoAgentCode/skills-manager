@@ -1,10 +1,11 @@
 # skills-manager
 
-本仓库用于管理可复用的 Codex/Claude Skills。目前包含 Dify、Mindmap 和 WeChat 三类 skill：
+本仓库用于管理可复用的 Codex/Claude Skills。目前包含 Dify、Mindmap、WeChat 和 Database 四类 skill：
 
 - Dify：覆盖 Dify Console Admin API 自动化与 Dify DSL 应用构建。
 - Mindmap：把 PDF、文本、大纲或文档内容转换为离线可双击打开的思维导图 HTML；仅在用户明确要求发布时，将静态产物发布到配置好的 Web 静态目录。
 - WeChat：把 Markdown、纯文本或粗糙笔记排版成微信公众号兼容 HTML，可选生成封面并推送到公众号草稿箱。
+- Database：通过 Python 脚本执行数据库查询，连接配置单独存放到本地配置文件；缺少配置时通过对话收集必要字段。
 
 ## 功能覆盖
 
@@ -90,6 +91,16 @@ PDF / 文本 / 大纲
 
 纯排版只需要本地 Python 依赖；没有 `config.json` 时会使用内置默认配置。推送草稿箱时需要在 `config.json` 中配置公众号 `app_id`、`app_secret` 和作者信息。`config.json` 已由该 skill 自带的 `.gitignore` 忽略，不应提交到仓库。
 
+### `database/python-db-query`
+
+该 skill 适合通过 Python 执行数据库查询：
+
+- 使用本地 `config.json` 管理数据库连接信息，仓库只提交 `config.example.json`。
+- 没有配置文件时，先通过对话收集数据库类型、地址、库名、账号和密码等必要字段。
+- 默认只允许只读 SQL；写入、DDL 或删除类操作需要用户明确授权后才使用 `--allow-write`。
+- 支持 SQLite 内置连接；PostgreSQL、MySQL、SQL Server、Oracle 11g、MongoDB 和 Redis 依赖相应 Python 驱动。
+- 支持表格、JSON、CSV 输出，并可导出查询结果到文件。
+
 ## 使用方式
 
 把需要使用的 skill 目录安装或复制到 Codex/Claude 可发现的 skills 目录中，保持目录名与 `SKILL.md` frontmatter 的 `name` 一致：
@@ -145,6 +156,19 @@ wechat-format/
   themes/
   templates/
   cover/
+
+python-db-query/
+  SKILL.md
+  config.example.json
+  agents/
+    openai.yaml
+  scripts/
+    check_dependencies.py
+    init_config.py
+    install_offline_dependencies.ps1
+    query_db.py
+  references/
+    config.md
 ```
 
 使用 DSL App Builder 处理涉及远程 Dify 创建或更新应用的任务时，应同时安装 `dify-console-admin-api`，因为前者会引用后者的 Admin API 流程。
@@ -187,6 +211,8 @@ markmap-assets/
 ## 安全注意事项
 
 - 不要把 `ADMIN_API_KEY` 写入仓库文件、README、PR 描述或长期脚本。
+- 不要把数据库密码、连接串或真实 `config.json` 提交到仓库；数据库查询 skill 已通过 `.gitignore` 忽略本地配置。
+- 数据库查询默认只执行只读 SQL；任何写操作、DDL 或大范围扫描都应先获得用户明确确认。
 - 导出 DSL 默认使用 `include_secret=false`。
 - 覆盖更新应用前先导出旧 DSL 作为备份。
 - Admin API 调用失败时先排查配置和服务状态；不要绕过 API 直接写数据库，除非用户明确授权。

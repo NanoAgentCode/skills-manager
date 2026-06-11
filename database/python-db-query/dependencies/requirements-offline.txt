@@ -1,0 +1,8 @@
+oracledb==2.5.1
+psycopg[binary]
+psycopg2-binary
+pymysql
+mysql-connector-python
+pyodbc
+pymongo
+redis
