@@ -1,0 +1,393 @@
+app:
+  description: 用户输入按领域检索知识库，汇总上下文后生成 JSON，并通过后置代码节点校验 JSON 格式。
+  icon: "\U0001F9E9"
+  icon_background: "#E0F2FE"
+  mode: workflow
+  name: 领域知识检索 JSON 生成与校验
+  use_icon_as_answer_icon: false
+dependencies: []
+kind: app
+version: 0.3.0
+workflow:
+  conversation_variables: []
+  environment_variables: []
+  features:
+    file_upload:
+      enabled: false
+    opening_statement: ''
+    retriever_resource:
+      enabled: true
+    sensitive_word_avoidance:
+      enabled: false
+    speech_to_text:
+      enabled: false
+    suggested_questions: []
+    suggested_questions_after_answer:
+      enabled: false
+    text_to_speech:
+      enabled: false
+      language: ''
+      voice: ''
+  graph:
+    edges:
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: start
+        targetType: knowledge-retrieval
+      id: start-source-knowledge_retrieval-target
+      source: start
+      sourceHandle: source
+      target: knowledge_retrieval
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: knowledge-retrieval
+        targetType: llm
+      id: knowledge_retrieval-source-generate_json-target
+      source: knowledge_retrieval
+      sourceHandle: source
+      target: generate_json
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: llm
+        targetType: code
+      id: generate_json-source-validate_json-target
+      source: generate_json
+      sourceHandle: source
+      target: validate_json
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: code
+        targetType: end
+      id: validate_json-source-end-target
+      source: validate_json
+      sourceHandle: source
+      target: end
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    nodes:
+    - data:
+        desc: ''
+        title: 输入参数
+        type: start
+        variables:
+        - default: ''
+          hint: 请输入需要分析的问题、需求或原始材料。
+          label: 用户输入
+          max_length: 4000
+          options: []
+          required: true
+          type: paragraph
+          variable: query
+        - default: 通用
+          hint: 用于限定知识检索领域；可按实际业务改成固定选项。
+          label: 领域
+          max_length: 256
+          options:
+          - 通用
+          - 产品
+          - 技术
+          - 法务
+          - 运营
+          required: true
+          type: select
+          variable: domain
+      height: 126
+      id: start
+      position:
+        x: 80
+        y: 282
+      positionAbsolute:
+        x: 80
+        y: 282
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 242
+    - data:
+        dataset_ids:
+        - REPLACE_WITH_DOMAIN_DATASET_ID
+        desc: 替换 dataset_ids 为目标 Dify 环境中的领域知识库 ID；如有多个领域知识库，可填多个 ID，或复制该节点后按领域分支连接。
+        multiple_retrieval_config:
+          reranking_enable: false
+          reranking_mode: weighted_score
+          score_threshold: null
+          top_k: 6
+          weights:
+            keyword_setting:
+              keyword_weight: 0.3
+            vector_setting:
+              embedding_model_name: text-embedding-3-large
+              embedding_provider_name: langgenius/openai/openai
+              vector_weight: 0.7
+            weight_type: customized
+        query_variable_selector:
+        - start
+        - query
+        retrieval_mode: multiple
+        title: 领域知识检索
+        type: knowledge-retrieval
+      height: 90
+      id: knowledge_retrieval
+      position:
+        x: 384
+        y: 282
+      positionAbsolute:
+        x: 384
+        y: 282
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 242
+    - data:
+        context:
+          enabled: true
+          variable_selector:
+          - knowledge_retrieval
+          - result
+        desc: ''
+        memory:
+          enabled: false
+          window:
+            enabled: false
+            size: 50
+        model:
+          mode: chat
+          name: gpt-4o
+          provider: langgenius/openai/openai
+        prompt_template:
+        - role: system
+          text: |
+            你是一个严谨的信息抽取助手。你必须基于检索到的领域知识和用户输入生成 JSON。
+
+            输出要求：
+            1. 只输出一个 JSON 对象，不要输出 Markdown、代码围栏或额外解释。
+            2. JSON 必须能被标准 JSON 解析器解析。
+            3. 不确定的信息使用 null，不要编造。
+            4. context_summary 必须概括检索到的关键上下文。
+            5. evidence 必须列出使用到的依据片段摘要。
+
+            JSON Schema 语义如下：
+            {
+              "domain": "string",
+              "user_query": "string",
+              "context_summary": "string",
+              "answer": "string",
+              "evidence": [
+                {
+                  "source": "string|null",
+                  "snippet": "string"
+                }
+              ],
+              "confidence": "high|medium|low",
+              "missing_info": ["string"]
+            }
+        - role: user
+          text: |
+            领域：{{#start.domain#}}
+            用户输入：{{#start.query#}}
+
+            请结合知识检索上下文生成最终 JSON。
+        retry_config:
+          enabled: false
+          exponential_backoff:
+            enabled: false
+            max_interval: 10000
+            multiplier: 2
+          max_retries: 1
+          retry_interval: 1000
+        structured_output:
+          enabled: false
+        title: 生成 JSON
+        type: llm
+        vision:
+          configs:
+            variable_selector: []
+          enabled: false
+      height: 110
+      id: generate_json
+      position:
+        x: 688
+        y: 282
+      positionAbsolute:
+        x: 688
+        y: 282
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 242
+    - data:
+        code: |
+          import json
+          import re
+
+          REQUIRED_KEYS = [
+              "domain",
+              "user_query",
+              "context_summary",
+              "answer",
+              "evidence",
+              "confidence",
+              "missing_info",
+          ]
+
+          def _strip_code_fence(text: str) -> str:
+              if not text:
+                  return ""
+              cleaned = text.strip()
+              match = re.match(r"^```(?:json)?\s*(.*?)\s*```$", cleaned, re.S)
+              return match.group(1).strip() if match else cleaned
+
+          def _fallback(raw: str, error: str) -> dict:
+              return {
+                  "valid": 0,
+                  "error": error,
+                  "data": {
+                      "domain": None,
+                      "user_query": None,
+                      "context_summary": "",
+                      "answer": raw,
+                      "evidence": [],
+                      "confidence": "low",
+                      "missing_info": ["LLM 输出不是合法 JSON，需要重新生成或人工检查。"],
+                  },
+                  "final_json": json.dumps({
+                      "domain": None,
+                      "user_query": None,
+                      "context_summary": "",
+                      "answer": raw,
+                      "evidence": [],
+                      "confidence": "low",
+                      "missing_info": ["LLM 输出不是合法 JSON，需要重新生成或人工检查。"],
+                  }, ensure_ascii=False),
+              }
+
+          def main(raw_json: str) -> dict:
+              raw = _strip_code_fence(raw_json)
+              try:
+                  data = json.loads(raw)
+              except Exception as exc:
+                  return _fallback(raw_json, f"JSON_PARSE_ERROR: {exc}")
+
+              if not isinstance(data, dict):
+                  return _fallback(raw_json, "JSON_ROOT_MUST_BE_OBJECT")
+
+              missing = [key for key in REQUIRED_KEYS if key not in data]
+              if missing:
+                  data.setdefault("missing_info", [])
+                  data["missing_info"].append("缺少必填字段：" + ", ".join(missing))
+
+              if data.get("confidence") not in ["high", "medium", "low"]:
+                  data["confidence"] = "low"
+                  data.setdefault("missing_info", []).append("confidence 已被校正为 low。")
+
+              if not isinstance(data.get("evidence"), list):
+                  data["evidence"] = []
+                  data.setdefault("missing_info", []).append("evidence 已被校正为空数组。")
+
+              if not isinstance(data.get("missing_info"), list):
+                  data["missing_info"] = [str(data.get("missing_info"))]
+
+              final_json = json.dumps(data, ensure_ascii=False)
+              return {
+                  "valid": 1 if len(missing) == 0 else 0,
+                  "error": "" if len(missing) == 0 else "MISSING_REQUIRED_KEYS",
+                  "data": data,
+                  "final_json": final_json,
+              }
+        code_language: python3
+        desc: 校验 LLM 输出是否为合法 JSON，并对常见字段问题做保底修正。
+        outputs:
+          data:
+            children: null
+            type: object
+          error:
+            children: null
+            type: string
+          final_json:
+            children: null
+            type: string
+          valid:
+            children: null
+            type: number
+        title: JSON 格式校验
+        type: code
+        variables:
+        - value_selector:
+          - generate_json
+          - text
+          value_type: string
+          variable: raw_json
+      height: 110
+      id: validate_json
+      position:
+        x: 992
+        y: 282
+      positionAbsolute:
+        x: 992
+        y: 282
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 242
+    - data:
+        desc: ''
+        outputs:
+        - value_selector:
+          - validate_json
+          - final_json
+          value_type: string
+          variable: final_json
+        - value_selector:
+          - validate_json
+          - valid
+          value_type: number
+          variable: valid
+        - value_selector:
+          - validate_json
+          - error
+          value_type: string
+          variable: error
+        - value_selector:
+          - validate_json
+          - data
+          value_type: object
+          variable: data
+        title: 输出结果
+        type: end
+      height: 126
+      id: end
+      position:
+        x: 1296
+        y: 282
+      positionAbsolute:
+        x: 1296
+        y: 282
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 242
+    viewport:
+      x: 0
+      y: 0
+      zoom: 0.8
+  rag_pipeline_variables: []
+  version: '2'
