@@ -3,7 +3,7 @@
 本仓库用于管理可复用的 Codex/Claude Skills。目前包含 Dify、Mindmap、WeChat、Database 和 Superpowers 五类 skill：
 
 - Dify：覆盖 Dify Console Admin API 自动化与 Dify DSL 应用构建。
-- Mindmap：把 PDF、文本、大纲或文档内容转换为离线可双击打开的思维导图 HTML；仅在用户明确要求发布时，将静态产物发布到配置好的 Web 静态目录。
+- Mindmap：把 PDF、文本、大纲或文档内容转换为离线可双击打开的思维导图 HTML；支持长文档默认总览、章节按需展开和对话式展开；仅在用户明确要求发布时，将静态产物发布到配置好的 Web 静态目录。
 - WeChat：把 Markdown、纯文本或粗糙笔记排版成微信公众号兼容 HTML，可选生成封面并推送到公众号草稿箱。
 - Database：通过 Python 脚本执行数据库查询，连接配置单独存放到本地配置文件；缺少配置时通过对话收集必要字段。
 - Superpowers：从 `obra/superpowers` 同步的软件开发方法论技能集，覆盖 brainstorm、计划编写、TDD、代码审查、并行子代理和工作树流程。
@@ -39,6 +39,11 @@
 
 - 从 PDF、文本、笔记、大纲或工作流输出中提炼层级结构。
 - 生成 markmap 友好的 Markdown。
+- 对书籍、长报告、长论文、手册或研究资料包，支持“先生成总览图，再按用户选择展开章节/小节”的长文档模式。
+- 用户明确要求“总览图”“默认只展示总览”“用户可选章节”“章节展开”“对话式展开”“按需展开”时，直接进入长文档模式。
+- 论文默认规则：25 页以内优先生成单张论文总览图；25 页以上默认生成 `overview + section-index + sections/` 的长文档结构。
+- 文本量默认规则：英文约 20,000 words 以内、中文约 30,000 characters 以内优先单张总览；超过该范围且具有文档结构时，默认使用长文档模式。
+- 长文档模式要求 `overview.md`、`section-index.md` 和章节展开图使用同一套章节/小节标签，避免总览节点和展开节点对不上。
 - 使用 `markmap-cli` 生成可双击打开的 `.html` 文件。
 - 携带 `d3`、`markmap-view`、`markmap-toolbar` 的本地 JS/CSS 资源。
 - 通过 `scripts/render_offline_mindmap.ps1` 把 CDN 引用替换为本地 `markmap-assets/` 路径。
@@ -56,6 +61,34 @@ PDF / 文本 / 大纲
 离线渲染脚本生成 HTML + markmap-assets/
         ↓
 双击 HTML 或用浏览器打开
+```
+
+长文档默认流程：
+
+```text
+PDF / 论文 / 书籍 / 长报告
+        ↓
+抽取目录、章节、小节和关键主题
+        ↓
+生成 section-index.md
+        ↓
+生成 overview.md / overview.html
+        ↓
+用户选择章节或小节
+        ↓
+生成 sections/{section-slug}.md / .html
+```
+
+示例输出结构：
+
+```text
+overview.md
+overview.html
+section-index.md
+sections/
+  section-05-cow-bench.md
+  section-05-cow-bench.html
+markmap-assets/
 ```
 
 ### `mindmap/mindmap-publisher`
