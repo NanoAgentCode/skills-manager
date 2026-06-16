@@ -211,6 +211,23 @@ superpowers/
 
 使用 DSL App Builder 处理涉及远程 Dify 创建或更新应用的任务时，应同时安装 `dify-console-admin-api`，因为前者会引用后者的 Admin API 流程。
 
+### 快速校验
+
+`dify/` 目录下提供一个无外部服务依赖的快速校验脚本，用于确认当前两个 Dify skill 的基本结构和关键引用仍然可用：
+
+```powershell
+python .\dify\quick_validate.py
+```
+
+该脚本会检查：
+
+- `dify-console-admin-api` 和 `dify-dsl-app-builder` 的 `SKILL.md` frontmatter。
+- DSL App Builder 引用的节点模板、DSL 导入规则和 Console Admin API skill 是否存在。
+- README 中列出的 Dify 路径是否能在仓库中解析。
+- `dify/context-json-validator-workflow.yml` 是否具备 Dify app/workflow 的基本结构，且在安装了 PyYAML 时会进一步检查节点 ID 与 edge 引用。
+
+脚本只做本地静态校验，不会调用 Dify 服务，也不会读取或输出 `ADMIN_API_KEY`。
+
 使用 Mindmap Builder 生成本地 HTML 时，需要本机具备 Node.js、npm 和 markmap-cli。Skill 会按以下命令检查依赖：
 
 ```powershell
