@@ -290,6 +290,9 @@ def fix_cjk_bold_punctuation(text: str) -> str:
 
 def convert_wikilinks(text: str, vault_root: Path, output_dir: Path) -> str:
     """把 Obsidian ![[image.jpg]] 转为 <img> 标签，复制图片到输出目录"""
+    if not re.search(r"!\[\[([^\]]+)\]\]", text):
+        return text
+
     images_dir = output_dir / "images"
     # 搜索路径：vault 目录（如需额外图片目录，在 config.json 的 image_search_paths 中配置）
     search_roots = [vault_root]
@@ -298,24 +301,28 @@ def convert_wikilinks(text: str, vault_root: Path, output_dir: Path) -> str:
         if p:
             search_roots.append(Path(p).expanduser())
 
+    file_cache = {}
+    for search_root in search_roots:
+        if not search_root.exists():
+            continue
+        for root, dirs, files in os.walk(search_root, followlinks=True):
+            for name in files:
+                file_cache.setdefault(name, Path(root) / name)
+
     def replace_img(match):
         filename = match.group(1).strip()
         # 处理带尺寸的 wikilink: ![[image.jpg|300]]
         if "|" in filename:
             filename = filename.split("|")[0].strip()
-        # 在多个目录中搜索图片（followlinks=True 跟随符号链接）
-        for search_root in search_roots:
-            if not search_root.exists():
-                continue
-            for root, dirs, files in os.walk(search_root, followlinks=True):
-                if filename in files:
-                    img_path = Path(root) / filename
-                    images_dir.mkdir(parents=True, exist_ok=True)
-                    dest = images_dir / filename
-                    if not dest.exists():
-                        shutil.copy2(img_path, dest)
-                    # 返回占位标记，后面注入样式时处理
-                    return f'<section data-role="img-wrapper"><img src="images/{filename}" alt="{filename}"></section>'
+
+        img_path = file_cache.get(filename)
+        if img_path:
+            images_dir.mkdir(parents=True, exist_ok=True)
+            dest = images_dir / filename
+            if not dest.exists():
+                shutil.copy2(img_path, dest)
+            # 返回占位标记，后面注入样式时处理
+            return f'<section data-role="img-wrapper"><img src="images/{filename}" alt="{filename}"></section>'
         return f'<span style="color:#999;">[图片: {filename}]</span>'
 
     return re.sub(r"!\[\[([^\]]+)\]\]", replace_img, text)
@@ -1752,10 +1759,15 @@ def main():
                 rendered_map[tid] = rendered
                 print(f"  ✓ {theme_map[tid].get('name', tid)} ({tid})")
 
+        recommended = [tid for tid in args.recommend if tid in theme_map]
+        missing_recommended = [tid for tid in args.recommend if tid not in theme_map]
+        if missing_recommended:
+            print(f"提示: 跳过不存在的推荐主题: {', '.join(missing_recommended)}")
+
         gallery_path = generate_gallery(
             rendered_map, theme_map, gallery_theme_ids,
             title, word_count, output_dir,
-            recommended=args.recommend
+            recommended=recommended
         )
         print(f"\n画廊页面: {gallery_path}")
 

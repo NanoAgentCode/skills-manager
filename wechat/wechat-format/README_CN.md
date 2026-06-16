@@ -9,14 +9,14 @@ Claude Code 公众号完整发布管线：**排版** → **封面**（可选）�
 ## 功能
 
 - **排版引擎**：Markdown 转微信公众号兼容的内联样式 HTML
-- **30 套主题**：5 大分类（深度长文 / 科技产品 / 文艺随笔 / 活力动态 / 模板布局），可视化画廊选择
+- **33 套主题**：6 大分类（卡片风格 / 深度长文 / 科技产品 / 文艺随笔 / 活力动态 / 模板布局），可视化画廊选择
 - **AI 内容增强**：自动识别对话体、金句、连续图片，套用 dialogue / callout / gallery 容器
 - **CJK 排版修复**：中英文自动加空格、加粗标点自动移出标记
 - **图片处理**：自动处理 Obsidian `![[image]]` 和标准 Markdown `![](image)` 引用
 - **外链转脚注**：微信不支持外链，自动转文末脚注
 - **封面图生成**：内置 Gemini API 生图脚本 + 提示词模板，一步出图
 - **一键发布**：自动上传图片到微信 CDN + 推送到草稿箱
-- **主题画廊**：浏览器中用真实文章预览所有主题，点选即用
+- **主题画廊**：浏览器中用真实文章预览核心主题，点选即用
 
 ## 安装
 
@@ -40,6 +40,7 @@ cp config.example.json config.json
 {
   "output_dir": "/tmp/wechat-format",
   "vault_root": "/path/to/your/obsidian/vault",
+  "image_search_paths": [],
   "settings": {
     "default_theme": "newspaper",
     "auto_open_browser": true
@@ -52,6 +53,11 @@ cp config.example.json config.json
   "cover": {
     "output_dir": "~/Documents/covers",
     "image_generation_script": ""
+  },
+  "ai": {
+    "url": "",
+    "api_key": "",
+    "model": ""
   }
 }
 ```
@@ -75,7 +81,7 @@ cp config.example.json config.json
 python3 scripts/format.py --input article.md --gallery --recommend newspaper magazine ink
 ```
 
-在浏览器中用真实文章预览 20 个核心主题，选好后回到 Claude 说主题名。
+在浏览器中用真实文章预览 23 个核心主题，选好后回到 Claude 说主题名。
 
 ### 指定主题排版
 
@@ -116,6 +122,14 @@ python3 scripts/publish.py --dir /tmp/wechat-format/article-name/ --cover cover.
 | 咖啡 | coffee-house | 棕色暖调 |
 | 微信原生 | wechat-native | 微信绿 |
 | 杂志 | magazine | 超大留白 |
+
+### 卡片风格（3 个）
+
+| 主题 | 命令值 | 风格 |
+|------|--------|------|
+| 暖光卡片 | warm-card | 暖白底+卡片布局 |
+| 清新卡片 | fresh-card | 淡绿底+卡片布局 |
+| 静谧卡片 | ocean-card | 淡蓝底+卡片布局 |
 
 ### 模板系列（14 个）
 

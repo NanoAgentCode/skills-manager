@@ -16,6 +16,7 @@
 | `scripts/format.py` | 排版：Markdown → 微信兼容 HTML |
 | `scripts/publish.py` | 推送：HTML → 公众号草稿箱 |
 | `scripts/comment_reply.py` | 评论自动回复（可选） |
+| `scripts/generate.py` | 封面生成脚本（需配合 `cover/config.json`） |
 
 ## 配置
 
@@ -31,6 +32,7 @@
 {
   "output_dir": "/tmp/wechat-format",
   "vault_root": "/path/to/your/obsidian/vault",
+  "image_search_paths": [],
   "settings": {
     "default_theme": "newspaper",
     "auto_open_browser": true
@@ -43,6 +45,11 @@
   "cover": {
     "output_dir": "~/Documents/covers",
     "image_generation_script": ""
+  },
+  "ai": {
+    "url": "",
+    "api_key": "",
+    "model": ""
   }
 }
 ```
@@ -173,7 +180,7 @@ python3 {baseDir}/scripts/format.py \
   --recommend newspaper magazine ink
 ```
 
-这会用用户的**真实文章**渲染 20 个主题，在浏览器打开画廊页面。用户点按钮切换主题预览，选中后点「用这个风格排版」一键复制到剪贴板。
+这会用用户的**真实文章**渲染 23 个核心主题，在浏览器打开画廊页面。用户点按钮切换主题预览，选中后点「用这个风格排版」一键复制到剪贴板。若 `--recommend` 传入了不存在的主题，脚本会提示并跳过。
 
 #### 第 3 步（备选）：直接指定主题排版
 
@@ -273,6 +280,7 @@ python3 {baseDir}/scripts/publish.py \
 - `--theme` / `-t`：直接指定主题名（跳过画廊）
 - `--output` / `-o`：输出目录（默认 /tmp/wechat-format）
 - `--vault-root`：Obsidian Vault 根目录（用于搜索 wikilink 图片）
+- `config.json.image_search_paths`：额外图片搜索目录（用于 `![[image.jpg]]`）
 - `--recommend`：推荐的主题 ID 列表，gallery 中高亮显示
 - `--no-open`：不自动打开浏览器
 - `--format`：输出格式 wechat/html/plain
@@ -290,7 +298,7 @@ python3 {baseDir}/scripts/publish.py \
 - 无参数：检测 Python 版本、`markdown`、`requests`
 - `--install`：用当前 Python 解释器执行 `pip install` 安装缺失包
 
-### 可用主题（30 个）
+### 可用主题（33 个）
 
 #### 独立风格（9 个，差异最大）
 
@@ -318,6 +326,14 @@ python3 {baseDir}/scripts/publish.py \
 | 微信原生 | wechat-native | 微信绿，传统阅读 |
 | 杂志 | magazine | 超大留白，品质长文 |
 
+#### 卡片风格（3 个）
+
+| 主题 | 命令值 | 风格 |
+|------|--------|------|
+| 暖光卡片 | warm-card | 暖白底+卡片布局，适合深度文章、情感随笔 |
+| 清新卡片 | fresh-card | 淡绿底+卡片布局，适合生活方式、自然主题 |
+| 静谧卡片 | ocean-card | 淡蓝底+卡片布局，适合技术文章、商业分析 |
+
 #### 模板系列（14 个，布局×配色）
 
 四种布局（简约/聚焦/精致/醒目）× 多种配色（金/蓝/红/绿/藏青/灰）
@@ -342,4 +358,4 @@ python3 {baseDir}/scripts/publish.py \
 - 依赖可用 `scripts/check_dependencies.py` 检测；缺失时，经用户确认后用 `scripts/check_dependencies.py --install` 安装
 - 图片在预览中可见，但粘贴到微信后需要手动上传（或用推送功能自动上传）
 - 如果用户对排版不满意，可以切换主题重新生成
-- 画廊模式渲染 20 个主题，用的是用户的真实文章
+- 画廊模式渲染 23 个核心主题，用的是用户的真实文章
