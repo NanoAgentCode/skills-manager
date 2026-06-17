@@ -1,6 +1,6 @@
 # xiaohu-wechat-format
 
-A Claude Code skill for the full WeChat Official Account (公众号) publishing pipeline: **Format** → **Cover** (optional) → **Publish** — with 34 themes, a visual gallery picker, AI content enhancement, and one-click publishing to drafts.
+A Claude Code skill for the full WeChat Official Account (公众号) publishing pipeline: **Format** → **Cover** (optional) → **Publish** — with 26 themes, a visual gallery picker, AI content enhancement, and one-click publishing to drafts.
 
 **[中文说明](README_CN.md)**
 
@@ -9,8 +9,8 @@ A Claude Code skill for the full WeChat Official Account (公众号) publishing 
 ## What It Does
 
 1. **Markdown → WeChat HTML**: Converts standard Markdown into inline-styled HTML that works in WeChat's editor (no `<style>` tags, no classes — everything inline)
-2. **34 Themes**: From card layouts and newspaper-style serif to neon cyberpunk, organized into 6 categories
-3. **Visual Gallery**: Preview 24 core themes with your actual article in a browser, then pick one
+2. **26 Themes**: From newspaper-style serif to neon cyberpunk, organized into 5 categories
+3. **Visual Gallery**: Preview 18 core themes with your actual article in a browser, then pick one
 4. **AI Content Enhancement**: Auto-detects dialogue, key quotes, and image sequences — wraps them in styled containers
 5. **One-Click Publish**: Uploads images to WeChat CDN and pushes the article to your drafts
 
@@ -49,9 +49,9 @@ Claude will:
 4. You pick a theme, tell Claude the name
 5. Claude formats and optionally publishes to WeChat
 
-## Themes (34)
+## Themes (26)
 
-### Standalone Styles (10)
+### Standalone Styles (9)
 
 | Theme | ID | Style |
 |-------|-----|-------|
@@ -62,9 +62,6 @@ Claude will:
 | Newspaper | `newspaper` | NYT-style serif, serious |
 | GitHub | `github` | Developer-friendly, light code blocks |
 | SSPAI | `sspai` | Chinese tech media red |
-| Bauhaus | `bauhaus` | Primary colors, geometric |
-| Ink | `ink` | Pure black, minimal whitespace |
-| Midnight | `midnight` | Dark background, neon accents |
 
 ### Curated Styles (7)
 
@@ -78,17 +75,9 @@ Claude will:
 | WeChat Native | `wechat-native` | WeChat green |
 | Magazine | `magazine` | Extra whitespace, editorial |
 
-### Card Styles (3)
+### Template Series (12)
 
-| Theme | ID | Style |
-|-------|-----|-------|
-| Warm Card | `warm-card` | Warm white card layout |
-| Fresh Card | `fresh-card` | Light green card layout |
-| Ocean Card | `ocean-card` | Light blue card layout |
-
-### Template Series (14)
-
-4 layouts (Minimal / Focus / Elegant / Bold) × multiple color variants (Gold / Blue / Red / Green / Navy / Gray)
+4 layouts (Minimal / Focus / Elegant / Bold) × multiple color variants (Blue / Red / Green / Navy / Gray, etc.)
 
 ## Container Syntax
 

@@ -9,7 +9,7 @@ Claude Code 公众号完整发布管线：**排版** → **封面**（可选）�
 ## 功能
 
 - **排版引擎**：Markdown 转微信公众号兼容的内联样式 HTML
-- **34 套主题**：6 大分类（卡片风格 / 深度长文 / 科技产品 / 文艺随笔 / 活力动态 / 模板布局），可视化画廊选择
+- **26 套主题**：5 大分类（深度长文 / 科技产品 / 文艺随笔 / 活力动态 / 模板布局），可视化画廊选择
 - **AI 内容增强**：自动识别对话体、金句、连续图片，套用 dialogue / callout / gallery 容器
 - **CJK 排版修复**：中英文自动加空格、加粗标点自动移出标记
 - **图片处理**：自动处理 Obsidian `![[image]]` 和标准 Markdown `![](image)` 引用
@@ -78,10 +78,10 @@ cp config.example.json config.json
 ### 主题画廊（推荐）
 
 ```bash
-python3 scripts/format.py --input article.md --gallery --recommend newspaper magazine ink
+python3 scripts/format.py --input article.md --gallery --recommend newspaper magazine coffee-house
 ```
 
-在浏览器中用真实文章预览 24 个核心主题，选好后回到 Claude 说主题名。
+在浏览器中用真实文章预览 18 个核心主题，选好后回到 Claude 说主题名。
 
 ### 指定主题排版
 
@@ -97,7 +97,7 @@ python3 scripts/publish.py --dir /tmp/wechat-format/article-name/ --cover cover.
 
 ## 主题一览
 
-### 独立风格（10 个）
+### 独立风格（9 个）
 
 | 主题 | 命令值 | 风格 |
 |------|--------|------|
@@ -108,9 +108,6 @@ python3 scripts/publish.py --dir /tmp/wechat-format/article-name/ --cover cover.
 | 报纸 | newspaper | 纽约时报风，严肃深度 |
 | GitHub | github | 开发者风，浅色代码块 |
 | 少数派 | sspai | 中文科技媒体红 |
-| 包豪斯 | bauhaus | 红蓝黄三原色，先锋几何 |
-| 墨韵 | ink | 纯黑水墨，极简留白 |
-| 暗夜 | midnight | 深色底+霓虹色 |
 
 ### 精选风格（7 个）
 
@@ -124,17 +121,9 @@ python3 scripts/publish.py --dir /tmp/wechat-format/article-name/ --cover cover.
 | 微信原生 | wechat-native | 微信绿 |
 | 杂志 | magazine | 超大留白 |
 
-### 卡片风格（3 个）
+### 模板系列（12 个）
 
-| 主题 | 命令值 | 风格 |
-|------|--------|------|
-| 暖光卡片 | warm-card | 暖白底+卡片布局 |
-| 清新卡片 | fresh-card | 淡绿底+卡片布局 |
-| 静谧卡片 | ocean-card | 淡蓝底+卡片布局 |
-
-### 模板系列（14 个）
-
-四种布局（简约 / 聚焦 / 精致 / 醒目）× 多种配色（金 / 蓝 / 红 / 绿 / 藏青 / 灰）
+四种布局（简约 / 聚焦 / 精致 / 醒目）× 多种配色（蓝 / 红 / 绿 / 藏青 / 灰等）
 
 ## 容器语法
 

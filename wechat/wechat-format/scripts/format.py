@@ -52,18 +52,16 @@ CALLOUT_TYPE_COLORS = {
 
 # Gallery 核心主题列表（按用途分类，不存在的会跳过）
 GALLERY_THEMES = [
-    # 卡片系列（3，暖光/清新/静谧）— 新增，置顶展示
-    "warm-card", "fresh-card", "ocean-card",
-    # 深度长文（4）
-    "newspaper", "magazine", "ink", "coffee-house",
+    # 深度长文（3）
+    "newspaper", "magazine", "coffee-house",
     # 科技产品（5）
-    "bytedance", "apple-code", "github", "sspai", "midnight",
+    "bytedance", "apple-code", "github", "sspai",
     # 文艺随笔（4）
     "terracotta", "mint-fresh", "sunset-amber", "lavender-dream",
     # 活力动态（4）
-    "sports", "bauhaus", "chinese", "wechat-native",
+    "sports", "chinese", "wechat-native",
     # 模板布局（4，每种布局1个代表）
-    "minimal-gold", "focus-blue", "elegant-green", "bold-blue",
+    "minimal-blue", "focus-blue", "elegant-green", "bold-blue",
 ]
 
 # Gallery 示例文章（写死，不用用户文章）
@@ -1537,12 +1535,11 @@ def generate_gallery(rendered_map: dict, theme_map: dict,
 
     # 生成 THEME_BUTTONS（带分组标签）
     GROUPS = [
-        ("卡片系列", ["warm-card", "fresh-card", "ocean-card"]),
-        ("深度长文", ["newspaper", "magazine", "ink", "coffee-house"]),
-        ("科技产品", ["bytedance", "apple-code", "github", "sspai", "midnight"]),
+        ("深度长文", ["newspaper", "magazine", "coffee-house"]),
+        ("科技产品", ["bytedance", "apple-code", "github", "sspai"]),
         ("文艺随笔", ["terracotta", "mint-fresh", "sunset-amber", "lavender-dream"]),
-        ("活力动态", ["sports", "bauhaus", "chinese", "wechat-native"]),
-        ("模板布局", ["minimal-gold", "focus-blue", "elegant-green", "bold-blue"]),
+        ("活力动态", ["sports", "chinese", "wechat-native"]),
+        ("模板布局", ["minimal-blue", "focus-blue", "elegant-green", "bold-blue"]),
     ]
     buttons_html = ""
     btn_index = 0

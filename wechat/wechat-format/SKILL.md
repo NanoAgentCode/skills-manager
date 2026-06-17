@@ -162,12 +162,12 @@ python3 {baseDir}/scripts/check_dependencies.py --install
 
 | 内容类型 | 推荐主题 |
 |----------|----------|
-| 深度长文/分析 | newspaper, magazine, ink |
+| 深度长文/分析 | newspaper, magazine, coffee-house |
 | 科技产品/AI工具 | apple-code, bytedance, github |
 | 访谈/对话体 | terracotta, coffee-house, mint-fresh |
 | 教程/操作指南 | github, sspai, bytedance |
 | 文艺/随笔/观点 | terracotta, sunset-amber, lavender-dream |
-| 活力/动态/速报 | sports, bauhaus, chinese |
+| 活力/动态/速报 | sports, chinese, wechat-native |
 
 推荐的主题 ID 通过 `--recommend` 参数传给脚本，在 gallery 中高亮显示。
 
@@ -177,10 +177,10 @@ python3 {baseDir}/scripts/check_dependencies.py --install
 python3 {baseDir}/scripts/format.py \
   --input "文章路径.md" \
   --gallery \
-  --recommend newspaper magazine ink
+  --recommend newspaper magazine coffee-house
 ```
 
-这会用用户的**真实文章**渲染 24 个核心主题，在浏览器打开画廊页面。用户点按钮切换主题预览，选中后点「用这个风格排版」一键复制到剪贴板。若 `--recommend` 传入了不存在的主题，脚本会提示并跳过。
+这会用用户的**真实文章**渲染 18 个核心主题，在浏览器打开画廊页面。用户点按钮切换主题预览，选中后点「用这个风格排版」一键复制到剪贴板。若 `--recommend` 传入了不存在的主题，脚本会提示并跳过。
 
 #### 第 3 步（备选）：直接指定主题排版
 
@@ -298,9 +298,9 @@ python3 {baseDir}/scripts/publish.py \
 - 无参数：检测 Python 版本、`markdown`、`requests`
 - `--install`：用当前 Python 解释器执行 `pip install` 安装缺失包
 
-### 可用主题（34 个）
+### 可用主题（26 个）
 
-#### 独立风格（10 个，差异最大）
+#### 独立风格（9 个，差异最大）
 
 | 主题 | 命令值 | 风格 |
 |------|--------|------|
@@ -311,9 +311,6 @@ python3 {baseDir}/scripts/publish.py \
 | 报纸 | newspaper | 纽约时报风，严肃深度 |
 | GitHub | github | 开发者风，浅色代码块 |
 | 少数派 | sspai | 中文科技媒体红 |
-| 包豪斯 | bauhaus | 红蓝黄三原色，先锋几何 |
-| 墨韵 | ink | 纯黑水墨，极简留白 |
-| 暗夜 | midnight | 深色底+霓虹色，赛博朋克 |
 
 #### 精选风格（7 个）
 
@@ -327,17 +324,9 @@ python3 {baseDir}/scripts/publish.py \
 | 微信原生 | wechat-native | 微信绿，传统阅读 |
 | 杂志 | magazine | 超大留白，品质长文 |
 
-#### 卡片风格（3 个）
+#### 模板系列（12 个，布局×配色）
 
-| 主题 | 命令值 | 风格 |
-|------|--------|------|
-| 暖光卡片 | warm-card | 暖白底+卡片布局，适合深度文章、情感随笔 |
-| 清新卡片 | fresh-card | 淡绿底+卡片布局，适合生活方式、自然主题 |
-| 静谧卡片 | ocean-card | 淡蓝底+卡片布局，适合技术文章、商业分析 |
-
-#### 模板系列（14 个，布局×配色）
-
-四种布局（简约/聚焦/精致/醒目）× 多种配色（金/蓝/红/绿/藏青/灰）
+四种布局（简约/聚焦/精致/醒目）× 多种配色（蓝/红/绿/藏青/灰等）
 
 ### 内置排版增强
 
@@ -359,4 +348,4 @@ python3 {baseDir}/scripts/publish.py \
 - 依赖可用 `scripts/check_dependencies.py` 检测；缺失时，经用户确认后用 `scripts/check_dependencies.py --install` 安装
 - 图片在预览中可见，但粘贴到微信后需要手动上传（或用推送功能自动上传）
 - 如果用户对排版不满意，可以切换主题重新生成
-- 画廊模式渲染 24 个核心主题，用的是用户的真实文章
+- 画廊模式渲染 18 个核心主题，用的是用户的真实文章
