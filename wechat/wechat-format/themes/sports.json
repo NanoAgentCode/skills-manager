@@ -20,7 +20,6 @@
       "font_weight": "700",
       "color": "#ffffff",
       "text_align": "center",
-      "letter_spacing": "0.12em",
       "line_height": "1.4",
       "background": "linear-gradient(120deg, #00A968, #008A56, #00A968)",
       "border_radius": "16px",

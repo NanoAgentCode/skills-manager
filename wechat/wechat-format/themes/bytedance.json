@@ -17,18 +17,17 @@
     },
     "h1": {
       "font_size": "22px",
-      "font_weight": "600",
+      "font_weight": "700",
       "color": "#1d2129",
       "text_align": "center",
-      "letter_spacing": "0.1em",
-      "line_height": "1.2",
-      "padding": "10px 24px",
+      "line_height": "1.28",
+      "padding": "12px 16px",
       "background": "linear-gradient(to right, rgba(22,119,255,0.02), rgba(5,212,205,0.05), rgba(22,119,255,0.02))",
       "border_radius": "4px",
       "border_top": "3px solid #1677FF",
       "border_bottom": "1px solid rgba(5,212,205,0.5)",
       "margin_top": "24px",
-      "margin_bottom": "24px"
+      "margin_bottom": "18px"
     },
     "h2": {
       "font_size": "20px",

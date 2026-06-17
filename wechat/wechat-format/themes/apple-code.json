@@ -17,7 +17,7 @@
     },
     "h1": {
       "font_size": "22px",
-      "font_weight": "750",
+      "font_weight": "700",
       "color": "#1d1d1f",
       "text_align": "center",
       "line_height": "1.28",
@@ -25,10 +25,10 @@
       "border": "1px solid rgba(0,122,255,0.18)",
       "border_top": "3px solid #007AFF",
       "border_radius": "14px",
-      "padding": "16px 24px",
+      "padding": "12px 16px",
       "box_shadow": "0 10px 24px rgba(0,122,255,0.08)",
       "margin_top": "24px",
-      "margin_bottom": "22px"
+      "margin_bottom": "18px"
     },
     "h2": {
       "font_size": "20px",

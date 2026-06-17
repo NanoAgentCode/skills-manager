@@ -282,8 +282,8 @@ body {
     </div>
 
     <!-- Action Buttons -->
-    <button class="action-btn" id="confirmBtn" onclick="confirmAndCopy()">✓ 确认 — 回到 Claude 回复主题名 推送到公众号</button>
-    <button class="action-btn" id="copyBtn" onclick="applyTheme()" style="background:#86868b;margin-top:8px;">复制内容到剪贴板 去公众号粘贴</button>
+    <button class="action-btn" id="confirmBtn" onclick="confirmAndCopy()">✓ 确认主题并推送到公众号</button>
+    <button class="action-btn" id="copyBtn" onclick="applyTheme()" style="background:#86868b;margin-top:8px;">复制到剪贴板，去公众号粘贴</button>
 
 </div>
 
@@ -319,7 +319,7 @@ function switchTheme(themeId) {
     // Reset confirm button
     var confirmBtn = document.getElementById('confirmBtn');
     if (confirmBtn) {
-        confirmBtn.textContent = '✓ 确认 — 回到 Claude 回复主题名 推送到公众号';
+        confirmBtn.textContent = '✓ 确认主题并推送到公众号';
         confirmBtn.classList.remove('copied');
     }
     // Scroll preview to top
@@ -367,7 +367,7 @@ function confirmAndCopy() {
         themeName = activeBtn.textContent.replace('推荐', '').trim();
     }
     var btn = document.getElementById('confirmBtn');
-    btn.textContent = '✓ 已确认「' + themeName + '」— 回到 Claude 回复「' + themeName + '」推送到公众号';
+    btn.textContent = '✓ 已确认「' + themeName + '」— 推送到公众号';
     btn.classList.add('copied');
 }
 
@@ -385,7 +385,7 @@ function showCopied() {
     btn.textContent = '已复制「' + themeName + '」到剪贴板 ✓';
     btn.classList.add('copied');
     setTimeout(function() {
-        btn.textContent = '复制内容到剪贴板 去公众号粘贴';
+        btn.textContent = '复制到剪贴板，去公众号粘贴';
         btn.classList.remove('copied');
     }, 3000);
 }
