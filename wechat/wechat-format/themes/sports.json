@@ -23,7 +23,7 @@
       "letter_spacing": "0.12em",
       "line_height": "1.4",
       "background": "linear-gradient(120deg, #00A968, #008A56, #00A968)",
-      "border_radius": "50px",
+      "border_radius": "16px",
       "padding": "12px 24px",
       "box_shadow": "0 8px 20px rgba(0, 169, 104, 0.3)",
       "margin_top": "24px",
