@@ -28,3 +28,7 @@ __pycache__/
 
 # Local scratch space used while importing external skills
 .tmp/
+
+# Local IDE and generated test outputs
+.idea/
+mindmap/test-output/
