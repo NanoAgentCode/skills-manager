@@ -1,0 +1,4 @@
+interface:
+  display_name: "Skill Linter"
+  short_description: "Lint skill structure and quality"
+  default_prompt: "Use $skill-linter to lint this skill folder and report structural, trigger, path, documentation, and secret-handling issues."

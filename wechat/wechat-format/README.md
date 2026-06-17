@@ -1,4 +1,4 @@
-# xiaohu-wechat-format
+# wechat-format
 
 A Claude Code skill for the full WeChat Official Account (公众号) publishing pipeline: **Format** → **Cover** (optional) → **Publish** — with 26 themes, a visual gallery picker, AI content enhancement, and one-click publishing to drafts.
 
@@ -21,8 +21,8 @@ A Claude Code skill for the full WeChat Official Account (公众号) publishing 
 ```bash
 # Install
 cd ~/.claude/skills/
-git clone https://github.com/xiaohuailabs/xiaohu-wechat-format.git
-python3 xiaohu-wechat-format/scripts/check_dependencies.py --install
+git clone <repo-url> wechat-format
+python3 wechat-format/scripts/check_dependencies.py --install
 
 # Format an article (opens gallery in browser)
 python3 scripts/format.py --input article.md --gallery
@@ -160,11 +160,11 @@ cp config.example.json config.json
 
 ## Cover Image Generation
 
-This repo includes a complete cover image generator in `cover/`. It calls the Gemini Image API (or compatible third-party gateways) to produce WeChat cover images (2.35:1 ratio, Notion illustration style).
+This repo includes a complete cover image generator in `wechat-cover/`. It calls the Gemini Image API (or compatible third-party gateways) to produce WeChat cover images (2.35:1 ratio, Notion illustration style).
 
 ### Setup
 
-1. Copy `cover/config.example.json` → `cover/config.json`
+1. Copy `wechat-cover/config.example.json` -> `wechat-cover/config.json`
 2. Fill in your API credentials:
 
 ```json
@@ -184,14 +184,14 @@ This repo includes a complete cover image generator in `cover/`. It calls the Ge
 
 ```bash
 python3 scripts/generate.py \
-  --config cover/config.json \
+  --config wechat-cover/config.json \
   --prompt-file prompt.md \
   --out cover.jpg
 ```
 
 Or with Claude Code, just say: `给这篇文章配个封面`
 
-See `cover/SKILL.md` for the full prompt template and workflow details.
+See `wechat-cover/SKILL.md` for the full prompt template and workflow details.
 
 ## How WeChat Compatibility Works
 

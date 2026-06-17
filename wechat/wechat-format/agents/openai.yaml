@@ -1,0 +1,4 @@
+interface:
+  display_name: "WeChat Format"
+  short_description: "Format and publish WeChat articles"
+  default_prompt: "Use $wechat-format to format this article into WeChat official-account compatible HTML, optionally generate a cover, and prepare it for publishing."

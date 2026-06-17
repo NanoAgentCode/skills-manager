@@ -1,6 +1,6 @@
 ---
-name: xiaohu-wechat-cover
-description: "公众号封面图生成器。一步出图，输入文章路径或主题即可。当用户要求'公众号封面''微信封面''文章封面'时使用。"
+name: wechat-cover
+description: "公众号封面图生成器。Use when the user asks to create, generate, insert, or regenerate a WeChat official-account article cover image from an article path, Markdown file, draft title, or topic, especially for requests such as 公众号封面, 微信封面, 文章封面, 封面图, or 2.35:1 cover."
 ---
 
 # 公众号封面图生成器
@@ -11,10 +11,10 @@ description: "公众号封面图生成器。一步出图，输入文章路径或
 
 ```bash
 # 指定文章路径
-/xiaohu-wechat-cover path/to/article.md
+/wechat-cover path/to/article.md
 
 # 直接输入主题
-/xiaohu-wechat-cover 主题：Claude Code 桌面端更新四大功能
+/wechat-cover 主题：Claude Code 桌面端更新四大功能
 ```
 
 ## 配置（必须）
@@ -104,12 +104,12 @@ image_size: "2K"
 调用生图脚本，**必须传 `--config` 指向本技能自己的配置**：
 ```bash
 python3 <本仓库>/scripts/generate.py \
-  --config <本技能目录>/cover/config.json \
+  --config <本技能目录>/config.json \
   --prompt-file <目标目录>/prompt.md \
   --out <目标目录>/cover.jpg
 ```
 
-> `<本仓库>` 和 `<本技能目录>` 请替换为你本地实际安装路径。如果你通过 `claude install` 安装，路径一般是 `~/.claude/skills/xiaohu-wechat-format/`。
+> `<本仓库>` 和 `<本技能目录>` 请替换为你本地实际安装路径。如果你通过 `claude install` 安装，路径一般是 `~/.claude/skills/wechat-format/wechat-cover/`。
 
 生成完成后展示给用户预览。不满意就调整内容主题描述重新生成。
 

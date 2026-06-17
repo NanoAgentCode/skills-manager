@@ -1,4 +1,4 @@
-# xiaohu-wechat-format
+# wechat-format
 
 Claude Code 公众号完整发布管线：**排版** → **封面**（可选）→ **推送**，一句话搞定。
 
@@ -22,8 +22,8 @@ Claude Code 公众号完整发布管线：**排版** → **封面**（可选）�
 
 ```bash
 cd ~/.claude/skills/
-git clone https://github.com/xiaohuailabs/xiaohu-wechat-format.git
-python3 xiaohu-wechat-format/scripts/check_dependencies.py --install
+git clone <repo-url> wechat-format
+python3 wechat-format/scripts/check_dependencies.py --install
 ```
 
 ## 配置
@@ -165,11 +165,11 @@ python3 scripts/publish.py --dir /tmp/wechat-format/article-name/ --cover cover.
 
 ## 封面图生成
 
-仓库自带封面图生成器（`cover/` 目录），调用 Gemini Image API（或兼容的第三方网关）生成公众号封面图（2.35:1 Notion 插画风格）。
+仓库自带封面图生成器（`wechat-cover/` 目录），调用 Gemini Image API（或兼容的第三方网关）生成公众号封面图（2.35:1 Notion 插画风格）。
 
 ### 配置
 
-1. 复制 `cover/config.example.json` → `cover/config.json`
+1. 复制 `wechat-cover/config.example.json` -> `wechat-cover/config.json`
 2. 填写 API 信息：
 
 ```json
@@ -189,14 +189,14 @@ python3 scripts/publish.py --dir /tmp/wechat-format/article-name/ --cover cover.
 
 ```bash
 python3 scripts/generate.py \
-  --config cover/config.json \
+  --config wechat-cover/config.json \
   --prompt-file prompt.md \
   --out cover.jpg
 ```
 
 或者在 Claude Code 里直接说：`给这篇文章配个封面`
 
-完整提示词模板和工作流详见 `cover/SKILL.md`。
+完整提示词模板和工作流详见 `wechat-cover/SKILL.md`。
 
 ## 自定义主题
 

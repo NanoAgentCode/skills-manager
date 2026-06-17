@@ -1,4 +1,9 @@
-# xiaohu-wechat-format
+---
+name: wechat-format
+description: 公众号完整内容生产管线：排版、封面、推送。Use when the user asks to format Markdown, plain text, rough notes, or articles into WeChat official-account compatible HTML, generate or insert a WeChat article cover, publish to WeChat drafts, handle comment replies, or run WeChat article production workflows.
+---
+
+# wechat-format
 
 公众号一键排版技能。把任意文本内容（Markdown、纯文本、格式粗糙的笔记）转成微信公众号兼容的排版 HTML，AI 自动理解内容结构并增强排版，可视化选择主题后一键复制粘贴到微信后台。可选生成封面图、推送草稿箱。
 
@@ -16,7 +21,7 @@
 | `scripts/format.py` | 排版：Markdown → 微信兼容 HTML |
 | `scripts/publish.py` | 推送：HTML → 公众号草稿箱 |
 | `scripts/comment_reply.py` | 评论自动回复（可选） |
-| `scripts/generate.py` | 封面生成脚本（需配合 `cover/config.json`） |
+| `scripts/generate.py` | 封面生成脚本（需配合 `wechat-cover/config.json`） |
 
 ## 配置
 

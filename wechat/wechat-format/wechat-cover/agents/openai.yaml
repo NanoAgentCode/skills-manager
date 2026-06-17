@@ -1,0 +1,4 @@
+interface:
+  display_name: "WeChat Cover"
+  short_description: "Generate WeChat article covers"
+  default_prompt: "Use $wechat-cover to generate a 2.35:1 WeChat official-account cover image from this article or topic."

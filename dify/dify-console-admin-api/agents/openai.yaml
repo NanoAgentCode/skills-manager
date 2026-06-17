@@ -1,0 +1,4 @@
+interface:
+  display_name: "Dify Admin API"
+  short_description: "Automate Dify Console Admin API"
+  default_prompt: "Use $dify-console-admin-api to create, export, import, or verify Dify apps through the Console Admin API."

@@ -1,6 +1,6 @@
 ---
 name: dify-console-admin-api
-description: 通过 ADMIN_API_KEY 自动化调用 Dify Console API，创建工作流应用、导出 DSL、导入 DSL。适用于不想走浏览器登录 cookie、需要脚本化测试或自动化工作流导入导出的场景。
+description: 通过 ADMIN_API_KEY 自动化调用 Dify Console API，创建工作流应用、导出 DSL、导入 DSL。Use when the user asks to create Dify apps, export or import Dify DSL, overwrite existing workflow or advanced-chat apps, confirm pending imports, validate Admin API authentication, or automate Dify Console operations without browser login cookies.
 ---
 
 # Dify Console Admin API

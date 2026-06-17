@@ -1,4 +1,4 @@
-"""Configuration helpers for xiaohu-wechat-format scripts."""
+"""Configuration helpers for wechat-format scripts."""
 
 from __future__ import annotations
 

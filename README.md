@@ -1,12 +1,37 @@
 # skills-manager
 
-本仓库用于管理可复用的 Codex/Claude Skills。目前包含 Dify、Mindmap、WeChat、Database 和 Superpowers 五类 skill：
+本仓库用于管理可复用的 AI agent skills。目前包含 Dify、Mindmap、WeChat、Database、Quality 和 Superpowers 六类 skill，并提供 Codex、Claude、Gemini、GLM、DeepSeek 的兼容入口。
 
 - Dify：覆盖 Dify Console Admin API 自动化与 Dify DSL 应用构建。
 - Mindmap：把 PDF、文本、大纲或文档内容转换为离线可双击打开的思维导图 HTML；支持长文档默认总览、章节按需展开和对话式展开；仅在用户明确要求发布时，将静态产物发布到配置好的 Web 静态目录。
 - WeChat：把 Markdown、纯文本或粗糙笔记排版成微信公众号兼容 HTML，可选生成封面并推送到公众号草稿箱。
 - Database：通过 Python 脚本执行数据库查询，连接配置单独存放到本地配置文件；缺少配置时通过对话收集必要字段。
+- Quality：检查 skill 结构、触发描述、资源引用、UI 元数据、敏感信息和 README 同步状态。
 - Superpowers：从 `obra/superpowers` 同步的软件开发方法论技能集，覆盖 brainstorm、计划编写、TDD、代码审查、并行子代理和工作树流程。
+
+## 多模型兼容
+
+本仓库的能力本体是每个目录中的 `SKILL.md`。不同模型或客户端的差异主要在于是否能自动发现和触发 skill；只要模型能读取 `SKILL.md` 和相关资源，就可以按同一套流程执行。
+
+| 模型/客户端 | 兼容入口 | 说明 |
+|---|---|---|
+| Codex | `SKILL.md` + `agents/openai.yaml` + `AGENTS.md` | `agents/openai.yaml` 用于 Codex/OpenAI UI 元数据。 |
+| Claude / Claude Code | `CLAUDE.md` + `SKILL.md` | Claude 可直接读取 `SKILL.md`；`CLAUDE.md` 提供仓库级入口。 |
+| Gemini | `GEMINI.md` + `SKILL.md` | `GEMINI.md` 引导 Gemini 先读技能索引，再读目标 skill。 |
+| GLM | `GLM.md` + `SKILL.md` | GLM 未必自动发现 skill，建议显式要求读取入口文件和目标 `SKILL.md`。 |
+| DeepSeek | `DEEPSEEK.md` + `SKILL.md` | DeepSeek 未必自动发现 skill，建议显式要求读取入口文件和目标 `SKILL.md`。 |
+
+通用调用方式：
+
+```text
+请先阅读 AGENTS.md，再阅读 <skill-path>/SKILL.md，并严格按该 skill 的流程完成任务。
+```
+
+示例：
+
+```text
+请先阅读 AGENTS.md，再阅读 wechat/wechat-format/SKILL.md，把这篇文章排版成公众号 HTML。
+```
 
 ## 功能覆盖
 
@@ -135,6 +160,26 @@ markmap-assets/
 - 支持 SQLite 内置连接；PostgreSQL、MySQL、SQL Server、Oracle 11g、MongoDB 和 Redis 依赖相应 Python 驱动。
 - 支持表格、JSON、CSV 输出，并可导出查询结果到文件。
 
+### `quality/skill-linter`
+
+该 skill 适合在创建、修改、评审或发布 skill 前做结构和质量检查：
+
+- 检查 `SKILL.md` frontmatter 是否存在、字段是否完整、`name` 是否符合 hyphen-case 并匹配目录名。
+- 检查 `description` 是否还残留模板文本、是否足够具体、是否包含明确触发/使用场景。
+- 检查正文是否仍有 TODO 模板、相对 Markdown 链接和 `scripts/`、`references/`、`assets/` 引用是否能解析。
+- 检查 `agents/openai.yaml` 是否存在，且 `default_prompt` 是否包含 `$skill-name`。
+- 扫描可能误提交的 `config.json`、API key、token、password 等敏感信息。
+- 传入 `--repo-root` 时，检查仓库 README 是否提到该 skill 名称或路径。
+- 支持单个 skill 检查，也支持扫描仓库内所有 `SKILL.md`。
+
+示例：
+
+```powershell
+python .\quality\skill-linter\scripts\lint_skill.py .\quality\skill-linter --repo-root .
+python .\quality\skill-linter\scripts\lint_skill.py . --repo-root .
+python .\quality\skill-linter\scripts\lint_skill.py . --repo-root . --json
+```
+
 ### `superpowers/superpowers`
 
 该目录从 [obra/superpowers](https://github.com/obra/superpowers) 同步，包含一组面向 coding agent 的开发流程技能：
@@ -161,11 +206,13 @@ markmap-assets/
 
 ## 使用方式
 
-把需要使用的 skill 目录安装或复制到 Codex/Claude 可发现的 skills 目录中，保持目录名与 `SKILL.md` frontmatter 的 `name` 一致：
+把需要使用的 skill 目录安装或复制到目标 agent 可发现的 skills 目录中；如果目标 agent 没有自动发现机制，则在提示词中显式要求先读 `AGENTS.md` 和目标 `SKILL.md`。安装目录应保持目录名与 `SKILL.md` frontmatter 的 `name` 一致：
 
 ```text
 dify-dsl-app-builder/
   SKILL.md
+  agents/
+    openai.yaml
   nodes-basic.md
   nodes-logic.md
   nodes-processing.md
@@ -175,6 +222,8 @@ dify-dsl-app-builder/
 
 dify-console-admin-api/
   SKILL.md
+  agents/
+    openai.yaml
 
 mindmap-builder/
   SKILL.md
@@ -213,7 +262,7 @@ wechat-format/
     generate.py
   themes/
   templates/
-  cover/
+  wechat-cover/
 
 python-db-query/
   SKILL.md
@@ -227,6 +276,13 @@ python-db-query/
     query_db.py
   references/
     config.md
+
+skill-linter/
+  SKILL.md
+  agents/
+    openai.yaml
+  scripts/
+    lint_skill.py
 
 superpowers/
   superpowers/
@@ -245,6 +301,13 @@ superpowers/
 使用 DSL App Builder 处理涉及远程 Dify 创建或更新应用的任务时，应同时安装 `dify-console-admin-api`，因为前者会引用后者的 Admin API 流程。
 
 ### 快速校验
+
+`quality/skill-linter` 可用于检查单个 skill 或整个仓库的 skill 质量：
+
+```powershell
+python .\quality\skill-linter\scripts\lint_skill.py .\quality\skill-linter --repo-root .
+python .\quality\skill-linter\scripts\lint_skill.py . --repo-root .
+```
 
 `dify/` 目录下提供一个无外部服务依赖的快速校验脚本，用于确认当前两个 Dify skill 的基本结构和关键引用仍然可用：
 

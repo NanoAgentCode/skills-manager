@@ -39,7 +39,7 @@ def install_packages(packages: list[str]) -> int:
 
 def main() -> int:
     parser = argparse.ArgumentParser(
-        description="Check xiaohu-wechat-format Python dependencies."
+        description="Check wechat-format Python dependencies."
     )
     parser.add_argument(
         "--install",
