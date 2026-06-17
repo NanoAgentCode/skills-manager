@@ -163,7 +163,7 @@ python3 {baseDir}/scripts/check_dependencies.py --install
 | 内容类型 | 推荐主题 |
 |----------|----------|
 | 深度长文/分析 | newspaper, magazine, ink |
-| 科技产品/AI工具 | bytedance, github, sspai |
+| 科技产品/AI工具 | apple-code, bytedance, github |
 | 访谈/对话体 | terracotta, coffee-house, mint-fresh |
 | 教程/操作指南 | github, sspai, bytedance |
 | 文艺/随笔/观点 | terracotta, sunset-amber, lavender-dream |
@@ -180,7 +180,7 @@ python3 {baseDir}/scripts/format.py \
   --recommend newspaper magazine ink
 ```
 
-这会用用户的**真实文章**渲染 23 个核心主题，在浏览器打开画廊页面。用户点按钮切换主题预览，选中后点「用这个风格排版」一键复制到剪贴板。若 `--recommend` 传入了不存在的主题，脚本会提示并跳过。
+这会用用户的**真实文章**渲染 24 个核心主题，在浏览器打开画廊页面。用户点按钮切换主题预览，选中后点「用这个风格排版」一键复制到剪贴板。若 `--recommend` 传入了不存在的主题，脚本会提示并跳过。
 
 #### 第 3 步（备选）：直接指定主题排版
 
@@ -298,14 +298,15 @@ python3 {baseDir}/scripts/publish.py \
 - 无参数：检测 Python 版本、`markdown`、`requests`
 - `--install`：用当前 Python 解释器执行 `pip install` 安装缺失包
 
-### 可用主题（33 个）
+### 可用主题（34 个）
 
-#### 独立风格（9 个，差异最大）
+#### 独立风格（10 个，差异最大）
 
 | 主题 | 命令值 | 风格 |
 |------|--------|------|
 | 赤陶 | terracotta | 暖橙色，满底圆角标题，左边框渐变 |
 | 字节蓝 | bytedance | 蓝青渐变，科技现代 |
+| 苹果代码 | apple-code | macOS 深色代码窗口，粉紫渐变外框，苹果蓝紫强调 |
 | 中国风 | chinese | 朱砂红，古典雅致 |
 | 报纸 | newspaper | 纽约时报风，严肃深度 |
 | GitHub | github | 开发者风，浅色代码块 |
@@ -358,4 +359,4 @@ python3 {baseDir}/scripts/publish.py \
 - 依赖可用 `scripts/check_dependencies.py` 检测；缺失时，经用户确认后用 `scripts/check_dependencies.py --install` 安装
 - 图片在预览中可见，但粘贴到微信后需要手动上传（或用推送功能自动上传）
 - 如果用户对排版不满意，可以切换主题重新生成
-- 画廊模式渲染 23 个核心主题，用的是用户的真实文章
+- 画廊模式渲染 24 个核心主题，用的是用户的真实文章

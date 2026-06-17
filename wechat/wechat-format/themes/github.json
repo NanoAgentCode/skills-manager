@@ -58,7 +58,8 @@
       "margin_top": "0",
       "margin_bottom": "16px",
       "letter_spacing": "0.5px",
-      "text_align": "left"
+      "text_align": "left",
+      "text_indent": "2em"
     },
     "blockquote": {
       "border": "1px solid #d8dee4",

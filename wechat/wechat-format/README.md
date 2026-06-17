@@ -1,6 +1,6 @@
 # xiaohu-wechat-format
 
-A Claude Code skill for the full WeChat Official Account (公众号) publishing pipeline: **Format** → **Cover** (optional) → **Publish** — with 33 themes, a visual gallery picker, AI content enhancement, and one-click publishing to drafts.
+A Claude Code skill for the full WeChat Official Account (公众号) publishing pipeline: **Format** → **Cover** (optional) → **Publish** — with 34 themes, a visual gallery picker, AI content enhancement, and one-click publishing to drafts.
 
 **[中文说明](README_CN.md)**
 
@@ -9,8 +9,8 @@ A Claude Code skill for the full WeChat Official Account (公众号) publishing 
 ## What It Does
 
 1. **Markdown → WeChat HTML**: Converts standard Markdown into inline-styled HTML that works in WeChat's editor (no `<style>` tags, no classes — everything inline)
-2. **33 Themes**: From card layouts and newspaper-style serif to neon cyberpunk, organized into 6 categories
-3. **Visual Gallery**: Preview 23 core themes with your actual article in a browser, then pick one
+2. **34 Themes**: From card layouts and newspaper-style serif to neon cyberpunk, organized into 6 categories
+3. **Visual Gallery**: Preview 24 core themes with your actual article in a browser, then pick one
 4. **AI Content Enhancement**: Auto-detects dialogue, key quotes, and image sequences — wraps them in styled containers
 5. **One-Click Publish**: Uploads images to WeChat CDN and pushes the article to your drafts
 
@@ -49,14 +49,15 @@ Claude will:
 4. You pick a theme, tell Claude the name
 5. Claude formats and optionally publishes to WeChat
 
-## Themes (33)
+## Themes (34)
 
-### Standalone Styles (9)
+### Standalone Styles (10)
 
 | Theme | ID | Style |
 |-------|-----|-------|
 | Terracotta | `terracotta` | Warm orange, rounded headers |
 | ByteDance | `bytedance` | Blue-teal gradient, modern tech |
+| Apple Code | `apple-code` | macOS dark code window with a pink-purple gradient frame |
 | Chinese | `chinese` | Vermillion red, classical |
 | Newspaper | `newspaper` | NYT-style serif, serious |
 | GitHub | `github` | Developer-friendly, light code blocks |

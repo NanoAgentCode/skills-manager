@@ -56,8 +56,8 @@ GALLERY_THEMES = [
     "warm-card", "fresh-card", "ocean-card",
     # 深度长文（4）
     "newspaper", "magazine", "ink", "coffee-house",
-    # 科技产品（4）
-    "bytedance", "github", "sspai", "midnight",
+    # 科技产品（5）
+    "bytedance", "apple-code", "github", "sspai", "midnight",
     # 文艺随笔（4）
     "terracotta", "mint-fresh", "sunset-amber", "lavender-dream",
     # 活力动态（4）
@@ -803,43 +803,50 @@ def inject_dark_mode_attrs(html: str, dark_mode: dict, style_map: dict) -> str:
 
 def _basic_syntax_highlight(code_html: str) -> str:
     """增强语法高亮：注释、字符串、关键字、数字、装饰器、类型"""
+    def sub_text(pattern: str, repl: str, text: str) -> str:
+        parts = re.split(r'(<[^>]+>)', text)
+        for i, part in enumerate(parts):
+            if not part.startswith('<'):
+                parts[i] = re.sub(pattern, repl, part)
+        return ''.join(parts)
+
     # 装饰器 @xxx
-    code_html = re.sub(
+    code_html = sub_text(
         r'(@\w+)',
         r'<span style="color:#c586c0">\1</span>',
         code_html
     )
     # 单行注释 // ... 和 # ...（排除 URL 中的 ://）
-    code_html = re.sub(
-        r'(?<!:)(//.*?)(<br>|$)',
-        r'<span style="color:#6a9955">\1</span>\2',
+    code_html = sub_text(
+        r'(?<!:)(//.*)$',
+        r'<span style="color:#6a9955">\1</span>',
         code_html
     )
-    code_html = re.sub(
-        r'(#[^{].*?)(<br>|$)',
-        r'<span style="color:#6a9955">\1</span>\2',
+    code_html = sub_text(
+        r'(#[^{].*)$',
+        r'<span style="color:#6a9955">\1</span>',
         code_html
     )
     # f-string: f"..." / f'...'（Python）
-    code_html = re.sub(
+    code_html = sub_text(
         r'(f&quot;.*?&quot;|f&#x27;.*?&#x27;|f"[^"<]*?"|f\'[^\'<]*?\')',
         r'<span style="color:#ce9178">\1</span>',
         code_html
     )
     # 模板字符串 `...`（JS）
-    code_html = re.sub(
+    code_html = sub_text(
         r'(`[^`<]*?`)',
         r'<span style="color:#ce9178">\1</span>',
         code_html
     )
     # 字符串（双引号和单引号，HTML 转义形式）
-    code_html = re.sub(
+    code_html = sub_text(
         r'(&quot;.*?&quot;|&#x27;.*?&#x27;|"[^"<]*?"|\'[^\'<]*?\')',
         r'<span style="color:#ce9178">\1</span>',
         code_html
     )
     # 数字（整数和浮点数）
-    code_html = re.sub(
+    code_html = sub_text(
         r'(?<![a-zA-Z0-9_])(\d+\.?\d*)',
         r'<span style="color:#b5cea8">\1</span>',
         code_html
@@ -857,7 +864,7 @@ def _basic_syntax_highlight(code_html: str) -> str:
         'raise', 'del', 'global', 'nonlocal', 'assert',
     ]
     for kw in keywords:
-        code_html = re.sub(
+        code_html = sub_text(
             rf'(?<![a-zA-Z0-9_])({kw})(?![a-zA-Z0-9_])',
             rf'<span style="color:#569cd6">\1</span>',
             code_html
@@ -870,7 +877,7 @@ def _basic_syntax_highlight(code_html: str) -> str:
         'console', 'document', 'window', 'Math', 'JSON', 'Date',
     ]
     for bt in builtins:
-        code_html = re.sub(
+        code_html = sub_text(
             rf'(?<![a-zA-Z0-9_])({bt})(?![a-zA-Z0-9_])',
             rf'<span style="color:#4ec9b0">\1</span>',
             code_html
@@ -1199,6 +1206,9 @@ def inject_inline_styles(html: str, theme: dict, skip_wrapper: bool = False) -> 
         pre_code_style = style_map.get("pre_code", "")
         code_block_style = style_map.get("code_block", "")
         code_header_style = style_map.get("code_header", "")
+        has_language = bool(re.search(r'<code[^>]*class="language-', pre_content))
+        pre_content = re.sub(r'^\s*<code[^>]*>', '', pre_content)
+        pre_content = re.sub(r'</code>\s*$', '', pre_content)
         # 保护空格：公众号编辑器会压缩连续空格，用 &nbsp; 替换
         def protect_spaces(text):
             parts = re.split(r'(<[^>]+>)', text)
@@ -1211,15 +1221,8 @@ def inject_inline_styles(html: str, theme: dict, skip_wrapper: bool = False) -> 
         # 公众号编辑器会吃掉 pre 里的 \n，必须转成 <br> 才能保留换行
         pre_content = pre_content.replace("\n", "<br>")
         # 语法高亮：仅对有语言标记的代码块启用（避免破坏 URL 等纯文本内容）
-        has_language = bool(re.search(r'class="language-', pre_content))
         if has_language:
             pre_content = _basic_syntax_highlight(pre_content)
-        # 替换内部 code 标签
-        pre_content = re.sub(
-            r"<code[^>]*>",
-            f'<code style="{pre_code_style}">',
-            pre_content,
-        )
         # Mac 风格工具栏（红黄绿三圆点）
         dot_base = "display:inline-block;width:12px;height:12px;border-radius:50%;margin-right:8px"
         mac_header = (
@@ -1232,7 +1235,7 @@ def inject_inline_styles(html: str, theme: dict, skip_wrapper: bool = False) -> 
         return (
             f'<section style="{code_block_style}">'
             f'{mac_header}'
-            f'<pre style="{pre_style}">{pre_content}</pre>'
+            f'<pre style="{pre_style}"><code style="{pre_code_style}">{pre_content}</code></pre>'
             f'</section>'
         )
 
@@ -1289,7 +1292,9 @@ def inject_inline_styles(html: str, theme: dict, skip_wrapper: bool = False) -> 
             old = f'<tr>{row_content}</tr>'
             if i == 0:
                 continue  # 表头行跳过（th 已有样式）
-            bg = 'background:#f9f9f9;' if i % 2 == 0 else ''
+            even_bg = style_map.get("table_row_even", "background:#f9f9f9;")
+            odd_bg = style_map.get("table_row_odd", "")
+            bg = even_bg if i % 2 == 0 else odd_bg
             new = f'<tr style="{bg}">{row_content}</tr>'
             result = result.replace(old, new, 1)
         return result
@@ -1534,7 +1539,7 @@ def generate_gallery(rendered_map: dict, theme_map: dict,
     GROUPS = [
         ("卡片系列", ["warm-card", "fresh-card", "ocean-card"]),
         ("深度长文", ["newspaper", "magazine", "ink", "coffee-house"]),
-        ("科技产品", ["bytedance", "github", "sspai", "midnight"]),
+        ("科技产品", ["bytedance", "apple-code", "github", "sspai", "midnight"]),
         ("文艺随笔", ["terracotta", "mint-fresh", "sunset-amber", "lavender-dream"]),
         ("活力动态", ["sports", "bauhaus", "chinese", "wechat-native"]),
         ("模板布局", ["minimal-gold", "focus-blue", "elegant-green", "bold-blue"]),

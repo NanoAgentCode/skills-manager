@@ -9,7 +9,7 @@ Claude Code 公众号完整发布管线：**排版** → **封面**（可选）�
 ## 功能
 
 - **排版引擎**：Markdown 转微信公众号兼容的内联样式 HTML
-- **33 套主题**：6 大分类（卡片风格 / 深度长文 / 科技产品 / 文艺随笔 / 活力动态 / 模板布局），可视化画廊选择
+- **34 套主题**：6 大分类（卡片风格 / 深度长文 / 科技产品 / 文艺随笔 / 活力动态 / 模板布局），可视化画廊选择
 - **AI 内容增强**：自动识别对话体、金句、连续图片，套用 dialogue / callout / gallery 容器
 - **CJK 排版修复**：中英文自动加空格、加粗标点自动移出标记
 - **图片处理**：自动处理 Obsidian `![[image]]` 和标准 Markdown `![](image)` 引用
@@ -81,7 +81,7 @@ cp config.example.json config.json
 python3 scripts/format.py --input article.md --gallery --recommend newspaper magazine ink
 ```
 
-在浏览器中用真实文章预览 23 个核心主题，选好后回到 Claude 说主题名。
+在浏览器中用真实文章预览 24 个核心主题，选好后回到 Claude 说主题名。
 
 ### 指定主题排版
 
@@ -97,12 +97,13 @@ python3 scripts/publish.py --dir /tmp/wechat-format/article-name/ --cover cover.
 
 ## 主题一览
 
-### 独立风格（9 个）
+### 独立风格（10 个）
 
 | 主题 | 命令值 | 风格 |
 |------|--------|------|
 | 赤陶 | terracotta | 暖橙色，满底圆角标题 |
 | 字节蓝 | bytedance | 蓝青渐变，科技现代 |
+| 苹果代码 | apple-code | macOS 深色代码窗口，粉紫渐变外框 |
 | 中国风 | chinese | 朱砂红，古典雅致 |
 | 报纸 | newspaper | 纽约时报风，严肃深度 |
 | GitHub | github | 开发者风，浅色代码块 |
