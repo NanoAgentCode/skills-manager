@@ -9,14 +9,14 @@ Claude Code 公众号完整发布管线：**排版** → **封面**（可选）�
 ## 功能
 
 - **排版引擎**：Markdown 转微信公众号兼容的内联样式 HTML
-- **26 套主题**：5 大分类（深度长文 / 科技产品 / 文艺随笔 / 活力动态 / 模板布局），可视化画廊选择
+- **26 套主题**：8 大场景分类（深度阅读 / 技术产品 / 生活灵感 / 活力通用 / 极简商务 / 品牌聚焦 / 精致杂志 / 醒目公告），可视化画廊选择
 - **AI 内容增强**：自动识别对话体、金句、连续图片，套用 dialogue / callout / gallery 容器
 - **CJK 排版修复**：中英文自动加空格、加粗标点自动移出标记
 - **图片处理**：自动处理 Obsidian `![[image]]` 和标准 Markdown `![](image)` 引用
 - **外链转脚注**：微信不支持外链，自动转文末脚注
 - **封面图生成**：内置 Gemini API 生图脚本 + 提示词模板，一步出图
 - **一键发布**：自动上传图片到微信 CDN + 推送到草稿箱
-- **主题画廊**：浏览器中用真实文章预览核心主题，点选即用
+- **主题画廊**：浏览器中用真实文章预览 26 个全量主题，点选即用
 
 ## 安装
 
@@ -81,7 +81,7 @@ cp config.example.json config.json
 python3 scripts/format.py --input article.md --gallery --recommend newspaper magazine coffee-house
 ```
 
-在浏览器中用真实文章预览 18 个核心主题，选好后回到 Claude 说主题名。
+在浏览器中用真实文章预览 26 个全量主题，选好后回到 Claude 说主题名。
 
 ### 指定主题排版
 
@@ -97,33 +97,48 @@ python3 scripts/publish.py --dir /tmp/wechat-format/article-name/ --cover cover.
 
 ## 主题一览
 
-### 独立风格（9 个）
+### 深度阅读（3 个）
+
+| 主题 | 命令值 | 风格 |
+|------|--------|------|
+| 报纸 | newspaper | 纽约时报风，严肃深度 |
+| 杂志 | magazine | 超大留白，品质长文 |
+| 咖啡 | coffee-house | 棕色暖调，稳重温馨 |
+
+### 技术产品（4 个）
+
+| 主题 | 命令值 | 风格 |
+|------|--------|------|
+| 苹果代码 | apple-code | macOS 深色代码窗口，粉紫渐变外框 |
+| GitHub | github | 开发者风，浅色代码块 |
+| 字节蓝 | bytedance | 蓝青渐变，科技现代 |
+| 少数派 | sspai | 中文科技媒体红 |
+
+### 生活灵感（5 个）
 
 | 主题 | 命令值 | 风格 |
 |------|--------|------|
 | 赤陶 | terracotta | 暖橙色，满底圆角标题 |
-| 字节蓝 | bytedance | 蓝青渐变，科技现代 |
-| 苹果代码 | apple-code | macOS 深色代码窗口，粉紫渐变外框 |
+| 薄荷 | mint-fresh | 薄荷绿，清爽健康 |
+| 日落 | sunset-amber | 琥珀暖调，温暖感性 |
+| 薰衣草 | lavender-dream | 紫色梦幻，浪漫诗意 |
 | 中国风 | chinese | 朱砂红，古典雅致 |
-| 报纸 | newspaper | 纽约时报风，严肃深度 |
-| GitHub | github | 开发者风，浅色代码块 |
-| 少数派 | sspai | 中文科技媒体红 |
 
-### 精选风格（7 个）
+### 活力通用（2 个）
 
 | 主题 | 命令值 | 风格 |
 |------|--------|------|
 | 运动 | sports | 渐变色带，活力动感 |
-| 薄荷 | mint-fresh | 薄荷绿，清爽 |
-| 日落 | sunset-amber | 琥珀暖调 |
-| 薰衣草 | lavender-dream | 紫色梦幻 |
-| 咖啡 | coffee-house | 棕色暖调 |
-| 微信原生 | wechat-native | 微信绿 |
-| 杂志 | magazine | 超大留白 |
+| 微信原生 | wechat-native | 微信绿，传统阅读 |
 
 ### 模板系列（12 个）
 
-四种布局（简约 / 聚焦 / 精致 / 醒目）× 多种配色（蓝 / 红 / 绿 / 藏青 / 灰等）
+| 分类 | 命令值 | 风格 |
+|------|--------|------|
+| 极简商务 | minimal-blue / minimal-navy / minimal-red | 无装饰标题，适合商务/科技/专业内容 |
+| 品牌聚焦 | focus-blue / focus-gold / focus-red | 居中标题+上下线，适合品牌/展示/营销内容 |
+| 精致杂志 | elegant-blue / elegant-green / elegant-navy | 左侧双线边框+渐变表头，适合杂志/设计/高端内容 |
+| 醒目公告 | bold-blue / bold-green / bold-navy | 填充标题+色块 h3，适合新闻/公告/重点内容 |
 
 ## 容器语法
 

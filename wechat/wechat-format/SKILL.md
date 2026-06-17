@@ -162,12 +162,12 @@ python3 {baseDir}/scripts/check_dependencies.py --install
 
 | 内容类型 | 推荐主题 |
 |----------|----------|
-| 深度长文/分析 | newspaper, magazine, coffee-house |
-| 科技产品/AI工具 | apple-code, bytedance, github |
-| 访谈/对话体 | terracotta, coffee-house, mint-fresh |
-| 教程/操作指南 | github, sspai, bytedance |
-| 文艺/随笔/观点 | terracotta, sunset-amber, lavender-dream |
-| 活力/动态/速报 | sports, chinese, wechat-native |
+| 深度阅读/行业分析 | newspaper, magazine, coffee-house |
+| 技术产品/AI工具 | apple-code, github, bytedance, sspai |
+| 生活灵感/对话体 | terracotta, mint-fresh, sunset-amber |
+| 教程/操作指南 | github, apple-code, sspai |
+| 文艺/随笔/观点 | terracotta, sunset-amber, lavender-dream, chinese |
+| 活力/通用/速报 | sports, wechat-native, bold-blue |
 
 推荐的主题 ID 通过 `--recommend` 参数传给脚本，在 gallery 中高亮显示。
 
@@ -180,7 +180,7 @@ python3 {baseDir}/scripts/format.py \
   --recommend newspaper magazine coffee-house
 ```
 
-这会用用户的**真实文章**渲染 18 个核心主题，在浏览器打开画廊页面。用户点按钮切换主题预览，选中后点「用这个风格排版」一键复制到剪贴板。若 `--recommend` 传入了不存在的主题，脚本会提示并跳过。
+这会用用户的**真实文章**渲染 26 个全量主题，在浏览器打开画廊页面。用户点按钮切换主题预览，选中后点「用这个风格排版」一键复制到剪贴板。若 `--recommend` 传入了不存在的主题，脚本会提示并跳过。
 
 #### 第 3 步（备选）：直接指定主题排版
 
@@ -300,33 +300,48 @@ python3 {baseDir}/scripts/publish.py \
 
 ### 可用主题（26 个）
 
-#### 独立风格（9 个，差异最大）
+#### 深度阅读（3 个）
+
+| 主题 | 命令值 | 风格 |
+|------|--------|------|
+| 报纸 | newspaper | 纽约时报风，严肃深度 |
+| 杂志 | magazine | 超大留白，品质长文 |
+| 咖啡 | coffee-house | 棕色暖调，稳重温馨 |
+
+#### 技术产品（4 个）
+
+| 主题 | 命令值 | 风格 |
+|------|--------|------|
+| 苹果代码 | apple-code | macOS 深色代码窗口，粉紫渐变外框，苹果蓝紫强调 |
+| GitHub | github | 开发者风，浅色代码块 |
+| 字节蓝 | bytedance | 蓝青渐变，科技现代 |
+| 少数派 | sspai | 中文科技媒体红 |
+
+#### 生活灵感（5 个）
 
 | 主题 | 命令值 | 风格 |
 |------|--------|------|
 | 赤陶 | terracotta | 暖橙色，满底圆角标题，左边框渐变 |
-| 字节蓝 | bytedance | 蓝青渐变，科技现代 |
-| 苹果代码 | apple-code | macOS 深色代码窗口，粉紫渐变外框，苹果蓝紫强调 |
+| 薄荷 | mint-fresh | 薄荷绿，清爽健康 |
+| 日落 | sunset-amber | 琥珀暖调，温暖感性 |
+| 薰衣草 | lavender-dream | 紫色梦幻，浪漫诗意 |
 | 中国风 | chinese | 朱砂红，古典雅致 |
-| 报纸 | newspaper | 纽约时报风，严肃深度 |
-| GitHub | github | 开发者风，浅色代码块 |
-| 少数派 | sspai | 中文科技媒体红 |
 
-#### 精选风格（7 个）
+#### 活力通用（2 个）
 
 | 主题 | 命令值 | 风格 |
 |------|--------|------|
 | 运动 | sports | 渐变色带，活力动感 |
-| 薄荷 | mint-fresh | 薄荷绿，清爽健康 |
-| 日落 | sunset-amber | 琥珀暖调，温暖感性 |
-| 薰衣草 | lavender-dream | 紫色梦幻，浪漫诗意 |
-| 咖啡 | coffee-house | 棕色暖调，稳重温馨 |
 | 微信原生 | wechat-native | 微信绿，传统阅读 |
-| 杂志 | magazine | 超大留白，品质长文 |
 
 #### 模板系列（12 个，布局×配色）
 
-四种布局（简约/聚焦/精致/醒目）× 多种配色（蓝/红/绿/藏青/灰等）
+| 分类 | 命令值 | 风格 |
+|------|--------|------|
+| 极简商务 | minimal-blue / minimal-navy / minimal-red | 无装饰标题，适合商务/科技/专业内容 |
+| 品牌聚焦 | focus-blue / focus-gold / focus-red | 居中标题+上下线，适合品牌/展示/营销内容 |
+| 精致杂志 | elegant-blue / elegant-green / elegant-navy | 左侧双线边框+渐变表头，适合杂志/设计/高端内容 |
+| 醒目公告 | bold-blue / bold-green / bold-navy | 填充标题+色块 h3，适合新闻/公告/重点内容 |
 
 ### 内置排版增强
 
@@ -348,4 +363,4 @@ python3 {baseDir}/scripts/publish.py \
 - 依赖可用 `scripts/check_dependencies.py` 检测；缺失时，经用户确认后用 `scripts/check_dependencies.py --install` 安装
 - 图片在预览中可见，但粘贴到微信后需要手动上传（或用推送功能自动上传）
 - 如果用户对排版不满意，可以切换主题重新生成
-- 画廊模式渲染 18 个核心主题，用的是用户的真实文章
+- 画廊模式渲染 26 个全量主题，用的是用户的真实文章

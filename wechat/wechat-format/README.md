@@ -9,8 +9,8 @@ A Claude Code skill for the full WeChat Official Account (公众号) publishing 
 ## What It Does
 
 1. **Markdown → WeChat HTML**: Converts standard Markdown into inline-styled HTML that works in WeChat's editor (no `<style>` tags, no classes — everything inline)
-2. **26 Themes**: From newspaper-style serif to neon cyberpunk, organized into 5 categories
-3. **Visual Gallery**: Preview 18 core themes with your actual article in a browser, then pick one
+2. **26 Themes**: Organized into 8 scenario-based categories
+3. **Visual Gallery**: Preview all 26 themes with your actual article in a browser, then pick one
 4. **AI Content Enhancement**: Auto-detects dialogue, key quotes, and image sequences — wraps them in styled containers
 5. **One-Click Publish**: Uploads images to WeChat CDN and pushes the article to your drafts
 
@@ -51,33 +51,48 @@ Claude will:
 
 ## Themes (26)
 
-### Standalone Styles (9)
+### Deep Reading (3)
+
+| Theme | ID | Style |
+|-------|-----|-------|
+| Newspaper | `newspaper` | NYT-style serif, serious |
+| Magazine | `magazine` | Extra whitespace, editorial |
+| Coffee | `coffee-house` | Brown warm tones |
+
+### Tech & Product (4)
+
+| Theme | ID | Style |
+|-------|-----|-------|
+| Apple Code | `apple-code` | macOS dark code window with a pink-purple gradient frame |
+| GitHub | `github` | Developer-friendly, light code blocks |
+| ByteDance | `bytedance` | Blue-teal gradient, modern tech |
+| SSPAI | `sspai` | Chinese tech media red |
+
+### Lifestyle & Inspiration (5)
 
 | Theme | ID | Style |
 |-------|-----|-------|
 | Terracotta | `terracotta` | Warm orange, rounded headers |
-| ByteDance | `bytedance` | Blue-teal gradient, modern tech |
-| Apple Code | `apple-code` | macOS dark code window with a pink-purple gradient frame |
+| Mint | `mint-fresh` | Mint green, fresh |
+| Sunset | `sunset-amber` | Warm amber tones |
+| Lavender | `lavender-dream` | Purple dreamy |
 | Chinese | `chinese` | Vermillion red, classical |
-| Newspaper | `newspaper` | NYT-style serif, serious |
-| GitHub | `github` | Developer-friendly, light code blocks |
-| SSPAI | `sspai` | Chinese tech media red |
 
-### Curated Styles (7)
+### Active & General (2)
 
 | Theme | ID | Style |
 |-------|-----|-------|
 | Sports | `sports` | Gradient stripes, energetic |
-| Mint | `mint-fresh` | Mint green, fresh |
-| Sunset | `sunset-amber` | Warm amber tones |
-| Lavender | `lavender-dream` | Purple dreamy |
-| Coffee | `coffee-house` | Brown warm tones |
 | WeChat Native | `wechat-native` | WeChat green |
-| Magazine | `magazine` | Extra whitespace, editorial |
 
 ### Template Series (12)
 
-4 layouts (Minimal / Focus / Elegant / Bold) × multiple color variants (Blue / Red / Green / Navy / Gray, etc.)
+| Category | IDs | Style |
+|----------|-----|-------|
+| Minimal Business | `minimal-blue` / `minimal-navy` / `minimal-red` | Undecorated headings for business, tech, and professional content |
+| Brand Focus | `focus-blue` / `focus-gold` / `focus-red` | Centered headings with top/bottom lines for branding and marketing |
+| Elegant Magazine | `elegant-blue` / `elegant-green` / `elegant-navy` | Double side borders and gradient table headers for premium editorial content |
+| Bold Announcement | `bold-blue` / `bold-green` / `bold-navy` | Filled headings and h3 color blocks for news, notices, and key messages |
 
 ## Container Syntax
 

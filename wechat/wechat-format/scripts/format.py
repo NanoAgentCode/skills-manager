@@ -50,18 +50,24 @@ CALLOUT_TYPE_COLORS = {
     "callout":   None,  # 默认用主题色，不覆盖
 }
 
-# Gallery 核心主题列表（按用途分类，不存在的会跳过）
+# Gallery 全量主题列表（按使用场景分类，不存在的会跳过）
 GALLERY_THEMES = [
-    # 深度长文（3）
+    # 深度阅读（3）
     "newspaper", "magazine", "coffee-house",
-    # 科技产品（5）
-    "bytedance", "apple-code", "github", "sspai",
-    # 文艺随笔（4）
-    "terracotta", "mint-fresh", "sunset-amber", "lavender-dream",
-    # 活力动态（4）
-    "sports", "chinese", "wechat-native",
-    # 模板布局（4，每种布局1个代表）
-    "minimal-blue", "focus-blue", "elegant-green", "bold-blue",
+    # 技术产品（4）
+    "apple-code", "github", "bytedance", "sspai",
+    # 生活灵感（5）
+    "terracotta", "mint-fresh", "sunset-amber", "lavender-dream", "chinese",
+    # 活力通用（2）
+    "sports", "wechat-native",
+    # 极简商务（3）
+    "minimal-blue", "minimal-navy", "minimal-red",
+    # 品牌聚焦（3）
+    "focus-blue", "focus-gold", "focus-red",
+    # 精致杂志（3）
+    "elegant-blue", "elegant-green", "elegant-navy",
+    # 醒目公告（3）
+    "bold-blue", "bold-green", "bold-navy",
 ]
 
 # Gallery 示例文章（写死，不用用户文章）
@@ -1535,11 +1541,14 @@ def generate_gallery(rendered_map: dict, theme_map: dict,
 
     # 生成 THEME_BUTTONS（带分组标签）
     GROUPS = [
-        ("深度长文", ["newspaper", "magazine", "coffee-house"]),
-        ("科技产品", ["bytedance", "apple-code", "github", "sspai"]),
-        ("文艺随笔", ["terracotta", "mint-fresh", "sunset-amber", "lavender-dream"]),
-        ("活力动态", ["sports", "chinese", "wechat-native"]),
-        ("模板布局", ["minimal-blue", "focus-blue", "elegant-green", "bold-blue"]),
+        ("深度阅读", ["newspaper", "magazine", "coffee-house"]),
+        ("技术产品", ["apple-code", "github", "bytedance", "sspai"]),
+        ("生活灵感", ["terracotta", "mint-fresh", "sunset-amber", "lavender-dream", "chinese"]),
+        ("活力通用", ["sports", "wechat-native"]),
+        ("极简商务", ["minimal-blue", "minimal-navy", "minimal-red"]),
+        ("品牌聚焦", ["focus-blue", "focus-gold", "focus-red"]),
+        ("精致杂志", ["elegant-blue", "elegant-green", "elegant-navy"]),
+        ("醒目公告", ["bold-blue", "bold-green", "bold-navy"]),
     ]
     buttons_html = ""
     btn_index = 0

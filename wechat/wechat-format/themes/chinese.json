@@ -18,19 +18,16 @@
     "h1": {
       "font_size": "22px",
       "font_weight": "bold",
-      "color": "#8B1E22",
+      "color": "#ffffff",
       "text_align": "center",
       "letter_spacing": "0.1em",
       "line_height": "1.2",
+      "background": "#8B1E22",
+      "border_radius": "8px",
       "padding": "12px 24px",
-      "background_image": "repeating-linear-gradient(45deg, rgba(139,30,34,0.03), rgba(139,30,34,0.03) 2px, transparent 2px, transparent 8px)",
-      "border_top": "2px solid #8B1E22",
-      "border_bottom": "2px solid #8B1E22",
-      "width": "80%",
+      "box_shadow": "0 2px 8px rgba(139,30,34,0.2)",
       "margin_top": "24px",
-      "margin_bottom": "24px",
-      "margin_left": "auto",
-      "margin_right": "auto"
+      "margin_bottom": "12px"
     },
     "h2": {
       "font_size": "20px",
