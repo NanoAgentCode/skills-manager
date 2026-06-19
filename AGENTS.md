@@ -20,6 +20,7 @@ This repository is a reusable skills library. Treat each `SKILL.md` as the sourc
 - `mindmap/mindmap-publisher/SKILL.md`: publish an already generated offline mindmap HTML folder to a static hosting path and return a URL.
 - `wechat/wechat-format/SKILL.md`: format Markdown, plain text, or rough notes into WeChat official-account compatible HTML; optionally generate covers and publish drafts.
 - `wechat/wechat-format/wechat-cover/SKILL.md`: generate a WeChat article cover from an article path or topic.
+- `writing/technical-article-polisher/SKILL.md`: polish technical Chinese articles or machine-translated drafts by checking terminology accuracy in context and reporting terminology changes.
 - `database/python-db-query/SKILL.md`: run safe Python database queries using local ignored config files.
 - `quality/skill-linter/SKILL.md`: lint skill structure, trigger descriptions, references, metadata, README sync, and secret hygiene.
 - `superpowers/superpowers/skills/*/SKILL.md`: upstream software-development process skills for brainstorming, planning, TDD, reviews, debugging, and worktrees.

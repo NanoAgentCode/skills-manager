@@ -31,4 +31,6 @@ __pycache__/
 
 # Local IDE and generated test outputs
 .idea/
+.obsidian/
+output/
 mindmap/test-output/

@@ -1,10 +1,11 @@
 # skills-manager
 
-本仓库用于管理可复用的 AI agent skills。目前包含 Dify、Mindmap、WeChat、Database、Quality 和 Superpowers 六类 skill，并提供 Codex、Claude、Gemini、GLM、DeepSeek 的兼容入口。
+本仓库用于管理可复用的 AI agent skills。目前包含 Dify、Mindmap、WeChat、Writing、Database、Quality 和 Superpowers 七类 skill，并提供 Codex、Claude、Gemini、GLM、DeepSeek 的兼容入口。
 
 - Dify：覆盖 Dify Console Admin API 自动化与 Dify DSL 应用构建。
 - Mindmap：把 PDF、文本、大纲或文档内容转换为离线可双击打开的思维导图 HTML；支持长文档默认总览、章节按需展开和对话式展开；仅在用户明确要求发布时，将静态产物发布到配置好的 Web 静态目录。
 - WeChat：把 Markdown、纯文本或粗糙笔记排版成微信公众号兼容 HTML，可选生成封面并推送到公众号草稿箱。
+- Writing：润色中文技术文章或机器翻译稿，结合上下文检查专业术语准确性，并输出术语修改记录。
 - Database：通过 Python 脚本执行数据库查询，连接配置单独存放到本地配置文件；缺少配置时通过对话收集必要字段。
 - Quality：检查 skill 结构、触发描述、资源引用、UI 元数据、敏感信息和 README 同步状态。
 - Superpowers：从 `obra/superpowers` 同步的软件开发方法论技能集，覆盖 brainstorm、计划编写、TDD、代码审查、并行子代理和工作树流程。
@@ -145,10 +146,21 @@ markmap-assets/
 - 将 Markdown、纯文本或格式粗糙的笔记转换为微信公众号兼容的内联样式 HTML。
 - 提供 30 个排版主题，并支持浏览器画廊预览主题效果。
 - 自动识别访谈对话、重点引用、图片序列等内容结构，并增强排版。
+- 技术文章会先按 `writing/technical-article-polisher` 做术语和语境质量检查，并保留术语修改记录。
 - 可选生成公众号封面图。
 - 可选上传图片到微信 CDN，并把文章推送到公众号草稿箱。
 
 纯排版只需要本地 Python 依赖；没有 `config.json` 时会使用内置默认配置。推送草稿箱时需要在 `config.json` 中配置公众号 `app_id`、`app_secret` 和作者信息。`config.json` 已由该 skill 自带的 `.gitignore` 忽略，不应提交到仓库。
+
+### `writing/technical-article-polisher`
+
+该 skill 适合对中文技术文章、机器翻译稿、AI/工程/架构类文章做专业润色，可用于技术博客、公众号文章、产品技术稿、文档、报告或发布前审校：
+
+- 结合文章上下文判断关键专业术语是否准确。
+- 检查机器翻译导致的误译、直译、术语不一致和概念混淆。
+- 保留作者原意，不把技术判断改写成泛泛的产品话术。
+- 输出润色后的 Markdown 文章。
+- 最后列出术语修改记录和不确定术语。
 
 ### `database/python-db-query`
 

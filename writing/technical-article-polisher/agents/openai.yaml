@@ -1,0 +1,4 @@
+interface:
+  display_name: "Technical Article Polisher"
+  short_description: "Polish technical articles and track terminology changes"
+  default_prompt: "Use $technical-article-polisher to polish this technical article, check terminology accuracy in context, and report terminology changes."
