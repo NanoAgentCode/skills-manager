@@ -19,6 +19,7 @@ This repository is a reusable skills library. Treat each `SKILL.md` as the sourc
 - `mindmap/mindmap-builder/SKILL.md`: convert PDFs, notes, outlines, papers, reports, or books into offline markmap HTML; supports overview-first long document mode.
 - `mindmap/mindmap-publisher/SKILL.md`: publish an already generated offline mindmap HTML folder to a static hosting path and return a URL.
 - `wechat/wechat-format/SKILL.md`: format Markdown, plain text, or rough notes into WeChat official-account compatible HTML; optionally generate covers and publish drafts.
+- `wechat/wechat-history-article-archive/SKILL.md`: archive self-owned WeChat historical mass-send article URLs and save local HTML/metadata backups from lawful link sources.
 - `wechat/wechat-format/wechat-cover/SKILL.md`: generate a WeChat article cover from an article path or topic.
 - `writing/technical-article-polisher/SKILL.md`: polish technical Chinese articles or machine-translated drafts by checking terminology accuracy in context and reporting terminology changes.
 - `database/python-db-query/SKILL.md`: run safe Python database queries using local ignored config files.

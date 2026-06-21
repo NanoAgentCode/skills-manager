@@ -1,5 +1,15 @@
 # skills-manager
 
+## Recently Added Skills
+
+### `wechat/wechat-history-article-archive`
+
+Archive historical mass-send articles for a WeChat official account the user owns or is explicitly authorized to operate.
+
+- Collect or normalize `mp.weixin.qq.com/s?...` article URLs from lawful sources.
+- Save local HTML and metadata backups in batch.
+- Use this before migration, reformatting, or long-term archival of historical article content.
+
 本仓库用于管理可复用的 AI agent skills。目前包含 Dify、Mindmap、WeChat、Writing、Database、Quality 和 Superpowers 七类 skill，并提供 Codex、Claude、Gemini、GLM、DeepSeek 的兼容入口。
 
 - Dify：覆盖 Dify Console Admin API 自动化与 Dify DSL 应用构建。
