@@ -27,8 +27,14 @@ python3 wechat-format/scripts/check_dependencies.py --install
 # Format an article (opens gallery in browser)
 python3 scripts/format.py --input article.md --gallery
 
+# Run the repo-local repeated workflow
+python3 scripts/article_workflow.py --input article.md --bytedance-preview --cover
+
 # Format with a specific theme
 python3 scripts/format.py --input article.md --theme newspaper
+
+# Run the workflow without opening browser windows
+python3 scripts/article_workflow.py --input article.md --theme apple-code --no-open
 
 # Publish to WeChat drafts
 python3 scripts/publish.py --dir /tmp/wechat-format/article-name/ --cover cover.jpg
@@ -48,6 +54,55 @@ Claude will:
 3. Open the theme gallery in your browser
 4. You pick a theme, tell Claude the name
 5. Claude formats and optionally publishes to WeChat
+
+## Repo-local Workflow Script
+
+`scripts/article_workflow.py` wraps the local workflow into one command:
+
+1. Copy the source article into a stable workflow folder
+2. Generate a terminology-polished Markdown draft plus a standalone terminology change table
+3. Generate `structured` and `enhanced` Markdown with the `ai` config from `config.json`
+4. Open the 26-theme gallery flow
+5. Save the chosen final theme output into a predictable directory
+6. Optionally emit a ByteDance preview and cover artifact
+
+Default output layout:
+
+```text
+output/article-workflows/<article-slug>/
+  source/
+  markdown/
+    <article>-polished.md
+    <article>-terminology-changes.md
+  render/
+  gallery/
+  selection/
+  final/<theme>/
+  bytedance/
+  cover/
+  manifest.json
+```
+
+PowerShell:
+
+```powershell
+$env:PYTHONIOENCODING = 'utf-8'
+python .\scripts\article_workflow.py --input ..\..\article.md --bytedance-preview --cover
+```
+
+Portable shell:
+
+```bash
+PYTHONIOENCODING=utf-8 python3 ./scripts/article_workflow.py --input ../../article.md --bytedance-preview --cover
+```
+
+Notes:
+
+- After terminology polishing, the script pauses for manual confirmation before continuing to the structured/enhanced steps.
+- If `--theme` is omitted, the script opens the gallery and then prompts in the terminal for the selected theme ID.
+- If `ai.url`, `ai.api_key`, or `ai.model` is missing in `config.json`, pass `--skip-ai` or provide `--structured-input` / `--enhanced-input`.
+- Use `--skip-terminology` when you want to keep the source text unchanged and only run the later formatting steps.
+- Use `--auto-accept-terminology` when you need a non-interactive run after the terminology step.
 
 ## Themes (26)
 
