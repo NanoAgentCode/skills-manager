@@ -7,7 +7,7 @@ from pathlib import Path
 
 
 def default_config(skill_dir: Path) -> dict:
-    output_dir = skill_dir / "output"
+    output_dir = skill_dir / ".tmp"
     return {
         "output_dir": str(output_dir),
         "vault_root": str(Path.home()),
@@ -51,4 +51,9 @@ def load_config(skill_dir: Path) -> dict:
 
     with open(config_path, encoding="utf-8") as f:
         user_config = json.load(f)
-    return deep_merge(config, user_config)
+    config = deep_merge(config, user_config)
+    output_dir = Path(config["output_dir"]).expanduser()
+    if not output_dir.is_absolute():
+        output_dir = skill_dir / output_dir
+    config["output_dir"] = str(output_dir)
+    return config

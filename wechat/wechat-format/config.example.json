@@ -1,5 +1,5 @@
 {
-  "output_dir": "/tmp/wechat-format",
+  "output_dir": "./.tmp",
   "vault_root": "/path/to/your/obsidian/vault",
   "image_search_paths": [],
   "settings": {

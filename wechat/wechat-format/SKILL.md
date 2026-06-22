@@ -27,7 +27,7 @@ description: 公众号完整内容生产管线：排版、封面、推送。Use 
 
 纯排版无需创建 `config.json`。如果文件不存在，脚本会使用内置默认配置：
 
-- 输出目录：`{baseDir}/output`
+- 输出目录：`{baseDir}/.tmp`
 - Vault 根目录：当前用户主目录
 - 默认主题：`newspaper`
 
@@ -35,7 +35,7 @@ description: 公众号完整内容生产管线：排版、封面、推送。Use 
 
 ```json
 {
-  "output_dir": "/tmp/wechat-format",
+  "output_dir": "./.tmp",
   "vault_root": "/path/to/your/obsidian/vault",
   "image_search_paths": [],
   "settings": {
@@ -131,7 +131,7 @@ python3 {baseDir}/scripts/check_dependencies.py --install
 6. **不改措辞**：不调语序、不增删内容、不润色文字。用户写什么就是什么，只加结构标记
 
 **保存与告知**：
-- 结构化后保存为 `/tmp/wechat-format/xxx-structured.md`
+- 结构化后保存为 `{baseDir}/.tmp/xxx-structured.md`
 - 告知用户："检测到输入缺少 Markdown 格式标记，已自动补充标题和结构，保存在 xxx-structured.md，可检查调整"
 - 后续第 2 步基于 structured.md 继续处理
 
@@ -172,7 +172,7 @@ python3 {baseDir}/scripts/check_dependencies.py --install
 
 7. **外部链接** → 无需处理（脚本自动转脚注）
 
-**处理完成后**，把增强后的 Markdown 保存为临时文件（`/tmp/wechat-format/xxx-enhanced.md`）。
+**处理完成后**，把增强后的 Markdown 保存为临时文件（`{baseDir}/.tmp/xxx-enhanced.md`）。
 
 #### 第 2.5 步：推荐主题
 
@@ -296,7 +296,7 @@ python3 {baseDir}/scripts/publish.py \
 - `--input` / `-i`：Markdown 文件路径（必须）
 - `--gallery`：打开主题画廊（推荐，默认使用）
 - `--theme` / `-t`：直接指定主题名（跳过画廊）
-- `--output` / `-o`：输出目录（默认 /tmp/wechat-format）
+- `--output` / `-o`：输出目录（默认 `{baseDir}/.tmp`）
 - `--vault-root`：Obsidian Vault 根目录（用于搜索 wikilink 图片）
 - `config.json.image_search_paths`：额外图片搜索目录（用于 `![[image.jpg]]`）
 - `--recommend`：推荐的主题 ID 列表，gallery 中高亮显示
@@ -306,6 +306,7 @@ python3 {baseDir}/scripts/publish.py \
 **publish.py**：
 - `--dir`：排版输出目录路径（已排版好的 HTML）
 - `--input`：Markdown 文件路径（自动排版再推送）
+- `--output` / `-o`：自动排版输出目录（仅 `--input` 模式有效，默认 `{baseDir}/.tmp`）
 - `--cover` / `-c`：封面图路径（可选，默认搜索目录内 cover.*）
 - `--title` / `-t`：文章标题（默认从 HTML 提取）
 - `--theme`：排版主题（仅 `--input` 模式有效）

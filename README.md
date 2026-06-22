@@ -160,7 +160,7 @@ markmap-assets/
 - 可选生成公众号封面图。
 - 可选上传图片到微信 CDN，并把文章推送到公众号草稿箱。
 
-纯排版只需要本地 Python 依赖；没有 `config.json` 时会使用内置默认配置。推送草稿箱时需要在 `config.json` 中配置公众号 `app_id`、`app_secret` 和作者信息。`config.json` 已由该 skill 自带的 `.gitignore` 忽略，不应提交到仓库。
+纯排版只需要本地 Python 依赖；没有 `config.json` 时会使用内置默认配置，并把产物写入 `wechat/wechat-format/.tmp/`。推送草稿箱时需要在 `config.json` 中配置公众号 `app_id`、`app_secret` 和作者信息。`config.json` 已由该 skill 自带的 `.gitignore` 忽略，不应提交到仓库。
 
 ### `writing/technical-article-polisher`
 

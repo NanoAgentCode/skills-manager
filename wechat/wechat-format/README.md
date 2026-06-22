@@ -37,7 +37,10 @@ python3 scripts/format.py --input article.md --theme newspaper
 python3 scripts/article_workflow.py --input article.md --theme apple-code --no-open
 
 # Publish to WeChat drafts
-python3 scripts/publish.py --dir /tmp/wechat-format/article-name/ --cover cover.jpg
+python3 scripts/publish.py --dir ./.tmp/article-name/ --cover cover.jpg
+
+# Or format and publish from Markdown through the same ignored output path
+python3 scripts/publish.py --input article.md --output ./.tmp --theme newspaper --cover cover.jpg
 ```
 
 ## Using with Claude Code
@@ -69,7 +72,7 @@ Claude will:
 Default output layout:
 
 ```text
-output/article-workflows/<article-slug>/
+.tmp/article-workflows/<article-slug>/
   source/
   markdown/
     <article>-polished.md
@@ -174,7 +177,7 @@ Bob: Hi, how are you?
 
 ## Configuration
 
-Formatting works without `config.json`. If the file does not exist, the scripts use built-in defaults and write output to `output/` inside the skill directory.
+Formatting works without `config.json`. If the file does not exist, the scripts use built-in defaults and write output to the ignored `.tmp/` directory inside the skill directory.
 
 For publishing, comment replies, cover generation, or custom output paths, copy and edit `config.json`:
 
@@ -184,7 +187,7 @@ cp config.example.json config.json
 
 ```json
 {
-  "output_dir": "/tmp/wechat-format",
+  "output_dir": "./.tmp",
   "vault_root": "/path/to/your/obsidian/vault",
   "image_search_paths": [],
   "settings": {

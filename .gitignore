@@ -28,6 +28,8 @@ __pycache__/
 
 # Local scratch space used while importing external skills
 .tmp/
+tmp/
+.codegraph/
 
 # Local IDE and generated test outputs
 .idea/

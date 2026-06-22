@@ -28,7 +28,7 @@ python3 wechat-format/scripts/check_dependencies.py --install
 
 ## 配置
 
-纯排版无需 `config.json`。如果文件不存在，脚本会使用默认配置，并输出到 skill 目录下的 `output/`。
+纯排版无需 `config.json`。如果文件不存在，脚本会使用默认配置，并输出到 skill 目录下已忽略的 `.tmp/`。
 
 如果要推送草稿箱、评论回复、生成封面，或自定义输出目录，复制并编辑 `config.json`：
 
@@ -38,7 +38,7 @@ cp config.example.json config.json
 
 ```json
 {
-  "output_dir": "/tmp/wechat-format",
+  "output_dir": "./.tmp",
   "vault_root": "/path/to/your/obsidian/vault",
   "image_search_paths": [],
   "settings": {
@@ -92,7 +92,10 @@ python3 scripts/format.py --input article.md --theme newspaper
 ### 推送到公众号
 
 ```bash
-python3 scripts/publish.py --dir /tmp/wechat-format/article-name/ --cover cover.jpg
+python3 scripts/publish.py --dir ./.tmp/article-name/ --cover cover.jpg
+
+# 或从 Markdown 自动排版并推送，仍使用同一个已忽略输出目录
+python3 scripts/publish.py --input article.md --output ./.tmp --theme newspaper --cover cover.jpg
 ```
 
 ## 主题一览

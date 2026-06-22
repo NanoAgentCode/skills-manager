@@ -28,7 +28,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--output-root",
         "-o",
-        default=str(SKILL_DIR / "output" / "article-workflows"),
+        default=str(SKILL_DIR / ".tmp" / "article-workflows"),
         help="Root directory for workflow artifacts",
     )
     parser.add_argument(
