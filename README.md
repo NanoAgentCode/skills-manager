@@ -2,6 +2,14 @@
 
 ## Recently Added Skills
 
+### `debugging/backend-log-contract-trace`
+
+Trace backend logs to the exact code path and contract boundary.
+
+- Follow failures from route/controller to service, mapper interface/XML, SQL, and database constraints.
+- Check API parameters, DTO/VO fields, entity fields, SQL column names, and cross-service payload names.
+- Re-open current files before and after edits to avoid stale-memory conclusions.
+
 ### `wechat/wechat-history-article-archive`
 
 Archive historical mass-send articles for a WeChat official account the user owns or is explicitly authorized to operate.
@@ -10,13 +18,14 @@ Archive historical mass-send articles for a WeChat official account the user own
 - Save local HTML and metadata backups in batch.
 - Use this before migration, reformatting, or long-term archival of historical article content.
 
-本仓库用于管理可复用的 AI agent skills。目前包含 Dify、Mindmap、WeChat、Writing、Database、Quality 和 Superpowers 七类 skill，并提供 Codex、Claude、Gemini、GLM、DeepSeek 的兼容入口。
+本仓库用于管理可复用的 AI agent skills。目前包含 Dify、Mindmap、WeChat、Writing、Database、Debugging、Quality 和 Superpowers 八类 skill，并提供 Codex、Claude、Gemini、GLM、DeepSeek 的兼容入口。
 
 - Dify：覆盖 Dify Console Admin API 自动化与 Dify DSL 应用构建。
 - Mindmap：把 PDF、文本、大纲或文档内容转换为离线可双击打开的思维导图 HTML；支持长文档默认总览、章节按需展开和对话式展开；仅在用户明确要求发布时，将静态产物发布到配置好的 Web 静态目录。
 - WeChat：把 Markdown、纯文本或粗糙笔记排版成微信公众号兼容 HTML，可选生成封面并推送到公众号草稿箱。
 - Writing：润色中文技术文章或机器翻译稿，结合上下文检查专业术语准确性，并输出术语修改记录。
 - Database：通过 Python 脚本执行数据库查询，连接配置单独存放到本地配置文件；缺少配置时通过对话收集必要字段。
+- Debugging：从后端日志一路追到接口参数、DTO/VO、实体字段、MyBatis XML、SQL 列名、跨服务参数和数据库约束。
 - Quality：检查 skill 结构、触发描述、资源引用、UI 元数据、多模型入口、敏感信息和 README 同步状态。
 - Superpowers：从 `obra/superpowers` 同步的软件开发方法论技能集，覆盖 brainstorm、计划编写、TDD、代码审查、并行子代理和工作树流程。
 
@@ -182,6 +191,15 @@ markmap-assets/
 - 支持 SQLite 内置连接；PostgreSQL、MySQL、SQL Server、Oracle 11g、MongoDB 和 Redis 依赖相应 Python 驱动。
 - 支持表格、JSON、CSV 输出，并可导出查询结果到文件。
 
+### `debugging/backend-log-contract-trace`
+
+该 skill 适合排查 ToolFlow/app-model 这类后端日志到代码路径的问题：
+
+- 从日志里的接口路径、异常类、SQL 片段、堆栈类名或错误码定位 controller/service/mapper。
+- 核对接口参数、DTO/VO、实体字段、枚举/编码、MyBatis XML、SQL 列名和数据库约束。
+- 排查跨服务参数契约，例如字段名、文件名、模型编码、下载参数和响应字段不一致。
+- 修改前后都重新打开当前文件确认，避免基于旧记忆判断修复是否存在或是否被回滚。
+
 ### `quality/skill-linter`
 
 该 skill 适合在创建、修改、评审或发布 skill 前做结构和质量检查：
@@ -299,6 +317,11 @@ python-db-query/
     query_db.py
   references/
     config.md
+
+backend-log-contract-trace/
+  SKILL.md
+  agents/
+    openai.yaml
 
 skill-linter/
   SKILL.md
