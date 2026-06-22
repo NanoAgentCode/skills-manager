@@ -1,6 +1,6 @@
 ---
 name: skill-linter
-description: Lint Codex or Claude skill folders for structural quality, trigger metadata, stale references, missing agents/openai.yaml metadata, broken bundled resource links, accidental secrets, placeholder text, and repository README sync. Use when creating, updating, reviewing, validating, or preparing to release a skill, especially before committing or installing skills from this repository.
+description: Lint multi-model skill folders for structural quality, trigger metadata, stale references, missing agents/openai.yaml metadata, stale repository compatibility entrypoints, broken bundled resource links, accidental secrets, placeholder text, and repository README sync. Use when creating, updating, reviewing, validating, or preparing to release a skill, especially before committing or installing skills from this repository.
 ---
 
 # Skill Linter
@@ -35,6 +35,7 @@ Use `--json` when another script or CI step needs machine-readable output. Use `
    - missing or weak trigger language in `description`
    - broken references to `scripts/`, `references/`, `assets/`, or Markdown links
    - missing or stale `agents/openai.yaml`
+   - missing or stale repository compatibility entrypoints (`AGENTS.md`, `CLAUDE.md`, `GEMINI.md`, `GLM.md`, `DEEPSEEK.md`)
    - committed-looking credentials or local `config.json`
 4. Re-run the linter after edits.
 5. For release or commit preparation, also check the repository README mentions the skill path and purpose.
@@ -59,6 +60,7 @@ The script catches mechanical failures. Always add a short judgment pass:
 - The skill body has meaningful content and no template TODO placeholders.
 - Relative Markdown links and common resource references resolve.
 - `agents/openai.yaml` exists, has UI metadata, and its default prompt mentions `$skill-name`.
+- Repository-level compatibility entrypoints exist when `--repo-root` is supplied: `AGENTS.md` mentions the compatibility surface, and Claude, Gemini, GLM, and DeepSeek entrypoints point users to `AGENTS.md` and `SKILL.md`.
 - Example config files do not look like real secrets.
 - Local config files, generated outputs, and likely credentials are flagged.
 - Repository README mentions the skill path or name when `--repo-root` is supplied.

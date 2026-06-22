@@ -17,7 +17,7 @@ Archive historical mass-send articles for a WeChat official account the user own
 - WeChat：把 Markdown、纯文本或粗糙笔记排版成微信公众号兼容 HTML，可选生成封面并推送到公众号草稿箱。
 - Writing：润色中文技术文章或机器翻译稿，结合上下文检查专业术语准确性，并输出术语修改记录。
 - Database：通过 Python 脚本执行数据库查询，连接配置单独存放到本地配置文件；缺少配置时通过对话收集必要字段。
-- Quality：检查 skill 结构、触发描述、资源引用、UI 元数据、敏感信息和 README 同步状态。
+- Quality：检查 skill 结构、触发描述、资源引用、UI 元数据、多模型入口、敏感信息和 README 同步状态。
 - Superpowers：从 `obra/superpowers` 同步的软件开发方法论技能集，覆盖 brainstorm、计划编写、TDD、代码审查、并行子代理和工作树流程。
 
 ## 多模型兼容
@@ -190,6 +190,7 @@ markmap-assets/
 - 检查 `description` 是否还残留模板文本、是否足够具体、是否包含明确触发/使用场景。
 - 检查正文是否仍有 TODO 模板、相对 Markdown 链接和 `scripts/`、`references/`、`assets/` 引用是否能解析。
 - 检查 `agents/openai.yaml` 是否存在，且 `default_prompt` 是否包含 `$skill-name`。
+- 传入 `--repo-root` 时，检查仓库级 `AGENTS.md`、`CLAUDE.md`、`GEMINI.md`、`GLM.md`、`DEEPSEEK.md` 是否存在，并确认入口文件仍覆盖多模型兼容面、引导用户读取目标 `SKILL.md`。
 - 扫描可能误提交的 `config.json`、API key、token、password 等敏感信息。
 - 传入 `--repo-root` 时，检查仓库 README 是否提到该 skill 名称或路径。
 - 支持单个 skill 检查，也支持扫描仓库内所有 `SKILL.md`。

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Lint Codex/Claude skill folders for structural and quality issues."""
+"""Lint multi-model skill folders for structural and quality issues."""
 
 from __future__ import annotations
 
@@ -41,6 +41,14 @@ SAFE_SECRET_FILENAMES = {
 SECRET_ASSIGNMENT_RE = re.compile(
     r"(?i)\b(api[_-]?key|app[_-]?secret|access[_-]?token|secret[_-]?key|password|passwd|pwd|authorization)\b\s*[:=]\s*['\"]?([^'\"\s,;]+)"
 )
+
+REPOSITORY_ENTRYPOINTS = {
+    "CLAUDE.md": "Claude",
+    "GEMINI.md": "Gemini",
+    "GLM.md": "GLM",
+    "DEEPSEEK.md": "DeepSeek",
+}
+REPOSITORY_GUIDE = "AGENTS.md"
 
 
 def looks_like_real_secret(value: str) -> bool:
@@ -304,6 +312,75 @@ def check_agents_metadata(skill_dir: Path, skill_name: str, base: Path) -> list[
     return findings
 
 
+def check_repository_entrypoints(repo_root: Path, base: Path) -> list[Finding]:
+    findings: list[Finding] = []
+    guide = repo_root / REPOSITORY_GUIDE
+    if not guide.exists():
+        findings.append(
+            Finding(
+                "warning",
+                "missing-agents-guide",
+                "Missing AGENTS.md repository skill index and platform guide",
+                rel(guide, base),
+            )
+        )
+    else:
+        guide_text = guide.read_text(encoding="utf-8")
+        missing_guide_terms = [
+            term
+            for term in ("SKILL.md", *REPOSITORY_ENTRYPOINTS)
+            if term.lower() not in guide_text.lower()
+        ]
+        if missing_guide_terms:
+            findings.append(
+                Finding(
+                    "warning",
+                    "stale-agents-guide",
+                    f"AGENTS.md should mention repository compatibility surface: {', '.join(missing_guide_terms)}",
+                    rel(guide, base),
+                )
+            )
+
+    for filename, platform in REPOSITORY_ENTRYPOINTS.items():
+        entrypoint = repo_root / filename
+        if not entrypoint.exists():
+            findings.append(
+                Finding(
+                    "warning",
+                    "missing-platform-entrypoint",
+                    f"Missing {platform} repository compatibility entrypoint {filename}",
+                    rel(entrypoint, base),
+                )
+            )
+            continue
+
+        text = entrypoint.read_text(encoding="utf-8")
+        missing_terms = [
+            term
+            for term in ("AGENTS.md", "SKILL.md")
+            if term.lower() not in text.lower()
+        ]
+        if missing_terms:
+            findings.append(
+                Finding(
+                    "warning",
+                    "stale-platform-entrypoint",
+                    f"{filename} should direct {platform} users to read {', '.join(missing_terms)}",
+                    rel(entrypoint, base),
+                )
+            )
+        if "TODO" in text or "[TODO" in text:
+            findings.append(
+                Finding(
+                    "error",
+                    "platform-entrypoint-placeholder",
+                    f"{filename} contains TODO placeholder text",
+                    rel(entrypoint, base),
+                )
+            )
+    return findings
+
+
 def check_secret_hygiene(skill_dir: Path, base: Path) -> list[Finding]:
     findings: list[Finding] = []
     for path in walk_files(skill_dir):
@@ -394,6 +471,10 @@ def main() -> int:
     results: dict[str, list[Finding]] = {}
     for skill_dir in skill_dirs:
         results[rel(skill_dir, base)] = lint_skill(skill_dir, repo_root, base)
+    if repo_root:
+        repo_findings = check_repository_entrypoints(repo_root, base)
+        if repo_findings:
+            results[rel(repo_root, base)] = repo_findings
 
     if args.json:
         payload = {
