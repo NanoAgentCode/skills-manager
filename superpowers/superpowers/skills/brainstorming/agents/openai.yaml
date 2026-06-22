@@ -1,0 +1,4 @@
+interface:
+  display_name: "Brainstorming"
+  short_description: "Explore intent and design before implementation"
+  default_prompt: "Use $brainstorming to explore user intent, requirements, constraints, and design options before implementation."

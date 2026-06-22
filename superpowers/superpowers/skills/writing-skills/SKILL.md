@@ -44,7 +44,7 @@ A **skill** is a reference guide for proven techniques, patterns, or tools. Skil
 
 The entire skill creation process follows RED-GREEN-REFACTOR.
 
-## When to Create a Skill
+## Skill Creation Criteria
 
 **Create when:**
 - Technique wasn't intuitively obvious to you
@@ -113,7 +113,7 @@ description: Use when [specific triggering conditions and symptoms]
 ## Overview
 What is this? Core principle in 1-2 sentences.
 
-## When to Use
+## Applicability Guidance
 [Small inline flowchart IF decision non-obvious]
 
 Bullet list with SYMPTOMS and use cases

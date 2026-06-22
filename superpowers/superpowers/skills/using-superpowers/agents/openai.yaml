@@ -1,0 +1,4 @@
+interface:
+  display_name: "Using Superpowers"
+  short_description: "Find and apply available process skills"
+  default_prompt: "Use $using-superpowers when starting a conversation that should discover and apply the appropriate superpowers skill."

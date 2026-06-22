@@ -1,0 +1,4 @@
+interface:
+  display_name: "Dispatching Parallel Agents"
+  short_description: "Split independent investigations across agents"
+  default_prompt: "Use $dispatching-parallel-agents when multiple independent tasks or failures can be investigated without shared state or sequential dependencies."

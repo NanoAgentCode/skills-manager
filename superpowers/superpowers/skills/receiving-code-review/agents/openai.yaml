@@ -1,0 +1,4 @@
+interface:
+  display_name: "Receiving Code Review"
+  short_description: "Handle review feedback with verification"
+  default_prompt: "Use $receiving-code-review before implementing code review suggestions, especially when feedback is unclear, risky, or technically questionable."

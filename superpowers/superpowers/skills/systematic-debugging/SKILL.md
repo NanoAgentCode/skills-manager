@@ -1,6 +1,6 @@
 ---
 name: systematic-debugging
-description: Use when encountering any bug, test failure, or unexpected behavior, before proposing fixes
+description: Use when encountering bugs, test failures, build failures, performance problems, integration issues, or unexpected behavior, before proposing fixes, so root cause is investigated before implementation.
 ---
 
 # Systematic Debugging
@@ -21,7 +21,7 @@ NO FIXES WITHOUT ROOT CAUSE INVESTIGATION FIRST
 
 If you haven't completed Phase 1, you cannot propose fixes.
 
-## When to Use
+## Debugging Scope
 
 Use for ANY technical issue:
 - Test failures

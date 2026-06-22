@@ -226,12 +226,19 @@ python .\quality\skill-linter\scripts\lint_skill.py . --repo-root . --json
 该目录从 [obra/superpowers](https://github.com/obra/superpowers) 同步，包含一组面向 coding agent 的开发流程技能：
 
 - `brainstorming`：写代码前进行苏格拉底式需求澄清和方案讨论。
+- `dispatching-parallel-agents`：把相互独立的失败、任务或调查分派给并行 agent。
+- `executing-plans`：按已有实现计划在独立会话中执行并设置 review 检查点。
+- `finishing-a-development-branch`：在实现完成并验证后选择 merge、PR 或清理路径。
+- `receiving-code-review`：接收 review 反馈时先核实技术事实，再决定采纳或反驳。
+- `requesting-code-review`：在完成较大任务或合并前发起结构化代码审查。
 - `writing-plans`：把已确认设计拆成可执行的小任务计划。
 - `test-driven-development`：强调 red/green/refactor 的 TDD 流程。
 - `subagent-driven-development`：用子代理逐任务实现并进行两阶段 review。
-- `requesting-code-review` / `receiving-code-review`：代码审查与反馈处理。
 - `using-git-worktrees`：为并行开发创建隔离工作树。
+- `using-superpowers`：说明如何发现、选择并调用 superpowers 技能。
 - `systematic-debugging`：系统化调试和根因分析。
+- `verification-before-completion`：在声称完成、修复或通过前先运行验证命令。
+- `writing-skills`：用测试驱动的方式创建、修改和验证可复用 skill。
 
 该目录保留上游插件元数据（如 `.codex-plugin`、`.claude-plugin`），但不包含上游 `.git` 目录。
 
