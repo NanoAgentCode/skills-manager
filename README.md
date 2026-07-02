@@ -9,6 +9,7 @@ Trace backend logs to the exact code path and contract boundary.
 - Follow failures from route/controller to service, mapper interface/XML, SQL, and database constraints.
 - Check API parameters, DTO/VO fields, entity fields, SQL column names, and cross-service payload names.
 - Re-open current files before and after edits to avoid stale-memory conclusions.
+- Use the built-in concrete trace example as the target output shape for backend failure reports.
 
 ### `wechat/wechat-history-article-archive`
 
@@ -193,12 +194,13 @@ markmap-assets/
 
 ### `debugging/backend-log-contract-trace`
 
-该 skill 适合排查 ToolFlow/app-model 这类后端日志到代码路径的问题：
+该 skill 适合排查后端日志到代码路径和数据契约的问题：
 
 - 从日志里的接口路径、异常类、SQL 片段、堆栈类名或错误码定位 controller/service/mapper。
 - 核对接口参数、DTO/VO、实体字段、枚举/编码、MyBatis XML、SQL 列名和数据库约束。
 - 排查跨服务参数契约，例如字段名、文件名、模型编码、下载参数和响应字段不一致。
 - 修改前后都重新打开当前文件确认，避免基于旧记忆判断修复是否存在或是否被回滚。
+- 内置完整示例，展示如何按 `Trace / Finding / Evidence / Change / Verification` 输出排查结论。
 
 ### `quality/skill-linter`
 

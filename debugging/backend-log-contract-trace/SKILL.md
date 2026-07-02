@@ -1,6 +1,6 @@
 ---
 name: backend-log-contract-trace
-description: Trace backend logs to the exact code path and contract boundary across API routes, controller methods, request parameters, DTO/VO classes, entity fields, service calls, MyBatis mapper interfaces/XML, SQL column names, cross-service payloads, and database constraints. Use when debugging ToolFlow/app-model-style backend failures, ORM/MyBatis errors, SQL exceptions, 404/NPE/publish/download failures, enum or field-length violations, mismatched request/response contracts, or when the user asks to verify a fix was not rolled back by re-opening current files before and after changes.
+description: Trace backend logs to the exact code path and contract boundary across API routes, controller methods, request parameters, DTO/VO classes, entity fields, service calls, MyBatis mapper interfaces/XML, SQL column names, cross-service payloads, and database constraints. Use when debugging backend failures such as ORM/MyBatis errors, SQL exceptions, 404/NPE/publish/download failures, enum or field-length violations, mismatched request/response contracts, or when the user asks to verify a fix was not rolled back by re-opening current files before and after changes.
 ---
 
 # Backend Log Contract Trace
@@ -75,4 +75,28 @@ Change:
 
 Verification:
 ...
+```
+
+## Concrete Example Trace
+
+Use this illustrative Java/Spring/MyBatis-style example as the target level of specificity when the user provides a backend failure log. The concrete names below are examples only; adapt the trace to the current repository and do not assume this project shape exists.
+
+```text
+Trace:
+GET /externalModel/list -> ExternalModelController.list -> ModelServiceImpl.getModelDetailList -> ModelInfoMapper.selectModelDetailList -> ModelInfoMapper.xml selectModelDetailList SQL -> model_software.software_code / model_software.software_name -> frontend expects model rows keyed by software_code
+
+Finding:
+The failing contract is the mapper-to-database field contract. The list API filters and joins by model software code, but the current SQL reads or aliases the display-name column as the code field. As a result, the query returns zero rows even though the logs show a valid request and the database has matching model software records.
+
+Evidence:
+- log clue: GET /externalModel/list returns Total: 0 for a request that should include external model rows.
+- controller/service clue: ExternalModelController.list delegates to ModelServiceImpl.getModelDetailList without rewriting software identity fields.
+- mapper clue: ModelInfoMapper.selectModelDetailList receives the same filter object that the controller accepted, so the XML SQL owns the column-name contract.
+- SQL clue: ModelInfoMapper.xml must compare/select model_software.software_code for code identity and use model_software.software_name only for display text.
+
+Change:
+Update ModelInfoMapper.xml so code comparisons, selected aliases, and resultMap fields use software_code for the model software identifier. Keep software_name mapped only to the display-name VO field. Do not rename the API parameter unless the controller, DTO, frontend caller, and mapper are changed together.
+
+Verification:
+Re-open ExternalModelController, ModelServiceImpl, ModelInfoMapper, ModelInfoMapper.xml, the request DTO/VO, and the model_software column definitions after editing. Run the focused module compile or test command when available, for example `mvn -pl zs-service/<module-name> -am -DskipTests compile`, then re-check that the SQL aliases still match the VO fields returned by GET /externalModel/list.
 ```

@@ -1,4 +1,4 @@
 interface:
   display_name: "Backend Log Contract Trace"
   short_description: "Trace backend logs to code and data contracts"
-  default_prompt: "Use $backend-log-contract-trace to trace backend logs through APIs, DTO/VOs, services, MyBatis XML, SQL columns, cross-service parameters, and database constraints."
+  default_prompt: "Use $backend-log-contract-trace to trace backend logs through APIs, DTO/VOs, services, MyBatis XML, SQL columns, cross-service parameters, and database constraints. Follow the concrete Trace/Finding/Evidence/Change/Verification example in the skill when a detailed trace is needed."

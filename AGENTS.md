@@ -23,7 +23,7 @@ This repository is a reusable skills library. Treat each `SKILL.md` as the sourc
 - `wechat/wechat-format/wechat-cover/SKILL.md`: generate a WeChat article cover from an article path or topic.
 - `writing/technical-article-polisher/SKILL.md`: polish technical Chinese articles or machine-translated drafts by checking terminology accuracy in context and reporting terminology changes.
 - `database/python-db-query/SKILL.md`: run safe Python database queries using local ignored config files.
-- `debugging/backend-log-contract-trace/SKILL.md`: trace backend logs through API parameters, DTO/VOs, services, MyBatis XML, SQL columns, cross-service parameters, and database constraints.
+- `debugging/backend-log-contract-trace/SKILL.md`: trace backend logs through API parameters, DTO/VOs, services, MyBatis XML, SQL columns, cross-service parameters, and database constraints; includes a concrete example in the recommended output shape.
 - `quality/skill-linter/SKILL.md`: lint skill structure, trigger descriptions, references, metadata, README sync, and secret hygiene.
 - `superpowers/superpowers/skills/*/SKILL.md`: upstream software-development process skills for brainstorming, planning, TDD, reviews, debugging, and worktrees.
 
