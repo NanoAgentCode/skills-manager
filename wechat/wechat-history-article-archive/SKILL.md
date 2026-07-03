@@ -1,48 +1,53 @@
 ---
 name: wechat-history-article-archive
-description: Archive or back up historical WeChat official-account mass-send articles for an account the user owns or is explicitly authorized to operate. Use when Codex needs to collect, normalize, and save a公众号's历史群发文章 links, fetch article pages in batch, export local HTML/metadata archives, or build a lawful backup workflow for self-owned WeChat article history without relying on unofficial private APIs.
+description: Archive, back up, migrate, or reformat historical WeChat official-account mass-send articles for an account the user owns or is explicitly authorized to operate. Use when Codex needs to collect and normalize lawful mp.weixin.qq.com article links, batch-fetch public article pages, save Markdown/metadata/local images, or hand archived articles to wechat-format/scripts/article_workflow.py for republishing preparation without relying on unofficial private APIs.
 ---
 
 # wechat-history-article-archive
 
-备份自己公众号的历史群发文章，不假设存在“官方一键全量导出历史群发”的通用接口。先用合规方式拿到文章 URL 列表，再批量归档页面和元数据。
+Back up historical mass-send articles for a self-owned or explicitly authorized WeChat Official Account. Start from lawful article URLs visible/exportable to the account operator, then archive public article pages as local Markdown, metadata, indexes, and images. When the user wants migration, reformatting, or republishing, hand archived Markdown to `../wechat-format/scripts/article_workflow.py` through the bundled bridge script.
 
 ## Scope
 
-- 只处理用户**自己拥有**或**明确授权**运营的公众号历史群发文章。
-- 优先使用公众号后台里用户可见、可复制、可导出的历史文章链接。
-- 不要求 `AppID` / `AppSecret`，因为历史群发文章备份的关键输入通常是**文章 URL 列表**，不是官方素材接口。
-- 不把“永久素材导出”误当成“全部历史群发文章导出”。
+- Only process articles for accounts the user owns or is explicitly authorized to operate.
+- Prefer URL lists copied or exported from the WeChat Official Account admin UI.
+- Do not ask for `AppID` / `AppSecret` for history backup. The normal input is an article URL list, not the permanent-material API.
+- Do not describe permanent material export as a full historical mass-send export.
+- Do not bypass captchas, risk controls, login limits, private APIs, or access restrictions.
 
 ## Bundled Scripts
 
 - `scripts/extract_mp_urls.py`
-  - 从文本、HTML、剪贴后的页面源码、CSV 片段或笔记里提取 `mp.weixin.qq.com/s?...` 文章链接
-  - 去重并输出一行一个 URL 的清单
+  - Extract and deduplicate `mp.weixin.qq.com/s?...` article URLs from text, HTML, CSV fragments, clipboard dumps, or notes.
+  - Output a clean one-URL-per-line list.
 - `scripts/archive_article_urls.py`
-  - 读取 URL 清单，批量抓取文章公开页
-  - 默认保存 Markdown、元数据 JSON、索引 CSV/JSON 和本地图片
-  - 仅在显式传入 `--keep-html` 时保留中间态 `article.html`
+  - Read a URL list and batch-fetch public article pages.
+  - Save Markdown, metadata JSON, index CSV/JSON, and local images by default.
+  - Keep intermediate `article.html` only when `--keep-html` is passed.
 - `scripts/convert_archive_to_markdown.py`
-  - 把已归档的 `article.html` 批量转换成 `article.md`
-  - 下载正文图片到每篇文章目录下的 `images/`
-  - 可选用 `--delete-html` 删除历史遗留的 `article.html`
+  - Convert archived `article.html` files into `article.md`.
+  - Download article images into each article's `images/` folder.
+  - Optionally delete legacy `article.html` with `--delete-html`.
+- `scripts/reformat_archived_articles.py`
+  - Stage archived `articles/<slug>/article.md`, sibling `images/`, and `meta.json` into formatter-ready folders.
+  - Call `../wechat-format/scripts/article_workflow.py` for one or more archived articles.
+  - Write `.tmp/reformat-inputs/reformat-manifest.json` with archive paths, staged inputs, formatter commands, and workflow output roots.
 
 ## Workflow
 
-### 1. Confirm the source of the history links
+### 1. Confirm the Source
 
-先确认历史群发文章链接从哪里来。优先顺序：
+Use one of these lawful sources:
 
-1. 用户从公众号后台“已群发”页手动复制的文章链接
-2. 用户从公众号后台导出的表格、页面源码或粘贴文本
-3. 当前环境**明确提供**浏览器自动化能力，且用户已经登录自己的公众号后台，此时再做半自动采集
+1. Article links manually copied from the account's "sent" history in the Official Account admin UI.
+2. A backend export, spreadsheet, page source, or pasted text that contains article links.
+3. Browser automation only when the current environment explicitly provides browser control and the user is already logged in to their own authorized account.
 
-如果当前环境没有可靠浏览器能力，不要编造“官方历史文章接口”；改为让用户提供或导出 URL 列表，再继续归档。
+If reliable browser automation is unavailable, ask the user for a URL list or exported text and continue from there.
 
-### 2. Normalize the URL list
+### 2. Normalize the URL List
 
-如果输入不是干净的一行一个链接，先运行：
+PowerShell:
 
 ```powershell
 $Python = Join-Path $env:USERPROFILE ".cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe"
@@ -52,7 +57,7 @@ $Python = Join-Path $env:USERPROFILE ".cache\codex-runtimes\codex-primary-runtim
   --output .\wechat\wechat-history-article-archive\output\history-urls.txt
 ```
 
-可移植形式：
+Portable shell:
 
 ```bash
 python3 ./wechat/wechat-history-article-archive/scripts/extract_mp_urls.py \
@@ -60,9 +65,9 @@ python3 ./wechat/wechat-history-article-archive/scripts/extract_mp_urls.py \
   --output ./wechat/wechat-history-article-archive/output/history-urls.txt
 ```
 
-### 3. Archive the article pages
+### 3. Archive the Article Pages
 
-对整理好的 URL 清单运行：
+PowerShell:
 
 ```powershell
 & $Python `
@@ -71,7 +76,7 @@ python3 ./wechat/wechat-history-article-archive/scripts/extract_mp_urls.py \
   --output-dir .\wechat\wechat-history-article-archive\output\archive
 ```
 
-可移植形式：
+Portable shell:
 
 ```bash
 python3 ./wechat/wechat-history-article-archive/scripts/archive_article_urls.py \
@@ -79,15 +84,17 @@ python3 ./wechat/wechat-history-article-archive/scripts/archive_article_urls.py 
   --output-dir ./wechat/wechat-history-article-archive/output/archive
 ```
 
-默认会输出：
+Default archive output:
 
-- `index.json`
-- `index.csv`
-- `articles/<slug>/article.md`
-- `articles/<slug>/meta.json`
-- `articles/<slug>/images/*`
+```text
+index.json
+index.csv
+articles/<slug>/article.md
+articles/<slug>/meta.json
+articles/<slug>/images/*
+```
 
-如果已有一批 `article.html`，也可以后处理转换：
+If the archive already contains `article.html` files, convert them afterward:
 
 ```powershell
 & $Python `
@@ -96,37 +103,95 @@ python3 ./wechat/wechat-history-article-archive/scripts/archive_article_urls.py 
   --delete-html
 ```
 
-### 4. Review failures and retry carefully
+### 4. Review Failures
 
-如果部分链接失败：
+For failed links:
 
-- 检查 URL 是否失效、是否被删除、是否需要登录态
-- 降低抓取速度，避免短时间高频请求
-- 不要尝试绕过验证码、风控、登录限制或未公开接口
+- Check whether the URL is expired, deleted, malformed, or requires login.
+- Reduce request speed if there are transient failures.
+- Do not try to bypass verification, risk control, login restrictions, or non-public interfaces.
 
-### 5. Optional follow-up
+### 5. Reformat Archived Articles for Republishing
 
-归档完成后，如用户要继续做内容迁移、排版或二次发布：
+When the user wants reformatting, migration, or republishing preparation, prefer the bridge script instead of manually copying archive files into `wechat-format`.
 
-- 对单篇或批量文章做结构化整理
-- 必要时再衔接 `../wechat-format/SKILL.md`
+PowerShell:
+
+```powershell
+$env:PYTHONIOENCODING = 'utf-8'
+& $Python `
+  .\wechat\wechat-history-article-archive\scripts\reformat_archived_articles.py `
+  --archive-dir .\wechat\wechat-history-article-archive\output\archive `
+  --article 1 `
+  --theme apple-code `
+  --skip-ai `
+  --no-open `
+  --non-interactive
+```
+
+Portable shell:
+
+```bash
+PYTHONIOENCODING=utf-8 python3 ./wechat/wechat-history-article-archive/scripts/reformat_archived_articles.py \
+  --archive-dir ./wechat/wechat-history-article-archive/output/archive \
+  --article 1 \
+  --theme apple-code \
+  --skip-ai \
+  --no-open \
+  --non-interactive
+```
+
+Selection rules:
+
+- Omit `--article` to process every successful archived article.
+- Repeat `--article` for multiple items.
+- A selector can match `seq`, title, article directory name, or Markdown filename stem.
+- Use `--dry-run` to validate staging paths and formatter command construction without running the formatter.
+
+Default handoff output:
+
+```text
+wechat/wechat-history-article-archive/.tmp/reformat-inputs/
+  <archive-article-slug>/
+    <archive-article-slug>.md
+    images/
+    meta.json
+  reformat-manifest.json
+
+wechat/wechat-format/.tmp/article-workflows/<archive-article-slug>/
+  source/
+  markdown/
+  render/
+  gallery/
+  selection/
+  final/<theme>/
+  bytedance/
+  cover/
+  manifest.json
+```
+
+Report `reformat-manifest.json`, formatter `manifest.json`, final `preview.html`, final `article.html`, and optional cover/ByteDance preview paths.
 
 ## Configuration
 
-默认不需要 `config.json`。如需固定参数，可在本 skill 目录下创建本地 `config.json`，参考 `config.example.json`。不要提交真实本地配置。
+No `config.json` is required for archive-only runs. If fixed local defaults are needed, create a local `config.json` beside this skill and use `config.example.json` as the safe example. Do not commit real local config values.
+
+The reformat bridge delegates to `wechat-format/scripts/article_workflow.py`. Read `../wechat-format/SKILL.md` when the user asks for theme selection, AI polishing, cover generation, or draft publishing details.
 
 ## Output Expectations
 
-完成任务时，向用户明确说明：
+When finishing an archive task, report:
 
-- 一共识别出多少条历史文章 URL
-- 成功归档多少篇，失败多少篇
-- 归档目录位置
-- 是否存在“只有永久素材，没有历史群发全量接口”的边界
+- Number of URLs recognized.
+- Number of successful and failed archives.
+- Archive directory.
+- Whether the permanent-material API boundary is relevant.
+- If reformatting was requested: staged handoff directory, `reformat-manifest.json`, formatter workflow root, final preview/article HTML, and any cover/ByteDance preview artifacts.
 
 ## Safety Rules
 
-- 只对用户自己的公众号做历史文章备份。
-- 不使用未公开私有接口，不抓取未授权第三方公众号历史数据。
-- 不把 Cookie、Token、真实导出数据或本地 `config.json` 提交进仓库。
-- 如果需要浏览器自动化，先确认当前环境真的提供该能力，再使用；否则退回到“用户提供 URL 列表”的流程。
+- Only archive articles from self-owned or explicitly authorized accounts.
+- Do not scrape unauthorized third-party account history.
+- Do not use private APIs or bypass access controls.
+- Do not commit cookies, tokens, real exports, generated outputs, or local `config.json`.
+- Use browser automation only when the current environment actually exposes that capability and the user is already logged in to their authorized account.

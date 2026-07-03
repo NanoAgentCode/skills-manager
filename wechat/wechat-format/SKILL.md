@@ -508,6 +508,33 @@ python3 {baseDir}/scripts/publish.py \
 - **图片画廊**：`:::gallery[标题]` → 横向滚动多图容器
 - **长图展示**：`:::longimage[标题]` → 固定高度纵向滚动容器
 
+### Archived Article Handoff
+
+When the input comes from `../wechat-history-article-archive`, prefer that skill's bridge script:
+
+```powershell
+$Python = Join-Path $env:USERPROFILE ".cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe"
+$env:PYTHONIOENCODING = 'utf-8'
+& $Python `
+  ..\wechat-history-article-archive\scripts\reformat_archived_articles.py `
+  --archive-dir ..\wechat-history-article-archive\output\archive `
+  --article 1 `
+  --theme apple-code `
+  --skip-ai `
+  --no-open `
+  --non-interactive
+```
+
+The bridge stages each archived `article.md` with its sibling `images/` and `meta.json`, then calls this skill's `scripts/article_workflow.py`. Use the staged Markdown path only if the user explicitly asks to bypass the bridge.
+
+Expected linked outputs:
+
+```text
+../wechat-history-article-archive/.tmp/reformat-inputs/reformat-manifest.json
+.tmp/article-workflows/<archive-article-slug>/manifest.json
+.tmp/article-workflows/<archive-article-slug>/final/<theme>/preview.html
+.tmp/article-workflows/<archive-article-slug>/final/<theme>/article.html
+```
 ### 注意事项
 
 - 依赖可用 `scripts/check_dependencies.py` 检测；缺失时，经用户确认后用 `scripts/check_dependencies.py --install` 安装

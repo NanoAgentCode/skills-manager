@@ -26,7 +26,7 @@ Archive historical mass-send articles for a WeChat official account the user own
 
 - Collect or normalize `mp.weixin.qq.com/s?...` article URLs from lawful sources.
 - Save Markdown, metadata JSON, index CSV/JSON, and local image backups in batch; keep raw HTML only when explicitly requested.
-- Use this before migration, reformatting, long-term archival, or handing selected archived articles to `wechat/wechat-format`.
+- Use `scripts/reformat_archived_articles.py` to stage selected archived articles and run `wechat/wechat-format/scripts/article_workflow.py` for migration, reformatting, or republishing preparation.
 
 本仓库用于管理可复用的 AI agent skills。目前包含 Dify、Mindmap、WeChat、Writing、Database、Debugging、Market、Quality 和 Superpowers 九类 skill，并提供 Codex、Claude、Gemini、GLM、DeepSeek 的兼容入口。
 
@@ -194,7 +194,7 @@ markmap-assets/
 
 纯排版只需要本地 Python 依赖；没有 `config.json` 时会使用内置默认配置，并把产物写入 `wechat/wechat-format/.tmp/`。推送草稿箱时需要在 `config.json` 中配置公众号 `app_id`、`app_secret` 和作者信息。`config.json` 已由该 skill 自带的 `.gitignore` 忽略，不应提交到仓库。
 
-如果输入来自历史文章备份，先使用 `wechat/wechat-history-article-archive` 把授权文章 URL 归档为 Markdown、元数据和本地图片，再把选定的 `article.md` 交给本 skill 做结构化、重排版、封面或草稿箱发布。
+如果输入来自历史文章备份，先使用 `wechat/wechat-history-article-archive` 把授权文章 URL 归档为 Markdown、元数据和本地图片，再通过 `wechat/wechat-history-article-archive/scripts/reformat_archived_articles.py` 把选定文章交给 `wechat/wechat-format/scripts/article_workflow.py` 做结构化、重排版、封面或草稿箱发布。
 
 ### `wechat/wechat-history-article-archive`
 
@@ -204,7 +204,7 @@ markmap-assets/
 - 对 URL 清单批量抓取公开文章页，默认输出 `index.json`、`index.csv`、每篇文章的 `article.md`、`meta.json` 和本地 `images/`。
 - 仅在传入 `--keep-html` 时保留中间态 `article.html`；已有 HTML 归档可用 `convert_archive_to_markdown.py` 转成 Markdown。
 - 不要求 `AppID` / `AppSecret`，不使用未公开私有接口，也不把“永久素材导出”误当成“全部历史群发文章导出”。
-- 归档后如需迁移、重排版或二次发布，可把单篇或批量 Markdown 继续交给 `wechat/wechat-format`。
+- 归档后如需迁移、重排版或二次发布，使用 `scripts/reformat_archived_articles.py` 批量暂存 `article.md`、`images/` 和 `meta.json`，并调用 `wechat/wechat-format/scripts/article_workflow.py` 生成可复用的排版工作流产物。
 
 ### `writing/technical-article-polisher`
 
@@ -378,6 +378,7 @@ wechat-history-article-archive/
     extract_mp_urls.py
     archive_article_urls.py
     convert_archive_to_markdown.py
+    reformat_archived_articles.py
     markdown_export.py
 
 python-db-query/

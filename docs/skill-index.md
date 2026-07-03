@@ -31,7 +31,7 @@ py .\market\us-sector-index-impact-report\scripts\render_investment_bank_html.py
 - `mindmap/`: offline markmap HTML generation and optional static publishing.
 - `wechat/`: WeChat article production and authorized archive workflows.
   - `wechat/wechat-format/SKILL.md`: Markdown/plain-text/rough-note packaging into WeChat-compatible inline HTML through the repo-local `scripts/article_workflow.py` by default, including terminology polishing, structured/enhanced Markdown, a 26-theme gallery, final themed outputs, optional covers, and draft publishing.
-  - `wechat/wechat-history-article-archive/SKILL.md`: self-owned or explicitly authorized historical mass-send article backup from lawful `mp.weixin.qq.com/s?...` URL sources, with URL normalization, batch archiving, Markdown/metadata/index/image outputs by default, and optional follow-up into `wechat-format` for reformatting or migration.
+  - `wechat/wechat-history-article-archive/SKILL.md`: self-owned or explicitly authorized historical mass-send article backup from lawful `mp.weixin.qq.com/s?...` URL sources, with URL normalization, batch archiving, Markdown/metadata/index/image outputs by default, and `scripts/reformat_archived_articles.py` for handing archived articles to `wechat-format/scripts/article_workflow.py`.
   - `wechat/wechat-format/wechat-cover/SKILL.md`: cover-image generation for WeChat articles.
 - `writing/`: Chinese technical article polishing.
 - `database/`: safe Python database querying with local ignored configs.

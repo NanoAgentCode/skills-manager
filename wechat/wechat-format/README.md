@@ -120,6 +120,59 @@ Notes:
 - Use `--skip-terminology` when you want to keep the source text unchanged and only run the later formatting steps.
 - Use `--auto-accept-terminology` when you need a non-interactive run after the terminology step.
 
+## Reformat Archived WeChat Articles
+
+If the source article was archived with `wechat/wechat-history-article-archive`, use that skill's bridge script instead of copying `article.md` by hand. The bridge keeps sibling `images/` and `meta.json` with the staged Markdown, then calls `scripts/article_workflow.py`.
+
+From `wechat/wechat-format/` on Windows PowerShell:
+
+```powershell
+$Python = Join-Path $env:USERPROFILE ".cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe"
+$env:PYTHONIOENCODING = 'utf-8'
+& $Python `
+  ..\wechat-history-article-archive\scripts\reformat_archived_articles.py `
+  --archive-dir ..\wechat-history-article-archive\output\archive `
+  --article 1 `
+  --theme apple-code `
+  --skip-ai `
+  --no-open `
+  --non-interactive
+```
+
+Portable shell:
+
+```bash
+PYTHONIOENCODING=utf-8 python3 ../wechat-history-article-archive/scripts/reformat_archived_articles.py \
+  --archive-dir ../wechat-history-article-archive/output/archive \
+  --article 1 \
+  --theme apple-code \
+  --skip-ai \
+  --no-open \
+  --non-interactive
+```
+
+Linked output structure:
+
+```text
+../wechat-history-article-archive/.tmp/reformat-inputs/
+  <archive-article-slug>/
+    <archive-article-slug>.md
+    images/
+    meta.json
+  reformat-manifest.json
+
+.tmp/article-workflows/<archive-article-slug>/
+  source/
+  markdown/
+  render/
+  gallery/
+  selection/
+  final/<theme>/
+  bytedance/
+  cover/
+  manifest.json
+```
+
 ## Manual Gallery Path
 
 Keep using `scripts/format.py` when you only need theme preview/rendering, when you already prepared the enhanced Markdown yourself, or when you are debugging a formatter issue:
