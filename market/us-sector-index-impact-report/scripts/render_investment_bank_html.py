@@ -219,20 +219,21 @@ def render_report(data: dict[str, Any]) -> str:
     :root {{
       --ink: #17202b;
       --muted: #697586;
-      --paper: #f5f1e9;
-      --paper-2: #eadfcf;
-      --card: #fffdf7;
-      --red: #c93a35;
-      --red-dark: #9f2724;
-      --green: #08745f;
-      --blue: #174e7c;
+      --paper: #f6f4ef;
+      --paper-2: #ece5da;
+      --card: #fffefa;
+      --red: #a9433f;
+      --red-dark: #7f2f2c;
+      --green: #0f6b57;
+      --blue: #1f5578;
       --navy: #102235;
-      --gold: #c79238;
-      --yellow: #f6d45c;
-      --mint: #dff3ec;
+      --gold: #a98242;
+      --yellow: #ead6a2;
+      --mint: #e8f3ee;
       --line: #223044;
-      --shadow: 0 24px 70px rgba(16, 34, 53, .18);
-      --soft-shadow: 0 14px 36px rgba(16, 34, 53, .10);
+      --shadow: 0 20px 54px rgba(16, 34, 53, .13);
+      --soft-shadow: 0 10px 28px rgba(16, 34, 53, .075);
+      --slide-shadow: 0 18px 46px rgba(16, 34, 53, .11);
     }}
     * {{ box-sizing: border-box; }}
     html {{ scroll-behavior: smooth; }}
@@ -242,12 +243,12 @@ def render_report(data: dict[str, Any]) -> str:
       font-family: "Microsoft YaHei", "PingFang SC", "Noto Sans CJK SC", "Segoe UI", sans-serif;
       line-height: 1.55;
       background:
-        linear-gradient(90deg, rgba(16,34,53,.045) 1px, transparent 1px),
-        linear-gradient(0deg, rgba(16,34,53,.035) 1px, transparent 1px),
-        radial-gradient(circle at 12% 8%, rgba(201,58,53,.13), transparent 24%),
-        radial-gradient(circle at 88% 2%, rgba(8,116,95,.10), transparent 22%),
+        linear-gradient(90deg, rgba(16,34,53,.025) 1px, transparent 1px),
+        linear-gradient(0deg, rgba(16,34,53,.022) 1px, transparent 1px),
+        radial-gradient(circle at 12% 8%, rgba(169,67,63,.055), transparent 26%),
+        radial-gradient(circle at 88% 2%, rgba(15,107,87,.05), transparent 24%),
         var(--paper);
-      background-size: 34px 34px, 34px 34px, auto, auto, auto;
+      background-size: 42px 42px, 42px 42px, auto, auto, auto;
     }}
     .page {{ width: min(1180px, calc(100% - 28px)); margin: 0 auto 70px; }}
     header.cover {{
@@ -259,29 +260,29 @@ def render_report(data: dict[str, Any]) -> str:
       border: 1px solid rgba(34,48,68,.18);
       border-radius: 28px;
       background:
-        linear-gradient(135deg, rgba(255,253,247,.96), rgba(246,238,224,.94)),
+        linear-gradient(135deg, rgba(255,254,250,.98), rgba(246,241,232,.96)),
         var(--card);
       box-shadow: var(--shadow);
     }}
     .cover::before {{
       content: "";
       position: absolute;
-      width: 560px;
-      height: 560px;
-      right: -210px;
-      top: -230px;
+      width: 520px;
+      height: 520px;
+      right: -240px;
+      top: -260px;
       border-radius: 50%;
-      background: linear-gradient(145deg, var(--red), #e66f4f);
-      opacity: .92;
+      background: linear-gradient(145deg, rgba(169,67,63,.86), rgba(169,130,66,.48));
+      opacity: .68;
     }}
     .cover::after {{
       content: "";
       position: absolute;
-      width: 180px;
-      height: 180px;
-      right: 78px;
-      top: 80px;
-      border: 18px solid rgba(255,255,255,.36);
+      width: 160px;
+      height: 160px;
+      right: 76px;
+      top: 78px;
+      border: 16px solid rgba(255,255,255,.28);
       border-radius: 50%;
       transform: rotate(-12deg);
     }}
@@ -293,21 +294,42 @@ def render_report(data: dict[str, Any]) -> str:
       padding: 9px 14px;
       border: 1px solid rgba(34,48,68,.22);
       border-radius: 12px;
-      background: #fff7df;
+      background: #fbf4e5;
       color: var(--navy);
       box-shadow: 0 8px 24px rgba(16,34,53,.10);
       font-weight: 950;
     }}
+    .cover-grid {{
+      position: absolute;
+      inset: auto 42px 34px auto;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: repeat(2, 112px);
+      gap: 10px;
+      opacity: .82;
+    }}
+    .cover-tile {{
+      min-height: 76px;
+      padding: 12px;
+      border: 1px solid rgba(34,48,68,.14);
+      border-radius: 16px;
+      background: rgba(255,254,250,.72);
+      box-shadow: 0 10px 26px rgba(16,34,53,.08);
+      font-size: 12px;
+      font-weight: 900;
+      color: var(--navy);
+    }}
+    .cover-tile strong {{ display: block; font-size: 20px; color: var(--red-dark); line-height: 1; margin-top: 6px; }}
     .cover-label::before {{
       content: "";
       width: 13px;
       height: 13px;
       border: 1px solid var(--line);
       border-radius: 50%;
-      background: var(--red);
+      background: var(--gold);
     }}
     .date-chip {{ position: relative; z-index: 2; border: 1px solid rgba(34,48,68,.20); border-radius: 999px; padding: 8px 14px; background: white; font-weight: 900; color: var(--navy); box-shadow: 0 8px 22px rgba(16,34,53,.08); }}
-    h1 {{ position: relative; z-index: 2; max-width: 880px; margin: 52px 0 18px; font-size: clamp(36px, 5.4vw, 70px); line-height: 1.02; letter-spacing: 0; color: var(--navy); }}
+    h1 {{ position: relative; z-index: 2; max-width: 880px; margin: 48px 0 18px; font-size: clamp(34px, 5vw, 64px); line-height: 1.05; letter-spacing: 0; color: var(--navy); }}
     .subtitle {{ position: relative; z-index: 2; max-width: 760px; font-size: clamp(18px, 2.2vw, 24px); font-weight: 760; color: #3d4858; }}
     .host-card {{
       position: relative;
@@ -322,7 +344,7 @@ def render_report(data: dict[str, Any]) -> str:
       border: 1px solid rgba(34,48,68,.18);
       border-radius: 18px;
       background: white;
-      box-shadow: 0 18px 42px rgba(16,34,53,.13);
+      box-shadow: 0 14px 34px rgba(16,34,53,.10);
     }}
     .avatar {{ display: grid; place-items: center; width: 70px; height: 70px; border: 1px solid rgba(34,48,68,.18); border-radius: 18px; background: var(--navy); color: white; font-size: 30px; font-weight: 950; }}
     .host-card strong {{ display: block; font-size: 18px; }}
@@ -346,78 +368,86 @@ def render_report(data: dict[str, Any]) -> str:
     }}
     .nav-strip a {{ flex: 0 0 auto; padding: 7px 12px; border-radius: 999px; color: var(--navy); text-decoration: none; font-size: 13px; font-weight: 900; }}
     .nav-strip a:hover {{ background: var(--navy); color: white; }}
-    .chapter {{ margin: 28px 0; }}
-    .section-title {{ display: flex; align-items: center; gap: 12px; margin: 0 0 16px; }}
+    .chapter {{
+      position: relative;
+      margin: 30px 0;
+      padding: 24px;
+      border: 1px solid rgba(34,48,68,.10);
+      border-radius: 26px;
+      background: rgba(255,254,250,.62);
+      box-shadow: 0 14px 38px rgba(16,34,53,.055);
+    }}
+    .section-title {{ display: flex; align-items: center; gap: 12px; margin: 0 0 18px; padding-bottom: 14px; border-bottom: 1px solid rgba(34,48,68,.10); }}
     .section-title span {{ display: grid; place-items: center; width: 42px; height: 42px; border: 1px solid rgba(34,48,68,.18); border-radius: 13px; background: var(--navy); color: white; font-weight: 950; box-shadow: 0 10px 24px rgba(16,34,53,.18); }}
-    h2 {{ margin: 0; font-size: clamp(24px, 3vw, 36px); letter-spacing: 0; }}
+    h2 {{ margin: 0; font-size: clamp(24px, 3vw, 34px); letter-spacing: 0; }}
     .big-card, .summary-card, .metric, .note, .impact, .scenario, .sector-card, .factor-card {{
       position: relative;
       overflow: hidden;
       background: var(--card);
       border: 1px solid rgba(34,48,68,.16);
       border-radius: 20px;
-      box-shadow: var(--soft-shadow);
+      box-shadow: var(--slide-shadow);
       transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
     }}
     .summary-card:hover, .metric:hover, .note:hover, .impact:hover, .scenario:hover, .sector-card:hover, .factor-card:hover {{
       transform: translateY(-3px);
       border-color: rgba(34,48,68,.30);
-      box-shadow: 0 22px 52px rgba(16,34,53,.16);
+      box-shadow: 0 18px 42px rgba(16,34,53,.12);
     }}
     .big-card {{ padding: clamp(20px, 3vw, 32px); box-shadow: var(--shadow); }}
     .house-view {{ font-size: clamp(19px, 2.2vw, 26px); font-weight: 850; }}
     .house-view em {{ font-style: normal; background: linear-gradient(transparent 58%, rgba(255,216,77,.75) 58%); }}
-    .summary {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(245px, 1fr)); gap: 16px; }}
-    .summary-card {{ min-height: 155px; padding: 18px; border-top: 5px solid var(--red); }}
-    .summary-card::after {{ content: ""; position: absolute; right: -28px; bottom: -28px; width: 90px; height: 90px; border-radius: 50%; background: rgba(201,58,53,.10); }}
-    .summary-card span {{ display: inline-grid; place-items: center; width: 40px; height: 40px; margin-bottom: 12px; border-radius: 12px; background: var(--red); color: white; font-weight: 950; }}
+    .summary {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(245px, 1fr)); gap: 16px; align-items: stretch; }}
+    .summary-card {{ min-height: 170px; padding: 18px; border-top: 4px solid var(--gold); display: flex; flex-direction: column; }}
+    .summary-card::after {{ content: ""; position: absolute; right: -34px; bottom: -34px; width: 96px; height: 96px; border-radius: 50%; background: rgba(169,130,66,.085); }}
+    .summary-card span {{ display: inline-grid; place-items: center; width: 40px; height: 40px; margin-bottom: 12px; border-radius: 12px; background: var(--navy); color: white; font-weight: 950; }}
     .summary-card p {{ margin: 0; font-weight: 800; text-indent: 2em; }}
-    .metrics {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(235px, 1fr)); gap: 16px; }}
-    .metric {{ padding: 18px; }}
-    .metric::before {{ content: ""; position: absolute; inset: 0 0 auto; height: 7px; background: linear-gradient(90deg, var(--red), var(--gold)); }}
+    .metrics {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(235px, 1fr)); gap: 16px; align-items: stretch; }}
+    .metric {{ padding: 18px; min-height: 190px; display: flex; flex-direction: column; }}
+    .metric::before {{ content: ""; position: absolute; inset: 0 0 auto; height: 6px; background: linear-gradient(90deg, var(--blue), var(--gold)); opacity: .92; }}
     .metric-label {{ margin-top: 8px; color: var(--muted); font-size: 14px; font-weight: 800; }}
     .metric-ticker {{ margin-top: 3px; font-size: 14px; font-weight: 950; }}
     .metric-close {{ margin-top: 10px; font-size: clamp(28px, 4vw, 44px); line-height: 1; font-weight: 950; }}
     .metric-change {{ display: inline-flex; margin-top: 12px; padding: 6px 11px; border: 1px solid currentColor; border-radius: 999px; background: white; font-weight: 950; }}
-    .metric p {{ color: var(--muted); margin: 12px 0 0; font-size: 14px; text-indent: 2em; }}
+    .metric p {{ color: var(--muted); margin: auto 0 0; padding-top: 12px; font-size: 14px; text-indent: 2em; }}
     .pos {{ color: var(--green); }} .neg {{ color: var(--red-dark); }} .flat {{ color: var(--muted); }}
-    .sector-grid {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(215px, 1fr)); gap: 16px; }}
-    .sector-card {{ min-height: 225px; padding: 18px; border-left: 5px solid #ccd6e0; }}
+    .sector-grid {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(215px, 1fr)); gap: 16px; align-items: stretch; }}
+    .sector-card {{ min-height: 245px; padding: 18px; border-left: 5px solid #ccd6e0; display: flex; flex-direction: column; }}
     .sector-card.pos {{ border-left-color: var(--green); }}
     .sector-card.neg {{ border-left-color: var(--red); }}
     .rank-pill {{ position: absolute; top: 14px; right: 14px; padding: 5px 10px; border-radius: 999px; background: #eef2f6; color: var(--navy); font-weight: 950; }}
     .sector-card h3 {{ width: calc(100% - 58px); margin: 0 0 4px; font-size: 18px; line-height: 1.22; }}
     .ticker-line {{ color: var(--muted); font-weight: 850; }}
     .sector-change {{ margin: 14px 0 10px; font-size: 36px; line-height: 1; font-weight: 950; }}
-    .sector-card p {{ margin: 0; color: #473b33; text-indent: 2em; }}
-    .factor-grid {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; }}
-    .factor-card {{ padding: 18px; background: #fffdfa; border-top: 5px solid var(--gold); }}
+    .sector-card p {{ margin: auto 0 0; color: #473b33; text-indent: 2em; }}
+    .factor-grid {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; align-items: stretch; }}
+    .factor-card {{ padding: 18px; background: #fffdfa; border-top: 4px solid var(--gold); min-height: 270px; display: flex; flex-direction: column; }}
     .factor-head {{ display: flex; justify-content: space-between; align-items: start; gap: 12px; margin-bottom: 12px; }}
     .factor-head h3 {{ margin: 0; font-size: 20px; line-height: 1.24; }}
     .badge {{ flex: 0 0 auto; border-radius: 999px; padding: 5px 11px; background: #eef2f6; font-size: 12px; font-weight: 950; color: var(--navy); }}
     .badge.positive {{ background: var(--mint); }} .badge.negative {{ background: #ffd1cd; }} .badge.neutral {{ background: #e8e0d4; }}
-    .factor-evidence {{ margin: 0; padding: 12px; border-radius: 14px; background: #fff3d8; font-weight: 750; text-indent: 2em; }}
+    .factor-evidence {{ margin: 0; padding: 12px; border-radius: 14px; background: #f7f0e3; font-weight: 750; text-indent: 2em; }}
     .factor-impact {{ margin: 12px 0 0; color: var(--muted); text-indent: 2em; }}
     .mini-label {{ margin: 4px 0 7px; color: var(--red-dark); font-size: 11px; font-weight: 950; letter-spacing: .08em; text-transform: uppercase; }}
     .impact-label {{ margin-top: 12px; color: var(--green); }}
-    .notes, .impact-grid, .scenario-grid {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; }}
-    .note {{ padding: 20px; border-left: 5px solid var(--blue); }}
+    .notes, .impact-grid, .scenario-grid {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; align-items: stretch; }}
+    .note {{ padding: 20px; border-left: 4px solid var(--blue); min-height: 230px; }}
     .card-kicker {{ margin-bottom: 8px; color: var(--gold); font-size: 11px; font-weight: 950; letter-spacing: .10em; text-transform: uppercase; }}
     .note h3 {{ margin: 0 0 10px; font-size: 21px; line-height: 1.25; }}
     .note p {{ margin: 0; color: #473b33; text-indent: 2em; }}
-    .impact {{ padding: 18px; background: #fffdfa; border-top: 5px solid #ccd6e0; }}
+    .impact {{ padding: 18px; background: #fffdfa; border-top: 4px solid #ccd6e0; min-height: 245px; display: flex; flex-direction: column; }}
     .impact.positive {{ border-top-color: var(--green); }}
     .impact.negative {{ border-top-color: var(--red); }}
     .impact.neutral {{ border-top-color: var(--gold); }}
     .impact-top {{ display: flex; justify-content: space-between; gap: 12px; align-items: start; margin-bottom: 10px; }}
     .impact h3 {{ margin: 0; font-size: 21px; }}
     .impact p {{ margin: 0; text-indent: 2em; }}
-    .impact footer {{ margin-top: 14px; padding: 12px; border-radius: 14px; background: #f3f6f8; color: var(--muted); font-weight: 800; }}
+    .impact footer {{ margin-top: auto; padding: 12px; border-radius: 14px; background: #f3f6f8; color: var(--muted); font-weight: 800; }}
     .impact footer span {{ display: block; margin-bottom: 4px; color: var(--navy); font-size: 11px; letter-spacing: .08em; text-transform: uppercase; }}
-    .scenario {{ padding: 18px; background: #f3fff9; border-left: 5px solid var(--green); }}
+    .scenario {{ padding: 18px; background: #f6fbf8; border-left: 4px solid var(--green); min-height: 180px; }}
     .scenario div {{ display: flex; justify-content: space-between; gap: 12px; color: var(--green); font-size: 20px; font-weight: 950; }}
     .scenario p {{ margin: 10px 0 0; text-indent: 2em; }}
-    .question-strip {{ display: inline-block; margin-bottom: 12px; padding: 7px 13px; border-radius: 999px; background: var(--navy); color: white; font-weight: 950; box-shadow: 0 10px 24px rgba(16,34,53,.14); }}
+    .question-strip {{ display: inline-block; margin-bottom: 12px; padding: 7px 13px; border-radius: 999px; background: #20364d; color: white; font-weight: 900; box-shadow: 0 8px 18px rgba(16,34,53,.10); }}
     .table-wrap {{ overflow-x: auto; background: var(--card); border: 1px solid rgba(34,48,68,.16); border-radius: 18px; box-shadow: var(--soft-shadow); }}
     table {{ width: 100%; border-collapse: collapse; min-width: 760px; }}
     th, td {{ padding: 12px 14px; border-bottom: 1px solid rgba(33,26,22,.18); text-align: left; vertical-align: top; }}
@@ -433,6 +463,8 @@ def render_report(data: dict[str, Any]) -> str:
       .brand-row {{ align-items: flex-start; flex-direction: column; }}
       .host-card {{ grid-template-columns: 1fr; }}
       .avatar {{ width: 58px; height: 58px; }}
+      .cover-grid {{ display: none; }}
+      .chapter {{ padding: 16px; border-radius: 20px; }}
     }}
     @media print {{
       body {{ background: white; }}
@@ -459,8 +491,13 @@ def render_report(data: dict[str, Any]) -> str:
       </div>
       <div class="meta">
         <span>Generated: {esc(data.get("generated_at"))}</span>
-        <span>Analyst: {esc(data.get("analyst"))}</span>
         <span>AI capex / 美元 / 黄金 / 港股A股</span>
+      </div>
+      <div class="cover-grid">
+        <div class="cover-tile">Nasdaq<strong>-0.80%</strong></div>
+        <div class="cover-tile">NDX<strong>-1.61%</strong></div>
+        <div class="cover-tile">Gold<strong>+1.25%</strong></div>
+        <div class="cover-tile">Theme<strong>AI Capex</strong></div>
       </div>
     </header>
 
