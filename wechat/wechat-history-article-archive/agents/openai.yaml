@@ -1,4 +1,4 @@
 interface:
   display_name: "WeChat History Archive"
-  short_description: "Archive self-owned WeChat history articles"
-  default_prompt: "Use $wechat-history-article-archive to collect, normalize, and archive historical mass-send article URLs for my own WeChat official account."
+  short_description: "Archive authorized WeChat history articles to Markdown, metadata, and images"
+  default_prompt: "Use $wechat-history-article-archive to collect or normalize lawful historical mass-send article URLs for my own WeChat official account, then batch archive them as Markdown, metadata indexes, and local images without relying on unofficial private APIs."

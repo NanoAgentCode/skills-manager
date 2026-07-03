@@ -25,14 +25,14 @@ Trace backend logs to the exact code path and contract boundary.
 Archive historical mass-send articles for a WeChat official account the user owns or is explicitly authorized to operate.
 
 - Collect or normalize `mp.weixin.qq.com/s?...` article URLs from lawful sources.
-- Save local HTML and metadata backups in batch.
-- Use this before migration, reformatting, or long-term archival of historical article content.
+- Save Markdown, metadata JSON, index CSV/JSON, and local image backups in batch; keep raw HTML only when explicitly requested.
+- Use this before migration, reformatting, long-term archival, or handing selected archived articles to `wechat/wechat-format`.
 
 本仓库用于管理可复用的 AI agent skills。目前包含 Dify、Mindmap、WeChat、Writing、Database、Debugging、Market、Quality 和 Superpowers 九类 skill，并提供 Codex、Claude、Gemini、GLM、DeepSeek 的兼容入口。
 
 - Dify：覆盖 Dify Console Admin API 自动化与 Dify DSL 应用构建。
 - Mindmap：把 PDF、文本、大纲或文档内容转换为离线可双击打开的思维导图 HTML；支持长文档默认总览、章节按需展开和对话式展开；仅在用户明确要求发布时，将静态产物发布到配置好的 Web 静态目录。
-- WeChat：把 Markdown、纯文本或粗糙笔记排版成微信公众号兼容 HTML，可选生成封面并推送到公众号草稿箱。
+- WeChat：把 Markdown、纯文本或粗糙笔记排版成微信公众号兼容 HTML；支持一命令文章包装、26 主题画廊、封面、草稿箱推送，以及自有公众号历史群发文章的合规 URL 归档。
 - Writing：润色中文技术文章或机器翻译稿，结合上下文检查专业术语准确性，并输出术语修改记录。
 - Database：通过 Python 脚本执行数据库查询，连接配置单独存放到本地配置文件；缺少配置时通过对话收集必要字段。
 - Debugging：从后端日志一路追到接口参数、DTO/VO、实体字段、MyBatis XML、SQL 列名、跨服务参数和数据库约束。
@@ -185,7 +185,7 @@ markmap-assets/
 该 skill 适合完成微信公众号内容生产流程：
 
 - 将 Markdown、纯文本或格式粗糙的笔记转换为微信公众号兼容的内联样式 HTML。
-- 默认使用 `scripts/article_workflow.py` 完成重复文章包装：术语润色、结构化、排版增强、主题画廊、最终主题输出和 manifest 记录。
+- 默认使用 `scripts/article_workflow.py` 完成重复文章包装：术语润色、结构化、排版增强、26 主题画廊、最终主题输出、ByteDance 预览、可选封面和 manifest 记录。
 - 提供 26 个排版主题，并支持浏览器画廊预览主题效果。
 - 自动识别访谈对话、重点引用、图片序列等内容结构，并增强排版。
 - 技术文章会先按 `writing/technical-article-polisher` 做术语和语境质量检查，并保留术语修改记录。
@@ -193,6 +193,18 @@ markmap-assets/
 - 可选上传图片到微信 CDN，并把文章推送到公众号草稿箱。
 
 纯排版只需要本地 Python 依赖；没有 `config.json` 时会使用内置默认配置，并把产物写入 `wechat/wechat-format/.tmp/`。推送草稿箱时需要在 `config.json` 中配置公众号 `app_id`、`app_secret` 和作者信息。`config.json` 已由该 skill 自带的 `.gitignore` 忽略，不应提交到仓库。
+
+如果输入来自历史文章备份，先使用 `wechat/wechat-history-article-archive` 把授权文章 URL 归档为 Markdown、元数据和本地图片，再把选定的 `article.md` 交给本 skill 做结构化、重排版、封面或草稿箱发布。
+
+### `wechat/wechat-history-article-archive`
+
+该 skill 适合备份用户自己拥有或明确授权运营的微信公众号历史群发文章：
+
+- 从后台复制内容、导出表格、页面源码、笔记或文本中提取并去重 `mp.weixin.qq.com/s?...` 文章链接。
+- 对 URL 清单批量抓取公开文章页，默认输出 `index.json`、`index.csv`、每篇文章的 `article.md`、`meta.json` 和本地 `images/`。
+- 仅在传入 `--keep-html` 时保留中间态 `article.html`；已有 HTML 归档可用 `convert_archive_to_markdown.py` 转成 Markdown。
+- 不要求 `AppID` / `AppSecret`，不使用未公开私有接口，也不把“永久素材导出”误当成“全部历史群发文章导出”。
+- 归档后如需迁移、重排版或二次发布，可把单篇或批量 Markdown 继续交给 `wechat/wechat-format`。
 
 ### `writing/technical-article-polisher`
 
@@ -356,6 +368,17 @@ wechat-format/
   themes/
   templates/
   wechat-cover/
+
+wechat-history-article-archive/
+  SKILL.md
+  config.example.json
+  agents/
+    openai.yaml
+  scripts/
+    extract_mp_urls.py
+    archive_article_urls.py
+    convert_archive_to_markdown.py
+    markdown_export.py
 
 python-db-query/
   SKILL.md
