@@ -17,6 +17,7 @@ description: 公众号完整内容生产管线：排版、封面、推送。Use 
 
 | 脚本 | 用途 |
 |------|------|
+| `scripts/article_workflow.py` | 默认一命令文章包装流程：术语检查、结构化、增强、画廊、最终主题输出、可选封面 |
 | `scripts/check_dependencies.py` | 检测依赖；带 `--install` 时安装缺失 Python 包 |
 | `scripts/format.py` | 排版：Markdown → 微信兼容 HTML |
 | `scripts/publish.py` | 推送：HTML → 公众号草稿箱 |
@@ -97,6 +98,62 @@ python3 {baseDir}/scripts/check_dependencies.py --install
 1. 如果用户给了文件路径，直接读取
 2. 如果没给路径，问用户要文章路径
 3. 读取文章内容，确认标题和字数
+
+#### 第 1.1 步：默认使用一命令文章包装流程
+
+对重复性的文章包装任务，默认使用 `scripts/article_workflow.py`。除非用户明确要求手动控制结构化、主题渲染或只运行单步排版，不要把 `format.py --gallery` 当作首选入口。
+
+`article_workflow.py` 会执行本技能的 repo-local 标准流程：
+
+1. 检测依赖
+2. 复制源文到稳定的 workflow 目录
+3. 生成术语润色稿和术语修改表
+4. 生成 structured / enhanced Markdown
+5. 打开 26 主题 gallery，或用 `--theme` 直接指定主题
+6. 保存最终主题输出、manifest，可选生成 ByteDance 预览和封面
+
+PowerShell：
+
+```powershell
+$env:PYTHONIOENCODING = 'utf-8'
+python {baseDir}/scripts/article_workflow.py --input "文章路径.md" --bytedance-preview --cover
+```
+
+Portable shell：
+
+```bash
+PYTHONIOENCODING=utf-8 python3 {baseDir}/scripts/article_workflow.py --input "文章路径.md" --bytedance-preview --cover
+```
+
+常用变体：
+
+```bash
+# 已知主题，跳过交互式主题选择
+python3 {baseDir}/scripts/article_workflow.py --input "文章路径.md" --theme apple-code
+
+# 不打开浏览器窗口，适合远程或批处理环境
+python3 {baseDir}/scripts/article_workflow.py --input "文章路径.md" --theme apple-code --no-open
+
+# 没有 ai.url / ai.api_key / ai.model 时，只运行确定性的后续排版步骤
+python3 {baseDir}/scripts/article_workflow.py --input "文章路径.md" --skip-ai
+```
+
+默认输出：
+
+```text
+{baseDir}/output/article-workflows/<article-slug>/
+  source/
+  markdown/
+  render/
+  gallery/
+  selection/
+  final/<theme>/
+  bytedance/
+  cover/
+  manifest.json
+```
+
+使用该脚本完成时，最终回复应给出 `manifest.json`、最终 `preview.html`、`article.html`、术语修改表，以及可选封面路径。脚本已经覆盖第 1.2 步到第 3 步；仅在需要人工改写中间稿或用户要求手动流程时，才继续执行下面的手动步骤。
 
 #### 第 1.2 步：技术文章术语质量检查（条件触发）
 
@@ -189,7 +246,7 @@ python3 {baseDir}/scripts/check_dependencies.py --install
 
 推荐的主题 ID 通过 `--recommend` 参数传给脚本，在 gallery 中高亮显示。
 
-#### 第 3 步：打开主题画廊（默认流程）
+#### 第 3 步：打开主题画廊（手动流程）
 
 ```bash
 python3 {baseDir}/scripts/format.py \
@@ -199,6 +256,8 @@ python3 {baseDir}/scripts/format.py \
 ```
 
 这会用用户的**真实文章**渲染 26 个全量主题，在浏览器打开画廊页面。用户点按钮切换主题预览，选中后点「用这个风格排版」一键复制到剪贴板。若 `--recommend` 传入了不存在的主题，脚本会提示并跳过。
+
+手动画廊路径适用于用户只想预览主题、已经手工准备 enhanced Markdown，或需要逐步调试 `format.py` 输出的情况。重复文章包装任务仍优先使用第 1.1 步的一命令流程。
 
 #### 第 3 步（备选）：直接指定主题排版
 
@@ -294,7 +353,7 @@ python3 {baseDir}/scripts/publish.py \
 
 **format.py**：
 - `--input` / `-i`：Markdown 文件路径（必须）
-- `--gallery`：打开主题画廊（推荐，默认使用）
+- `--gallery`：打开主题画廊（手动预览路径；重复包装任务优先用 `article_workflow.py`）
 - `--theme` / `-t`：直接指定主题名（跳过画廊）
 - `--output` / `-o`：输出目录（默认 `{baseDir}/.tmp`）
 - `--vault-root`：Obsidian Vault 根目录（用于搜索 wikilink 图片）
@@ -302,6 +361,21 @@ python3 {baseDir}/scripts/publish.py \
 - `--recommend`：推荐的主题 ID 列表，gallery 中高亮显示
 - `--no-open`：不自动打开浏览器
 - `--format`：输出格式 wechat/html/plain
+
+**article_workflow.py**：
+- `--input` / `-i`：Markdown 文件路径（必须）
+- `--output-root` / `-o`：workflow 输出根目录（默认 `{baseDir}/output/article-workflows`）
+- `--theme`：最终主题 ID；省略时打开 gallery 并在终端提示选择
+- `--recommend`：gallery 中高亮推荐的主题 ID 列表，默认推荐技术产品主题
+- `--bytedance-preview`：额外输出 ByteDance 主题预览
+- `--cover`：生成封面提示词并调用 `wechat-cover/config.json` 配置的封面生成流程
+- `--skip-ai`：跳过术语、结构化和增强的 AI 生成，直接使用源文排版
+- `--skip-terminology`：跳过术语润色，仍继续结构化和增强
+- `--auto-accept-terminology`：术语润色后不暂停确认
+- `--structured-input` / `--enhanced-input`：复用已有中间稿
+- `--no-open`：不自动打开浏览器
+- `--non-interactive`：缺少 `--theme` 或术语确认时直接失败，不进入提示
+- `--keep-existing`：复用已有 workflow 目录，不自动归档旧目录
 
 **publish.py**：
 - `--dir`：排版输出目录路径（已排版好的 HTML）

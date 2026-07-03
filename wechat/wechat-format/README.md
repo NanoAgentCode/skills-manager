@@ -24,11 +24,11 @@ cd ~/.claude/skills/
 git clone <repo-url> wechat-format
 python3 wechat-format/scripts/check_dependencies.py --install
 
-# Format an article (opens gallery in browser)
-python3 scripts/format.py --input article.md --gallery
-
-# Run the repo-local repeated workflow
+# Default repo-local repeated workflow
 python3 scripts/article_workflow.py --input article.md --bytedance-preview --cover
+
+# Manual gallery-only formatting
+python3 scripts/format.py --input article.md --gallery
 
 # Format with a specific theme
 python3 scripts/format.py --input article.md --theme newspaper
@@ -51,16 +51,17 @@ Just say:
 排版这篇文章 /path/to/article.md
 ```
 
-Claude will:
-1. Read and analyze your article
-2. Auto-enhance content (add dialogue containers, callout blocks, etc.)
-3. Open the theme gallery in your browser
-4. You pick a theme, tell Claude the name
-5. Claude formats and optionally publishes to WeChat
+Claude will use the repo-local workflow script by default:
+
+1. Run dependency checks
+2. Generate terminology-polished, structured, and enhanced Markdown artifacts
+3. Open the theme gallery, unless you specify a theme
+4. Save the final theme output and manifest in a predictable workflow folder
+5. Optionally generate a cover or publish to WeChat drafts
 
 ## Repo-local Workflow Script
 
-`scripts/article_workflow.py` wraps the local workflow into one command:
+`scripts/article_workflow.py` is the default path for repeated article packaging runs. It wraps the local workflow into one command:
 
 1. Copy the source article into a stable workflow folder
 2. Generate a terminology-polished Markdown draft plus a standalone terminology change table
@@ -106,6 +107,15 @@ Notes:
 - If `ai.url`, `ai.api_key`, or `ai.model` is missing in `config.json`, pass `--skip-ai` or provide `--structured-input` / `--enhanced-input`.
 - Use `--skip-terminology` when you want to keep the source text unchanged and only run the later formatting steps.
 - Use `--auto-accept-terminology` when you need a non-interactive run after the terminology step.
+
+## Manual Gallery Path
+
+Keep using `scripts/format.py` when you only need theme preview/rendering, when you already prepared the enhanced Markdown yourself, or when you are debugging a formatter issue:
+
+```bash
+python3 scripts/format.py --input article.md --gallery --recommend newspaper magazine coffee-house
+python3 scripts/format.py --input article.md --theme newspaper
+```
 
 ## Themes (26)
 

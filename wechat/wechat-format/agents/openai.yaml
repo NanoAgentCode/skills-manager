@@ -1,4 +1,4 @@
 interface:
   display_name: "WeChat Format"
-  short_description: "Format and publish WeChat articles"
-  default_prompt: "Use $wechat-format to format this article into WeChat official-account compatible HTML, optionally generate a cover, and prepare it for publishing."
+  short_description: "Package WeChat articles with the repo-local workflow"
+  default_prompt: "Use $wechat-format to package this article with scripts/article_workflow.py by default, producing WeChat official-account compatible HTML, optional cover artifacts, and publish-ready outputs."

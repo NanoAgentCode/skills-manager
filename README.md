@@ -174,7 +174,8 @@ markmap-assets/
 该 skill 适合完成微信公众号内容生产流程：
 
 - 将 Markdown、纯文本或格式粗糙的笔记转换为微信公众号兼容的内联样式 HTML。
-- 提供 30 个排版主题，并支持浏览器画廊预览主题效果。
+- 默认使用 `scripts/article_workflow.py` 完成重复文章包装：术语润色、结构化、排版增强、主题画廊、最终主题输出和 manifest 记录。
+- 提供 26 个排版主题，并支持浏览器画廊预览主题效果。
 - 自动识别访谈对话、重点引用、图片序列等内容结构，并增强排版。
 - 技术文章会先按 `writing/technical-article-polisher` 做术语和语境质量检查，并保留术语修改记录。
 - 可选生成公众号封面图。
@@ -334,6 +335,7 @@ wechat-format/
   README_CN.md
   config.example.json
   scripts/
+    article_workflow.py
     check_dependencies.py
     format.py
     publish.py

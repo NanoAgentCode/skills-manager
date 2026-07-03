@@ -75,7 +75,22 @@ cp config.example.json config.json
 排版这篇文章 /path/to/article.md
 ```
 
-### 主题画廊（推荐）
+默认会优先使用 repo-local 一命令流程：
+
+```powershell
+$env:PYTHONIOENCODING = 'utf-8'
+python .\scripts\article_workflow.py --input ..\..\article.md --bytedance-preview --cover
+```
+
+Portable shell：
+
+```bash
+PYTHONIOENCODING=utf-8 python3 ./scripts/article_workflow.py --input ../../article.md --bytedance-preview --cover
+```
+
+该脚本会完成依赖检测、术语润色、结构化、排版增强、主题画廊、最终主题输出、manifest 记录，并可选生成字节蓝预览和封面。重复性的文章包装任务优先用它；只有需要单独调试排版或已经准备好 enhanced Markdown 时，才走下面的手动画廊路径。
+
+### 主题画廊（手动路径）
 
 ```bash
 python3 scripts/format.py --input article.md --gallery --recommend newspaper magazine coffee-house
