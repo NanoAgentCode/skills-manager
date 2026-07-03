@@ -192,7 +192,7 @@ markmap-assets/
 - 可选生成公众号封面图。
 - 可选上传图片到微信 CDN，并把文章推送到公众号草稿箱。
 
-纯排版只需要本地 Python 依赖；没有 `config.json` 时会使用内置默认配置，并把产物写入 `wechat/wechat-format/.tmp/`。推送草稿箱时需要在 `config.json` 中配置公众号 `app_id`、`app_secret` 和作者信息。`config.json` 已由该 skill 自带的 `.gitignore` 忽略，不应提交到仓库。
+纯排版只需要本地 Python 依赖；没有 `config.json` 时会使用内置默认配置，并把产物写入仓库根目录 `output/wechat-format/`。推送草稿箱时需要在 `config.json` 中配置公众号 `app_id`、`app_secret` 和作者信息。`config.json` 已由该 skill 自带的 `.gitignore` 忽略，不应提交到仓库。
 
 如果输入来自历史文章备份，先使用 `wechat/wechat-history-article-archive` 把授权文章 URL 归档为 Markdown、元数据和本地图片，再通过 `wechat/wechat-history-article-archive/scripts/reformat_archived_articles.py` 把选定文章交给 `wechat/wechat-format/scripts/article_workflow.py` 做结构化、重排版、封面或草稿箱发布。
 
@@ -251,8 +251,8 @@ markmap-assets/
 
 ```powershell
 py .\market\us-sector-index-impact-report\scripts\render_investment_bank_html.py `
-  --input .\report-data.json `
-  --output .\us-sector-impact-report.html
+  --input .\output\us-sector-index-impact-report\report-data.json `
+  --output .\output\us-sector-index-impact-report\us-sector-impact-report.html
 ```
 
 ### `quality/skill-linter`
@@ -476,14 +476,14 @@ npm install -g markmap-cli
 ```powershell
 powershell -ExecutionPolicy Bypass -File .\scripts\render_offline_mindmap.ps1 `
   -InputMarkdown .\input.md `
-  -OutputHtml .\output.html
+  -OutputHtml ..\..\output\mindmap-builder\output.html
 ```
 
 输出目录中会同时生成：
 
 ```text
-output.html
-markmap-assets/
+output/mindmap-builder/output.html
+output/mindmap-builder/markmap-assets/
   d3.min.js
   markmap-view.js
   markmap-toolbar.js

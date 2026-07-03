@@ -21,8 +21,8 @@ Primary command:
 
 ```powershell
 py .\market\us-sector-index-impact-report\scripts\render_investment_bank_html.py `
-  --input .\report-data.json `
-  --output .\us-sector-impact-report.html
+  --input .\output\us-sector-index-impact-report\report-data.json `
+  --output .\output\us-sector-index-impact-report\us-sector-impact-report.html
 ```
 
 ## Other Categories

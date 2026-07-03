@@ -1,5 +1,5 @@
 {
-  "output_dir": "./.tmp",
+  "output_dir": "../../output/wechat-format/tmp",
   "vault_root": "/path/to/your/obsidian/vault",
   "image_search_paths": [],
   "settings": {
@@ -12,7 +12,7 @@
     "author": "作者名"
   },
   "cover": {
-    "output_dir": "~/Documents/covers",
+    "output_dir": "../../output/wechat-cover",
     "image_generation_script": ""
   },
   "ai": {

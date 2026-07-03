@@ -31,7 +31,7 @@ Back up historical mass-send articles for a self-owned or explicitly authorized 
 - `scripts/reformat_archived_articles.py`
   - Stage archived `articles/<slug>/article.md`, sibling `images/`, and `meta.json` into formatter-ready folders.
   - Call `../wechat-format/scripts/article_workflow.py` for one or more archived articles.
-  - Write `.tmp/reformat-inputs/reformat-manifest.json` with archive paths, staged inputs, formatter commands, and workflow output roots.
+  - Write `output/wechat-history-article-archive/reformat-inputs/reformat-manifest.json` with archive paths, staged inputs, formatter commands, and workflow output roots.
 
 ## Workflow
 
@@ -54,7 +54,7 @@ $Python = Join-Path $env:USERPROFILE ".cache\codex-runtimes\codex-primary-runtim
 & $Python `
   .\wechat\wechat-history-article-archive\scripts\extract_mp_urls.py `
   --input .\history-source.txt `
-  --output .\wechat\wechat-history-article-archive\output\history-urls.txt
+  --output .\output\wechat-history-article-archive\history-urls.txt
 ```
 
 Portable shell:
@@ -62,7 +62,7 @@ Portable shell:
 ```bash
 python3 ./wechat/wechat-history-article-archive/scripts/extract_mp_urls.py \
   --input ./history-source.txt \
-  --output ./wechat/wechat-history-article-archive/output/history-urls.txt
+  --output ./output/wechat-history-article-archive/history-urls.txt
 ```
 
 ### 3. Archive the Article Pages
@@ -72,16 +72,16 @@ PowerShell:
 ```powershell
 & $Python `
   .\wechat\wechat-history-article-archive\scripts\archive_article_urls.py `
-  --input .\wechat\wechat-history-article-archive\output\history-urls.txt `
-  --output-dir .\wechat\wechat-history-article-archive\output\archive
+  --input .\output\wechat-history-article-archive\history-urls.txt `
+  --output-dir .\output\wechat-history-article-archive\archive
 ```
 
 Portable shell:
 
 ```bash
 python3 ./wechat/wechat-history-article-archive/scripts/archive_article_urls.py \
-  --input ./wechat/wechat-history-article-archive/output/history-urls.txt \
-  --output-dir ./wechat/wechat-history-article-archive/output/archive
+  --input ./output/wechat-history-article-archive/history-urls.txt \
+  --output-dir ./output/wechat-history-article-archive/archive
 ```
 
 Default archive output:
@@ -99,7 +99,7 @@ If the archive already contains `article.html` files, convert them afterward:
 ```powershell
 & $Python `
   .\wechat\wechat-history-article-archive\scripts\convert_archive_to_markdown.py `
-  --archive-dir .\wechat\wechat-history-article-archive\output\archive `
+  --archive-dir .\output\wechat-history-article-archive\archive `
   --delete-html
 ```
 
@@ -121,7 +121,7 @@ PowerShell:
 $env:PYTHONIOENCODING = 'utf-8'
 & $Python `
   .\wechat\wechat-history-article-archive\scripts\reformat_archived_articles.py `
-  --archive-dir .\wechat\wechat-history-article-archive\output\archive `
+  --archive-dir .\output\wechat-history-article-archive\archive `
   --article 1 `
   --theme apple-code `
   --skip-ai `
@@ -133,7 +133,7 @@ Portable shell:
 
 ```bash
 PYTHONIOENCODING=utf-8 python3 ./wechat/wechat-history-article-archive/scripts/reformat_archived_articles.py \
-  --archive-dir ./wechat/wechat-history-article-archive/output/archive \
+  --archive-dir ./output/wechat-history-article-archive/archive \
   --article 1 \
   --theme apple-code \
   --skip-ai \
@@ -151,14 +151,14 @@ Selection rules:
 Default handoff output:
 
 ```text
-wechat/wechat-history-article-archive/.tmp/reformat-inputs/
+output/wechat-history-article-archive/reformat-inputs/
   <archive-article-slug>/
     <archive-article-slug>.md
     images/
     meta.json
   reformat-manifest.json
 
-wechat/wechat-format/.tmp/article-workflows/<archive-article-slug>/
+output/wechat-format/article-workflows/<archive-article-slug>/
   source/
   markdown/
   render/

@@ -60,7 +60,7 @@ Produce a current, citation-backed Chinese investment research report from overn
 7. Render a standalone HTML file.
    - Build a JSON payload that follows `references/report-schema.md`.
    - Run `scripts/render_investment_bank_html.py` to create the HTML page.
-   - If the user specified an output path, use it. Otherwise write to a timestamped file under the current working directory, for example `us-sector-impact-report-YYYY-MM-DD.html`.
+   - If the user specified an output path, use it. Otherwise write the JSON payload and rendered HTML under the repository root `output/us-sector-index-impact-report/`, for example `output/us-sector-index-impact-report/us-sector-impact-report-YYYY-MM-DD.html`.
 
 ## Data Standards
 
@@ -77,8 +77,8 @@ Use the bundled renderer:
 
 ```powershell
 py .\market\us-sector-index-impact-report\scripts\render_investment_bank_html.py `
-  --input .\report-data.json `
-  --output .\us-sector-impact-report.html
+  --input .\output\us-sector-index-impact-report\report-data.json `
+  --output .\output\us-sector-index-impact-report\us-sector-impact-report.html
 ```
 
 The script has no third-party Python dependencies. Read [references/report-schema.md](references/report-schema.md) before constructing the JSON payload. Read [references/market-analysis-framework.md](references/market-analysis-framework.md) when the cross-market logic needs a checklist.

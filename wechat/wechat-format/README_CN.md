@@ -37,7 +37,7 @@ python3 wechat-format/scripts/check_dependencies.py --install
 
 ## 配置
 
-纯排版无需 `config.json`。如果文件不存在，脚本会使用默认配置，并输出到 skill 目录下已忽略的 `.tmp/`。
+纯排版无需 `config.json`。如果文件不存在，脚本会使用默认配置，并输出到仓库级 `../../output/wechat-format/` 目录。
 
 如果要推送草稿箱、评论回复、生成封面，或自定义输出目录，复制并编辑 `config.json`：
 
@@ -47,7 +47,7 @@ cp config.example.json config.json
 
 ```json
 {
-  "output_dir": "./.tmp",
+  "output_dir": "../../output/wechat-format/tmp",
   "vault_root": "/path/to/your/obsidian/vault",
   "image_search_paths": [],
   "settings": {
@@ -60,7 +60,7 @@ cp config.example.json config.json
     "author": "作者名"
   },
   "cover": {
-    "output_dir": "~/Documents/covers",
+    "output_dir": "../../output/wechat-cover",
     "image_generation_script": ""
   },
   "ai": {
@@ -129,17 +129,17 @@ Windows PowerShell：
 ### 推送到公众号
 
 ```bash
-python3 scripts/publish.py --dir ./.tmp/article-name/ --cover cover.jpg
+python3 scripts/publish.py --dir ../../output/wechat-format/tmp/article-name/ --cover cover.jpg
 
 # 或从 Markdown 自动排版并推送，仍使用同一个已忽略输出目录
-python3 scripts/publish.py --input article.md --output ./.tmp --theme newspaper --cover cover.jpg
+python3 scripts/publish.py --input article.md --output ../../output/wechat-format/tmp --theme newspaper --cover cover.jpg
 ```
 
 Windows PowerShell：
 
 ```powershell
-& $Python .\scripts\publish.py --dir .\.tmp\article-name --cover .\cover.jpg
-& $Python .\scripts\publish.py --input .\article.md --output .\.tmp --theme newspaper --cover .\cover.jpg
+& $Python .\scripts\publish.py --dir ..\..\output\wechat-format\tmp\article-name --cover .\cover.jpg
+& $Python .\scripts\publish.py --input .\article.md --output ..\..\output\wechat-format\tmp --theme newspaper --cover .\cover.jpg
 ```
 
 ## 主题一览
@@ -221,7 +221,7 @@ Windows PowerShell：
 
 ```json
 {
-  "output_dir": "~/Documents/covers",
+  "output_dir": "../../../output/wechat-cover",
   "settings": {
     "base_url": "https://你的API地址/v1",
     "model": "gemini-3-pro-image-preview"

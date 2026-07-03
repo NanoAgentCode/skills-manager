@@ -39,7 +39,8 @@ $Python = Join-Path $env:USERPROFILE ".cache\codex-runtimes\codex-primary-runtim
 
 纯排版无需创建 `config.json`。如果文件不存在，脚本会使用内置默认配置：
 
-- 输出目录：`{baseDir}/.tmp`
+- 输出目录：`{repoRoot}/output/wechat-format/tmp`
+- 默认 workflow 产物根目录：`{repoRoot}/output/wechat-format/article-workflows`
 - Vault 根目录：当前用户主目录
 - 默认主题：`newspaper`
 
@@ -47,7 +48,7 @@ $Python = Join-Path $env:USERPROFILE ".cache\codex-runtimes\codex-primary-runtim
 
 ```json
 {
-  "output_dir": "./.tmp",
+  "output_dir": "../../output/wechat-format/tmp",
   "vault_root": "/path/to/your/obsidian/vault",
   "image_search_paths": [],
   "settings": {
@@ -60,7 +61,7 @@ $Python = Join-Path $env:USERPROFILE ".cache\codex-runtimes\codex-primary-runtim
     "author": "作者名"
   },
   "cover": {
-    "output_dir": "~/Documents/covers",
+    "output_dir": "../../output/wechat-cover",
     "image_generation_script": ""
   },
   "ai": {
@@ -165,7 +166,7 @@ PYTHONIOENCODING=utf-8 python3 {baseDir}/scripts/article_workflow.py --input "�
 默认输出：
 
 ```text
-{baseDir}/output/article-workflows/<article-slug>/
+{repoRoot}/output/wechat-format/article-workflows/<article-slug>/
   source/
   markdown/
   render/
@@ -212,7 +213,7 @@ PYTHONIOENCODING=utf-8 python3 {baseDir}/scripts/article_workflow.py --input "�
 6. **不改措辞**：不调语序、不增删内容、不润色文字。用户写什么就是什么，只加结构标记
 
 **保存与告知**：
-- 结构化后保存为 `{baseDir}/.tmp/xxx-structured.md`
+- 结构化后保存为 `{repoRoot}/output/wechat-format/tmp/xxx-structured.md`
 - 告知用户："检测到输入缺少 Markdown 格式标记，已自动补充标题和结构，保存在 xxx-structured.md，可检查调整"
 - 后续第 2 步基于 structured.md 继续处理
 
@@ -253,7 +254,7 @@ PYTHONIOENCODING=utf-8 python3 {baseDir}/scripts/article_workflow.py --input "�
 
 7. **外部链接** → 无需处理（脚本自动转脚注）
 
-**处理完成后**，把增强后的 Markdown 保存为临时文件（`{baseDir}/.tmp/xxx-enhanced.md`）。
+**处理完成后**，把增强后的 Markdown 保存为临时文件（`{repoRoot}/output/wechat-format/tmp/xxx-enhanced.md`）。
 
 #### 第 2.5 步：推荐主题
 
@@ -412,7 +413,7 @@ python3 {baseDir}/scripts/publish.py \
 - `--input` / `-i`：Markdown 文件路径（必须）
 - `--gallery`：打开主题画廊（手动预览路径；重复包装任务优先用 `article_workflow.py`）
 - `--theme` / `-t`：直接指定主题名（跳过画廊）
-- `--output` / `-o`：输出目录（默认 `{baseDir}/.tmp`）
+- `--output` / `-o`：输出目录（默认 `{repoRoot}/output/wechat-format/tmp`）
 - `--vault-root`：Obsidian Vault 根目录（用于搜索 wikilink 图片）
 - `config.json.image_search_paths`：额外图片搜索目录（用于 `![[image.jpg]]`）
 - `--recommend`：推荐的主题 ID 列表，gallery 中高亮显示
@@ -421,7 +422,7 @@ python3 {baseDir}/scripts/publish.py \
 
 **article_workflow.py**：
 - `--input` / `-i`：Markdown 文件路径（必须）
-- `--output-root` / `-o`：workflow 输出根目录（默认 `{baseDir}/output/article-workflows`）
+- `--output-root` / `-o`：workflow 输出根目录（默认 `{repoRoot}/output/wechat-format/article-workflows`）
 - `--theme`：最终主题 ID；省略时打开 gallery 并在终端提示选择
 - `--recommend`：gallery 中高亮推荐的主题 ID 列表，默认推荐技术产品主题
 - `--bytedance-preview`：额外输出 ByteDance 主题预览
@@ -437,7 +438,7 @@ python3 {baseDir}/scripts/publish.py \
 **publish.py**：
 - `--dir`：排版输出目录路径（已排版好的 HTML）
 - `--input`：Markdown 文件路径（自动排版再推送）
-- `--output` / `-o`：自动排版输出目录（仅 `--input` 模式有效，默认 `{baseDir}/.tmp`）
+- `--output` / `-o`：自动排版输出目录（仅 `--input` 模式有效，默认 `{repoRoot}/output/wechat-format/tmp`）
 - `--cover` / `-c`：封面图路径（可选，默认搜索目录内 cover.*）
 - `--title` / `-t`：文章标题（默认从 HTML 提取）
 - `--theme`：排版主题（仅 `--input` 模式有效）
@@ -517,7 +518,7 @@ $Python = Join-Path $env:USERPROFILE ".cache\codex-runtimes\codex-primary-runtim
 $env:PYTHONIOENCODING = 'utf-8'
 & $Python `
   ..\wechat-history-article-archive\scripts\reformat_archived_articles.py `
-  --archive-dir ..\wechat-history-article-archive\output\archive `
+  --archive-dir ..\..\output\wechat-history-article-archive\archive `
   --article 1 `
   --theme apple-code `
   --skip-ai `
@@ -530,10 +531,10 @@ The bridge stages each archived `article.md` with its sibling `images/` and `met
 Expected linked outputs:
 
 ```text
-../wechat-history-article-archive/.tmp/reformat-inputs/reformat-manifest.json
-.tmp/article-workflows/<archive-article-slug>/manifest.json
-.tmp/article-workflows/<archive-article-slug>/final/<theme>/preview.html
-.tmp/article-workflows/<archive-article-slug>/final/<theme>/article.html
+../../output/wechat-history-article-archive/reformat-inputs/reformat-manifest.json
+../../output/wechat-format/article-workflows/<archive-article-slug>/manifest.json
+../../output/wechat-format/article-workflows/<archive-article-slug>/final/<theme>/preview.html
+../../output/wechat-format/article-workflows/<archive-article-slug>/final/<theme>/article.html
 ```
 ### 注意事项
 

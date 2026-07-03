@@ -48,10 +48,10 @@ python3 scripts/format.py --input article.md --theme newspaper
 python3 scripts/article_workflow.py --input article.md --theme apple-code --no-open
 
 # Publish to WeChat drafts
-python3 scripts/publish.py --dir ./.tmp/article-name/ --cover cover.jpg
+python3 scripts/publish.py --dir ../../output/wechat-format/tmp/article-name/ --cover cover.jpg
 
 # Or format and publish from Markdown through the same ignored output path
-python3 scripts/publish.py --input article.md --output ./.tmp --theme newspaper --cover cover.jpg
+python3 scripts/publish.py --input article.md --output ../../output/wechat-format/tmp --theme newspaper --cover cover.jpg
 ```
 
 ## Using with Claude Code
@@ -84,7 +84,7 @@ Claude will use the repo-local workflow script by default:
 Default output layout:
 
 ```text
-.tmp/article-workflows/<article-slug>/
+../../output/wechat-format/article-workflows/<article-slug>/
   source/
   markdown/
     <article>-polished.md
@@ -154,14 +154,14 @@ PYTHONIOENCODING=utf-8 python3 ../wechat-history-article-archive/scripts/reforma
 Linked output structure:
 
 ```text
-../wechat-history-article-archive/.tmp/reformat-inputs/
+../../output/wechat-history-article-archive/reformat-inputs/
   <archive-article-slug>/
     <archive-article-slug>.md
     images/
     meta.json
   reformat-manifest.json
 
-.tmp/article-workflows/<archive-article-slug>/
+../../output/wechat-format/article-workflows/<archive-article-slug>/
   source/
   markdown/
   render/
@@ -259,7 +259,7 @@ Bob: Hi, how are you?
 
 ## Configuration
 
-Formatting works without `config.json`. If the file does not exist, the scripts use built-in defaults and write output to the ignored `.tmp/` directory inside the skill directory.
+Formatting works without `config.json`. If the file does not exist, the scripts use built-in defaults and write output to the repository-level `../../output/wechat-format/` directory.
 
 For publishing, comment replies, cover generation, or custom output paths, copy and edit `config.json`:
 
@@ -269,7 +269,7 @@ cp config.example.json config.json
 
 ```json
 {
-  "output_dir": "./.tmp",
+  "output_dir": "../../output/wechat-format/tmp",
   "vault_root": "/path/to/your/obsidian/vault",
   "image_search_paths": [],
   "settings": {
@@ -282,7 +282,7 @@ cp config.example.json config.json
     "author": "Author Name"
   },
   "cover": {
-    "output_dir": "~/Documents/covers",
+    "output_dir": "../../output/wechat-cover",
     "image_generation_script": ""
   },
   "ai": {
@@ -309,7 +309,7 @@ This repo includes a complete cover image generator in `wechat-cover/`. It calls
 
 ```json
 {
-  "output_dir": "~/Documents/covers",
+  "output_dir": "../../../output/wechat-cover",
   "settings": {
     "base_url": "https://YOUR_PROVIDER/v1",
     "model": "gemini-3-pro-image-preview"

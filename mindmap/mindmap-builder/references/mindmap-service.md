@@ -16,12 +16,12 @@ PDF/text/outline
 Command:
 
 ```powershell
-.\scripts\render_offline_mindmap.ps1 -InputMarkdown input.md -OutputHtml output.html
+.\scripts\render_offline_mindmap.ps1 -InputMarkdown input.md -OutputHtml ..\..\output\mindmap-builder\output.html
 ```
 
 The script:
 
-- Runs `markmap input.md --output output.html --no-open`.
+- Runs `markmap input.md --output <repo-root>/output/mindmap-builder/output.html --no-open`.
 - Copies bundled assets to an output sibling folder named `markmap-assets`.
 - Replaces jsDelivr CDN URLs with local `./markmap-assets/...` paths.
 
@@ -69,7 +69,7 @@ Validation:
 - The root title appears in the generated HTML.
 - The generated HTML does not contain `cdn.jsdelivr.net`.
 - `markmap-assets/` exists next to the HTML file.
-- Opening via `file:///.../output.html` works in a browser.
+- Opening via `file:///.../output/mindmap-builder/output.html` works in a browser.
 
 ## Markdown Generation Rules
 

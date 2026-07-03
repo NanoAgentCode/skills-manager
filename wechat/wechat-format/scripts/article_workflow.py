@@ -18,6 +18,7 @@ from config_loader import load_config
 
 SCRIPT_DIR = Path(__file__).resolve().parent
 SKILL_DIR = SCRIPT_DIR.parent
+REPO_ROOT = SKILL_DIR.parents[1]
 WECHAT_COVER_DIR = SKILL_DIR / "wechat-cover"
 DEFAULT_RECOMMEND = ["apple-code", "github", "bytedance", "sspai"]
 def parse_args() -> argparse.Namespace:
@@ -28,7 +29,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--output-root",
         "-o",
-        default=str(SKILL_DIR / ".tmp" / "article-workflows"),
+        default=str(REPO_ROOT / "output" / "wechat-format" / "article-workflows"),
         help="Root directory for workflow artifacts",
     )
     parser.add_argument(

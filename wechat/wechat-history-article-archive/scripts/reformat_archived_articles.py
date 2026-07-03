@@ -17,8 +17,8 @@ SCRIPT_DIR = Path(__file__).resolve().parent
 ARCHIVE_SKILL_DIR = SCRIPT_DIR.parent
 REPO_ROOT = ARCHIVE_SKILL_DIR.parent.parent
 FORMAT_WORKFLOW = REPO_ROOT / "wechat" / "wechat-format" / "scripts" / "article_workflow.py"
-DEFAULT_STAGE_ROOT = ARCHIVE_SKILL_DIR / ".tmp" / "reformat-inputs"
-DEFAULT_WORKFLOW_ROOT = REPO_ROOT / "wechat" / "wechat-format" / ".tmp" / "article-workflows"
+DEFAULT_STAGE_ROOT = REPO_ROOT / "output" / "wechat-history-article-archive" / "reformat-inputs"
+DEFAULT_WORKFLOW_ROOT = REPO_ROOT / "output" / "wechat-format" / "article-workflows"
 
 
 def parse_args() -> argparse.Namespace:

@@ -12,6 +12,12 @@ This repository is a reusable skills library. Treat each `SKILL.md` as the sourc
 6. Do not expose secrets from local config files. Use `config.example.json` for examples and keep real `config.json` values private.
 7. If a platform cannot auto-discover skills, the user can invoke a skill by saying: `Read <skill-path>/SKILL.md and follow it for this task.`
 
+## Output Directory
+
+- Put generated skill artifacts under the repository root `output/` directory by default.
+- Use a skill-specific subdirectory such as `output/wechat-format/`, `output/wechat-history-article-archive/`, `output/mindmap-builder/`, or `output/us-sector-index-impact-report/`.
+- Respect a user-specified output path, but do not create new default output folders inside individual skill directories.
+
 ## Skill Index
 
 - `dify/dify-console-admin-api/SKILL.md`: automate Dify Console Admin API app creation, DSL export/import, overwrite import, and import confirmation.

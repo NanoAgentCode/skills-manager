@@ -7,7 +7,8 @@ from pathlib import Path
 
 
 def default_config(skill_dir: Path) -> dict:
-    output_dir = skill_dir / ".tmp"
+    repo_root = skill_dir.parents[1]
+    output_dir = repo_root / "output" / "wechat-format" / "tmp"
     return {
         "output_dir": str(output_dir),
         "vault_root": str(Path.home()),
@@ -22,7 +23,7 @@ def default_config(skill_dir: Path) -> dict:
             "author": "",
         },
         "cover": {
-            "output_dir": str(output_dir / "covers"),
+            "output_dir": str(repo_root / "output" / "wechat-cover"),
             "image_generation_script": "",
         },
         "ai": {
@@ -56,4 +57,10 @@ def load_config(skill_dir: Path) -> dict:
     if not output_dir.is_absolute():
         output_dir = skill_dir / output_dir
     config["output_dir"] = str(output_dir)
+    cover_config = config.get("cover")
+    if isinstance(cover_config, dict):
+        cover_output_dir = Path(str(cover_config.get("output_dir", ""))).expanduser()
+        if not cover_output_dir.is_absolute():
+            cover_output_dir = skill_dir / cover_output_dir
+        cover_config["output_dir"] = str(cover_output_dir)
     return config
