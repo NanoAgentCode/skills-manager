@@ -25,6 +25,15 @@ def pct_class(value: Any) -> str:
     return "flat"
 
 
+def balanced_grid_class(base_class: str, items: list[Any]) -> str:
+    count = len(items)
+    if count >= 8:
+        bucket = "many"
+    else:
+        bucket = str(max(count, 1))
+    return f"{base_class} balanced-grid grid-count-{bucket}"
+
+
 def render_summary(items: list[Any]) -> str:
     cards = []
     for index, item in enumerate(items, start=1):
@@ -198,17 +207,38 @@ def render_sources(items: list[dict[str, Any]]) -> str:
 
 
 def render_report(data: dict[str, Any]) -> str:
-    summary = render_summary(data.get("executive_summary", []))
-    indices = render_indices(data.get("indices", []))
-    sectors = render_sector_cards(data.get("sectors", []))
-    factors = render_factor_cards(data.get("core_factors", []))
-    ai_blocks = render_text_blocks(data.get("ai_capex_analysis", []))
-    geo_blocks = render_text_blocks(data.get("geopolitics_dollar_gold", []))
-    us_blocks = render_text_blocks(data.get("us_interpretation", []))
-    hk_cards = render_impact_cards(data.get("hong_kong_impact", []))
-    cn_cards = render_impact_cards(data.get("a_share_impact", []))
-    scenarios = render_scenarios(data.get("scenarios", []))
+    summary_items = data.get("executive_summary", [])
+    index_items = data.get("indices", [])
+    sector_items = data.get("sectors", [])
+    factor_items = data.get("core_factors", [])
+    ai_items = data.get("ai_capex_analysis", [])
+    geo_items = data.get("geopolitics_dollar_gold", [])
+    us_items = data.get("us_interpretation", [])
+    hk_items = data.get("hong_kong_impact", [])
+    cn_items = data.get("a_share_impact", [])
+    scenario_items = data.get("scenarios", [])
+
+    summary = render_summary(summary_items)
+    indices = render_indices(index_items)
+    sectors = render_sector_cards(sector_items)
+    factors = render_factor_cards(factor_items)
+    ai_blocks = render_text_blocks(ai_items)
+    geo_blocks = render_text_blocks(geo_items)
+    us_blocks = render_text_blocks(us_items)
+    hk_cards = render_impact_cards(hk_items)
+    cn_cards = render_impact_cards(cn_items)
+    scenarios = render_scenarios(scenario_items)
     sources = render_sources(data.get("sources", []))
+    summary_grid = balanced_grid_class("summary", summary_items)
+    metrics_grid = balanced_grid_class("metrics", index_items)
+    sector_grid = balanced_grid_class("sector-grid", sector_items)
+    factor_grid = balanced_grid_class("factor-grid", factor_items)
+    ai_grid = balanced_grid_class("notes", ai_items)
+    geo_grid = balanced_grid_class("notes", geo_items)
+    us_grid = balanced_grid_class("notes", us_items)
+    hk_grid = balanced_grid_class("impact-grid", hk_items)
+    cn_grid = balanced_grid_class("impact-grid", cn_items)
+    scenario_grid = balanced_grid_class("scenario-grid", scenario_items)
     return f"""<!doctype html>
 <html lang="zh-CN">
 <head>
@@ -422,12 +452,14 @@ def render_report(data: dict[str, Any]) -> str:
     .big-card {{ padding: clamp(20px, 3vw, 32px); box-shadow: var(--shadow); }}
     .house-view {{ font-size: clamp(19px, 2.2vw, 26px); font-weight: 850; }}
     .house-view em {{ font-style: normal; background: linear-gradient(transparent 58%, rgba(255,216,77,.75) 58%); }}
-    .summary {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(245px, 1fr)); gap: 16px; align-items: stretch; }}
+    .balanced-grid {{ display: grid; grid-template-columns: repeat(1, minmax(0, 1fr)); gap: 16px; align-items: stretch; }}
+    .grid-count-2, .grid-count-4 {{ grid-template-columns: repeat(2, minmax(0, 1fr)); }}
+    .grid-count-3, .grid-count-5, .grid-count-6 {{ grid-template-columns: repeat(3, minmax(0, 1fr)); }}
+    .grid-count-7, .grid-count-many {{ grid-template-columns: repeat(4, minmax(0, 1fr)); }}
     .summary-card {{ min-height: 170px; padding: 18px; border-top: 4px solid var(--gold); display: flex; flex-direction: column; }}
     .summary-card::after {{ content: ""; position: absolute; right: -34px; bottom: -34px; width: 96px; height: 96px; border-radius: 50%; background: rgba(169,130,66,.085); }}
     .summary-card span {{ display: inline-grid; place-items: center; width: 40px; height: 40px; margin-bottom: 12px; border-radius: 12px; background: var(--navy); color: white; font-weight: 950; }}
     .summary-card p {{ margin: 0; font-weight: 800; text-indent: 2em; }}
-    .metrics {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(235px, 1fr)); gap: 16px; align-items: stretch; }}
     .metric {{ padding: 18px; min-height: 190px; display: flex; flex-direction: column; background: linear-gradient(145deg, rgba(255,254,250,.88), rgba(247,240,227,.70)); backdrop-filter: blur(10px); }}
     .metric::before {{ content: ""; position: absolute; inset: 0 0 auto; height: 6px; background: linear-gradient(90deg, var(--blue), var(--gold)); opacity: .92; }}
     .metric-label {{ margin-top: 8px; color: var(--muted); font-size: 14px; font-weight: 800; }}
@@ -436,7 +468,6 @@ def render_report(data: dict[str, Any]) -> str:
     .metric-change {{ display: inline-flex; margin-top: 12px; padding: 6px 11px; border: 1px solid currentColor; border-radius: 999px; background: white; font-family: var(--font-number); font-weight: 950; }}
     .metric p {{ color: var(--muted); margin: auto 0 0; padding-top: 12px; font-size: 14px; text-indent: 2em; }}
     .pos {{ color: var(--green); }} .neg {{ color: var(--red-dark); }} .flat {{ color: var(--muted); }}
-    .sector-grid {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(215px, 1fr)); gap: 16px; align-items: stretch; }}
     .sector-card {{ min-height: 245px; padding: 18px; border-left: 5px solid #ccd6e0; display: flex; flex-direction: column; }}
     .sector-card.pos {{ border-left-color: var(--green); }}
     .sector-card.neg {{ border-left-color: var(--red); }}
@@ -445,7 +476,6 @@ def render_report(data: dict[str, Any]) -> str:
     .ticker-line {{ color: var(--muted); font-weight: 850; }}
     .sector-change {{ margin: 14px 0 10px; font-family: var(--font-number); font-size: 36px; line-height: 1; font-weight: 950; }}
     .sector-card p {{ margin: auto 0 0; color: #473b33; text-indent: 2em; }}
-    .factor-grid {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; align-items: stretch; }}
     .factor-card {{ padding: 18px; background: #fffdfa; border-top: 4px solid var(--gold); min-height: 270px; display: flex; flex-direction: column; }}
     .factor-head {{ display: flex; justify-content: space-between; align-items: start; gap: 12px; margin-bottom: 12px; }}
     .factor-head h3 {{ margin: 0; font-size: 20px; line-height: 1.24; }}
@@ -455,7 +485,6 @@ def render_report(data: dict[str, Any]) -> str:
     .factor-impact {{ margin: 12px 0 0; color: var(--muted); text-indent: 2em; }}
     .mini-label {{ margin: 4px 0 7px; color: var(--red-dark); font-size: 11px; font-weight: 950; letter-spacing: .08em; text-transform: uppercase; }}
     .impact-label {{ margin-top: 12px; color: var(--green); }}
-    .notes, .impact-grid, .scenario-grid {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; align-items: stretch; }}
     .note {{ padding: 20px; border-left: 4px solid var(--blue); min-height: 230px; background: linear-gradient(145deg, rgba(255,254,250,.94), rgba(247,240,227,.70)); }}
     .card-kicker {{ margin-bottom: 8px; color: var(--gold); font-size: 11px; font-weight: 950; letter-spacing: .10em; text-transform: uppercase; }}
     .note h3 {{ margin: 0 0 10px; font-size: 21px; line-height: 1.25; }}
@@ -490,6 +519,10 @@ def render_report(data: dict[str, Any]) -> str:
       .avatar {{ width: 58px; height: 58px; }}
       .cover-grid {{ display: none; }}
       .chapter {{ padding: 16px; border-radius: 20px; }}
+      .balanced-grid {{ grid-template-columns: 1fr; }}
+    }}
+    @media (min-width: 721px) and (max-width: 980px) {{
+      .grid-count-3, .grid-count-5, .grid-count-6, .grid-count-7, .grid-count-many {{ grid-template-columns: repeat(2, minmax(0, 1fr)); }}
     }}
     @media print {{
       body {{ background: white; }}
@@ -539,55 +572,55 @@ def render_report(data: dict[str, Any]) -> str:
 
     <section class="chapter" id="summary">
       <div class="section-title"><span>01</span><h2>先看结论</h2></div>
-      <div class="summary">{summary}</div>
+      <div class="{summary_grid}">{summary}</div>
     </section>
 
     <section class="chapter" id="indices">
       <div class="section-title"><span>02</span><h2>昨晚几个大数字</h2></div>
-      <div class="metrics">{indices}</div>
+      <div class="{metrics_grid}">{indices}</div>
     </section>
 
     <section class="chapter" id="sectors">
       <div class="section-title"><span>03</span><h2>哪些行业在涨，哪些在跌？</h2></div>
-      <div class="sector-grid">{sectors}</div>
+      <div class="{sector_grid}">{sectors}</div>
     </section>
 
     <section class="chapter" id="drivers">
       <div class="section-title"><span>04</span><h2>为什么会这样？</h2></div>
       <div class="question-strip">观点 - 证据 - 影响：先看驱动，再看传导</div>
-      <div class="factor-grid">{factors}</div>
+      <div class="{factor_grid}">{factors}</div>
     </section>
 
     <section class="chapter" id="ai-capex">
       <div class="section-title"><span>05</span><h2>AI资本开支：到底变了吗？</h2></div>
       <div class="question-strip">重点不是有没有AI，而是钱花得值不值</div>
-      <div class="notes">{ai_blocks}</div>
+      <div class="{ai_grid}">{ai_blocks}</div>
     </section>
 
     <section class="chapter" id="macro">
       <div class="section-title"><span>06</span><h2>美元、黄金、地缘政治怎么看？</h2></div>
       <div class="question-strip">美元弱一点，黄金强一点，风险偏好不一定更差</div>
-      <div class="notes">{geo_blocks}</div>
+      <div class="{geo_grid}">{geo_blocks}</div>
     </section>
 
     <section class="chapter" id="us">
       <div class="section-title"><span>07</span><h2>这对美股本身说明什么？</h2></div>
-      <div class="notes">{us_blocks}</div>
+      <div class="{us_grid}">{us_blocks}</div>
     </section>
 
     <section class="chapter" id="hk">
       <div class="section-title"><span>08</span><h2>传到港股，谁更敏感？</h2></div>
-      <div class="impact-grid">{hk_cards}</div>
+      <div class="{hk_grid}">{hk_cards}</div>
     </section>
 
     <section class="chapter" id="ashare">
       <div class="section-title"><span>09</span><h2>传到A股，重点看三条线</h2></div>
-      <div class="impact-grid">{cn_cards}</div>
+      <div class="{cn_grid}">{cn_cards}</div>
     </section>
 
     <section class="chapter" id="risk">
       <div class="section-title"><span>10</span><h2>接下来怎么验证？</h2></div>
-      <div class="scenario-grid">{scenarios}</div>
+      <div class="{scenario_grid}">{scenarios}</div>
     </section>
 
     <section class="chapter" id="sources">
