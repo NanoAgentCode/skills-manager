@@ -234,13 +234,16 @@ def render_report(data: dict[str, Any]) -> str:
       --shadow: 0 20px 54px rgba(16, 34, 53, .13);
       --soft-shadow: 0 10px 28px rgba(16, 34, 53, .075);
       --slide-shadow: 0 18px 46px rgba(16, 34, 53, .11);
+      --font-display: "Microsoft JhengHei UI", "Microsoft YaHei UI", "PingFang SC", "Noto Sans CJK SC", sans-serif;
+      --font-body: "Microsoft YaHei UI", "Microsoft YaHei", "PingFang SC", "Noto Sans CJK SC", sans-serif;
+      --font-number: "Bahnschrift", "DIN Alternate", "Segoe UI Variable Display", "Aptos Display", sans-serif;
     }}
     * {{ box-sizing: border-box; }}
     html {{ scroll-behavior: smooth; }}
     body {{
       margin: 0;
       color: var(--ink);
-      font-family: "Microsoft YaHei", "PingFang SC", "Noto Sans CJK SC", "Segoe UI", sans-serif;
+      font-family: var(--font-body);
       line-height: 1.55;
       background:
         linear-gradient(90deg, rgba(16,34,53,.025) 1px, transparent 1px),
@@ -304,22 +307,44 @@ def render_report(data: dict[str, Any]) -> str:
       inset: auto 42px 34px auto;
       z-index: 1;
       display: grid;
-      grid-template-columns: repeat(2, 112px);
-      gap: 10px;
-      opacity: .82;
+      grid-template-columns: repeat(2, 138px);
+      gap: 14px;
+      opacity: .96;
     }}
     .cover-tile {{
-      min-height: 76px;
-      padding: 12px;
-      border: 1px solid rgba(34,48,68,.14);
+      position: relative;
+      min-height: 94px;
+      padding: 16px 14px;
+      border: 1px solid rgba(255,255,255,.60);
       border-radius: 16px;
-      background: rgba(255,254,250,.72);
-      box-shadow: 0 10px 26px rgba(16,34,53,.08);
-      font-size: 12px;
-      font-weight: 900;
-      color: var(--navy);
+      color: #fff9c8;
+      box-shadow: 0 16px 36px rgba(16,34,53,.20), inset 0 0 0 1px rgba(255,255,255,.26);
+      backdrop-filter: blur(14px) saturate(128%);
+      overflow: hidden;
     }}
-    .cover-tile strong {{ display: block; font-size: 20px; color: var(--red-dark); line-height: 1; margin-top: 6px; }}
+    .cover-tile::before {{
+      content: "";
+      position: absolute;
+      inset: 7px;
+      border: 1px dashed rgba(255,255,255,.48);
+      border-radius: 12px;
+      pointer-events: none;
+    }}
+    .cover-tile::after {{
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(255,255,255,.22), transparent 45%, rgba(255,255,255,.14));
+      pointer-events: none;
+    }}
+    .cover-tile span, .cover-tile strong, .cover-tile em {{ position: relative; z-index: 1; display: block; }}
+    .cover-tile span {{ font-family: var(--font-display); font-size: 20px; font-weight: 950; line-height: 1.1; }}
+    .cover-tile strong {{ margin-top: 7px; font-family: var(--font-number); font-size: 24px; color: #fff2a6; line-height: 1; }}
+    .cover-tile em {{ margin-top: 7px; color: rgba(255,255,255,.82); font-style: normal; font-size: 12px; font-weight: 900; letter-spacing: .02em; }}
+    .glass-blue {{ background: linear-gradient(135deg, rgba(27,122,149,.76), rgba(74,57,158,.76)); }}
+    .glass-rose {{ background: linear-gradient(135deg, rgba(179,66,76,.78), rgba(132,57,116,.76)); }}
+    .glass-violet {{ background: linear-gradient(135deg, rgba(176,67,153,.76), rgba(67,79,145,.76)); }}
+    .glass-green {{ background: linear-gradient(135deg, rgba(45,128,95,.76), rgba(55,79,150,.76)); }}
     .cover-label::before {{
       content: "";
       width: 13px;
@@ -329,8 +354,8 @@ def render_report(data: dict[str, Any]) -> str:
       background: var(--gold);
     }}
     .date-chip {{ position: relative; z-index: 2; border: 1px solid rgba(34,48,68,.20); border-radius: 999px; padding: 8px 14px; background: white; font-weight: 900; color: var(--navy); box-shadow: 0 8px 22px rgba(16,34,53,.08); }}
-    h1 {{ position: relative; z-index: 2; max-width: 880px; margin: 48px 0 18px; font-size: clamp(34px, 5vw, 64px); line-height: 1.05; letter-spacing: 0; color: var(--navy); }}
-    .subtitle {{ position: relative; z-index: 2; max-width: 760px; font-size: clamp(18px, 2.2vw, 24px); font-weight: 760; color: #3d4858; }}
+    h1 {{ position: relative; z-index: 2; max-width: 880px; margin: 48px 0 18px; font-family: var(--font-display); font-size: clamp(34px, 5vw, 64px); line-height: 1.05; letter-spacing: 0; color: var(--navy); }}
+    .subtitle {{ position: relative; z-index: 2; max-width: 760px; font-family: var(--font-display); font-size: clamp(18px, 2.2vw, 24px); font-weight: 760; color: #3d4858; }}
     .host-card {{
       position: relative;
       z-index: 2;
@@ -379,7 +404,7 @@ def render_report(data: dict[str, Any]) -> str:
     }}
     .section-title {{ display: flex; align-items: center; gap: 12px; margin: 0 0 18px; padding-bottom: 14px; border-bottom: 1px solid rgba(34,48,68,.10); }}
     .section-title span {{ display: grid; place-items: center; width: 42px; height: 42px; border: 1px solid rgba(34,48,68,.18); border-radius: 13px; background: var(--navy); color: white; font-weight: 950; box-shadow: 0 10px 24px rgba(16,34,53,.18); }}
-    h2 {{ margin: 0; font-size: clamp(24px, 3vw, 34px); letter-spacing: 0; }}
+    h2 {{ margin: 0; font-family: var(--font-display); font-size: clamp(24px, 3vw, 34px); letter-spacing: 0; }}
     .big-card, .summary-card, .metric, .note, .impact, .scenario, .sector-card, .factor-card {{
       position: relative;
       overflow: hidden;
@@ -403,12 +428,12 @@ def render_report(data: dict[str, Any]) -> str:
     .summary-card span {{ display: inline-grid; place-items: center; width: 40px; height: 40px; margin-bottom: 12px; border-radius: 12px; background: var(--navy); color: white; font-weight: 950; }}
     .summary-card p {{ margin: 0; font-weight: 800; text-indent: 2em; }}
     .metrics {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(235px, 1fr)); gap: 16px; align-items: stretch; }}
-    .metric {{ padding: 18px; min-height: 190px; display: flex; flex-direction: column; }}
+    .metric {{ padding: 18px; min-height: 190px; display: flex; flex-direction: column; background: linear-gradient(145deg, rgba(255,254,250,.88), rgba(247,240,227,.70)); backdrop-filter: blur(10px); }}
     .metric::before {{ content: ""; position: absolute; inset: 0 0 auto; height: 6px; background: linear-gradient(90deg, var(--blue), var(--gold)); opacity: .92; }}
     .metric-label {{ margin-top: 8px; color: var(--muted); font-size: 14px; font-weight: 800; }}
     .metric-ticker {{ margin-top: 3px; font-size: 14px; font-weight: 950; }}
-    .metric-close {{ margin-top: 10px; font-size: clamp(28px, 4vw, 44px); line-height: 1; font-weight: 950; }}
-    .metric-change {{ display: inline-flex; margin-top: 12px; padding: 6px 11px; border: 1px solid currentColor; border-radius: 999px; background: white; font-weight: 950; }}
+    .metric-close {{ margin-top: 10px; font-family: var(--font-number); font-size: clamp(28px, 4vw, 44px); line-height: 1; font-weight: 950; }}
+    .metric-change {{ display: inline-flex; margin-top: 12px; padding: 6px 11px; border: 1px solid currentColor; border-radius: 999px; background: white; font-family: var(--font-number); font-weight: 950; }}
     .metric p {{ color: var(--muted); margin: auto 0 0; padding-top: 12px; font-size: 14px; text-indent: 2em; }}
     .pos {{ color: var(--green); }} .neg {{ color: var(--red-dark); }} .flat {{ color: var(--muted); }}
     .sector-grid {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(215px, 1fr)); gap: 16px; align-items: stretch; }}
@@ -418,7 +443,7 @@ def render_report(data: dict[str, Any]) -> str:
     .rank-pill {{ position: absolute; top: 14px; right: 14px; padding: 5px 10px; border-radius: 999px; background: #eef2f6; color: var(--navy); font-weight: 950; }}
     .sector-card h3 {{ width: calc(100% - 58px); margin: 0 0 4px; font-size: 18px; line-height: 1.22; }}
     .ticker-line {{ color: var(--muted); font-weight: 850; }}
-    .sector-change {{ margin: 14px 0 10px; font-size: 36px; line-height: 1; font-weight: 950; }}
+    .sector-change {{ margin: 14px 0 10px; font-family: var(--font-number); font-size: 36px; line-height: 1; font-weight: 950; }}
     .sector-card p {{ margin: auto 0 0; color: #473b33; text-indent: 2em; }}
     .factor-grid {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; align-items: stretch; }}
     .factor-card {{ padding: 18px; background: #fffdfa; border-top: 4px solid var(--gold); min-height: 270px; display: flex; flex-direction: column; }}
@@ -431,11 +456,11 @@ def render_report(data: dict[str, Any]) -> str:
     .mini-label {{ margin: 4px 0 7px; color: var(--red-dark); font-size: 11px; font-weight: 950; letter-spacing: .08em; text-transform: uppercase; }}
     .impact-label {{ margin-top: 12px; color: var(--green); }}
     .notes, .impact-grid, .scenario-grid {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; align-items: stretch; }}
-    .note {{ padding: 20px; border-left: 4px solid var(--blue); min-height: 230px; }}
+    .note {{ padding: 20px; border-left: 4px solid var(--blue); min-height: 230px; background: linear-gradient(145deg, rgba(255,254,250,.94), rgba(247,240,227,.70)); }}
     .card-kicker {{ margin-bottom: 8px; color: var(--gold); font-size: 11px; font-weight: 950; letter-spacing: .10em; text-transform: uppercase; }}
     .note h3 {{ margin: 0 0 10px; font-size: 21px; line-height: 1.25; }}
     .note p {{ margin: 0; color: #473b33; text-indent: 2em; }}
-    .impact {{ padding: 18px; background: #fffdfa; border-top: 4px solid #ccd6e0; min-height: 245px; display: flex; flex-direction: column; }}
+    .impact {{ padding: 18px; background: linear-gradient(145deg, rgba(255,254,250,.94), rgba(247,240,227,.72)); border-top: 4px solid #ccd6e0; min-height: 245px; display: flex; flex-direction: column; }}
     .impact.positive {{ border-top-color: var(--green); }}
     .impact.negative {{ border-top-color: var(--red); }}
     .impact.neutral {{ border-top-color: var(--gold); }}
@@ -494,10 +519,10 @@ def render_report(data: dict[str, Any]) -> str:
         <span>AI capex / 美元 / 黄金 / 港股A股</span>
       </div>
       <div class="cover-grid">
-        <div class="cover-tile">Nasdaq<strong>-0.80%</strong></div>
-        <div class="cover-tile">NDX<strong>-1.61%</strong></div>
-        <div class="cover-tile">Gold<strong>+1.25%</strong></div>
-        <div class="cover-tile">Theme<strong>AI Capex</strong></div>
+        <div class="cover-tile glass-blue"><span>纳指</span><strong>-0.80%</strong><em>Nasdaq Composite</em></div>
+        <div class="cover-tile glass-violet"><span>纳百</span><strong>-1.61%</strong><em>Nasdaq 100</em></div>
+        <div class="cover-tile glass-rose"><span>黄金</span><strong>+1.25%</strong><em>Global Gold</em></div>
+        <div class="cover-tile glass-green"><span>主线</span><strong>AI Capex</strong><em>Capital Spending</em></div>
       </div>
     </header>
 
