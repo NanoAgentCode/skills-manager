@@ -2,6 +2,18 @@
 
 ## Recently Added Skills
 
+### `media/video-transcriber`
+
+Turn local subtitle files, local video/audio files, approved online video URLs, or user-authorized WeChat Channels/视频号 material into transcripts, subtitles, summaries, or article-ready notes.
+
+- Prefer existing subtitle/caption files first with `scripts/subtitle_to_markdown.py`.
+- Use `scripts/extract_audio.py` only when subtitles are missing or unusable, then create mono 16 kHz audio and write a media manifest under `output/video-transcriber/`.
+- Supports YouTube caption-first workflows through `yt-dlp`, and Bilibili subtitle-first workflows through public subtitle discovery or user-authorized Chrome session capture of Bilibili AI subtitle JSON.
+- Treats WeChat Channels/视频号 as restricted: if share links hand off to phone WeChat or require WeChat-only state, ask for an exported video, screen recording, direct temporary media URL, or subtitle file.
+- Supports plain transcripts, timestamped Markdown, SRT/VTT subtitle workflows, meeting notes, and downstream writing or WeChat formatting.
+- For online videos and WeChat Channels, request the least-privileged credential route when captions/media require login, cookies, browser state, or owner/admin credentials.
+- Selects the best available local transcription tool first and requires explicit approval before downloading online sources, installing models, using browser/session state, or calling external APIs.
+
 ### `market/us-sector-index-impact-report`
 
 分析昨晚美股行业指数、纳斯达克指数和纳斯达克 100 指数，并输出投行风格 HTML 研究报告。
@@ -28,10 +40,11 @@ Archive historical mass-send articles for a WeChat official account the user own
 - Save Markdown, metadata JSON, index CSV/JSON, and local image backups in batch; keep raw HTML only when explicitly requested.
 - Use `scripts/reformat_archived_articles.py` to stage selected archived articles and run `wechat/wechat-format/scripts/article_workflow.py` for migration, reformatting, or republishing preparation.
 
-本仓库用于管理可复用的 AI agent skills。目前包含 Dify、Mindmap、WeChat、Writing、Database、Debugging、Market、Quality 和 Superpowers 九类 skill，并提供 Codex、Claude、Gemini、GLM、DeepSeek 的兼容入口。
+本仓库用于管理可复用的 AI agent skills。目前包含 Dify、Mindmap、Media、WeChat、Writing、Database、Debugging、Market、Quality 和 Superpowers 十类 skill，并提供 Codex、Claude、Gemini、GLM、DeepSeek 的兼容入口。
 
 - Dify：覆盖 Dify Console Admin API 自动化与 Dify DSL 应用构建。
 - Mindmap：把 PDF、文本、大纲或文档内容转换为离线可双击打开的思维导图 HTML；支持长文档默认总览、章节按需展开和对话式展开；仅在用户明确要求发布时，将静态产物发布到配置好的 Web 静态目录。
+- Media：优先使用已有字幕/平台字幕；没有字幕时，再从本地视频/音频、授权在线视频或微信视频号素材中提取音频并生成文字稿、字幕、摘要、会议纪要或文章草稿。
 - WeChat：把 Markdown、纯文本或粗糙笔记排版成微信公众号兼容 HTML；支持一命令文章包装、26 主题画廊、封面、草稿箱推送，以及自有公众号历史群发文章的合规 URL 归档。
 - Writing：润色中文技术文章或机器翻译稿，结合上下文检查专业术语准确性，并输出术语修改记录。
 - Database：通过 Python 脚本执行数据库查询，连接配置单独存放到本地配置文件；缺少配置时通过对话收集必要字段。
@@ -179,6 +192,29 @@ markmap-assets/
 ```
 
 注意：`PathPrefix` 不能省略，不能是 `/`，也不能由 skill 猜测。
+
+### `media/video-transcriber`
+
+该 skill 适合把字幕文件、本地视频、音频、授权在线视频或微信视频号素材转成可使用的文字材料：
+
+- 优先检查用户提供的 `.srt` / `.vtt` 字幕、本地同名字幕和平台可下载字幕。
+- 使用 `scripts/subtitle_to_markdown.py` 把字幕整理成带时间戳 Markdown。
+- YouTube 默认先用 `yt-dlp` 列出和下载字幕；B 站默认先查公开字幕，必要时在用户授权后使用已登录 Chrome 会话触发字幕菜单并保存 Bilibili AI 字幕 JSON。
+- 没有可用字幕时，使用 `scripts/extract_audio.py` 抽取单声道 16 kHz 音频，并在 `output/video-transcriber/<media-stem>/` 写入 `media-manifest.json`。
+- 支持普通文字稿、带时间戳 Markdown、SRT/VTT 字幕、会议纪要、摘要和文章草稿。
+- 在线视频和微信视频号如缺少登录态、cookies、直链或账号权限，先向用户索要最小必要凭证或授权文件；优先使用用户导出的本地文件、字幕、直链或明确授权的会话方式，不绕过访问控制。
+- 视频号分享链接如果只能扫码回流到手机微信，视为浏览器抓取受限，改为要求导出视频、录屏、直接临时媒体 URL 或字幕文件。
+- 优先使用本机已有 ASR 工具；安装大模型、使用浏览器登录态或调用外部 API 前必须征得用户确认。
+- 转写后如需发布级中文技术表达，可继续交给 `writing/technical-article-polisher` 或 `wechat/wechat-format`。
+
+示例：
+
+```powershell
+$Python = Join-Path $env:USERPROFILE ".cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe"
+& $Python .\media\video-transcriber\scripts\subtitle_to_markdown.py .\output\video-transcriber\demo\source.en.vtt --output .\output\video-transcriber\demo\transcript.md
+& $Python .\media\video-transcriber\scripts\extract_audio.py .\input\demo.mp4 --output-dir .\output\video-transcriber
+& $Python .\media\video-transcriber\scripts\extract_audio.py "https://example.com/video" --allow-url-download --output-dir .\output\video-transcriber
+```
 
 ### `wechat/wechat-format`
 
@@ -352,6 +388,14 @@ mindmap-publisher/
     publish_mindmap.ps1
   references/
     nginx-static-publish.md
+
+video-transcriber/
+  SKILL.md
+  agents/
+    openai.yaml
+  scripts/
+    extract_audio.py
+    subtitle_to_markdown.py
 
 wechat-format/
   SKILL.md

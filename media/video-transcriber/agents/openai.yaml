@@ -1,0 +1,4 @@
+interface:
+  display_name: "Video Transcriber"
+  short_description: "Convert captions or audio into transcripts"
+  default_prompt: "Use $video-transcriber to prefer available subtitles first, then extract audio only if needed, and produce a timestamped transcript."
