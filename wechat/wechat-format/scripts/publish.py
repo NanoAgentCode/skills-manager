@@ -1,17 +1,18 @@
 #!/usr/bin/env python3
-"""微信公众号草稿箱发布工具
+r"""微信公众号草稿箱发布工具
 
 将 format.py 排版后的文章推送到微信公众号草稿箱。
 
 用法:
     # 发布排版好的文章目录
-    python3 publish.py --dir /path/to/formatted/article/
+    Windows PowerShell: & $Python .\scripts\publish.py --dir .\.tmp\article-name
+    Portable shell: python3 scripts/publish.py --dir /path/to/formatted/article/
 
     # 指定封面图
-    python3 publish.py --dir /path/to/formatted/article/ --cover cover.jpg
+    python3 scripts/publish.py --dir /path/to/formatted/article/ --cover cover.jpg
 
     # 直接从 Markdown 一步到位（自动排版+发布）
-    python3 publish.py --input article.md --theme elegant
+    python3 scripts/publish.py --input article.md --theme elegant
 """
 
 import argparse
@@ -32,7 +33,7 @@ try:
 except ModuleNotFoundError:
     print("Missing dependency: requests")
     print(f"Install it with: {sys.executable} -m pip install requests")
-    print("Or run: python scripts/check_dependencies.py --install")
+    print(f"Or run: {sys.executable} {Path(__file__).parent / 'check_dependencies.py'} --install")
     sys.exit(1)
 
 # ── 路径 ──────────────────────────────────────────────────────────────

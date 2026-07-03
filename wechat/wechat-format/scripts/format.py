@@ -1,13 +1,14 @@
 #!/usr/bin/env python3
-"""微信公众号文章排版工具
+r"""微信公众号文章排版工具
 
 将 Markdown 文件转为微信公众号兼容的内联样式 HTML。
 微信编辑器不支持 <style> 标签、CSS class 和 JS，
 所以所有样式必须用 style="..." 内联写在每个标签上。
 
 用法:
-    python3 format.py --input article.md --theme elegant [--vault-root /path] [--output /path]
-    python3 format.py --input article.md --format plain  # 纯 HTML 输出（无微信兼容处理）
+    Windows PowerShell: & $Python .\scripts\format.py --input article.md --theme elegant
+    Portable shell: python3 scripts/format.py --input article.md --theme elegant
+    Portable shell: python3 scripts/format.py --input article.md --format plain  # 纯 HTML 输出（无微信兼容处理）
 """
 
 import argparse
@@ -28,7 +29,7 @@ try:
 except ModuleNotFoundError:
     print("Missing dependency: markdown")
     print(f"Install it with: {sys.executable} -m pip install markdown")
-    print("Or run: python scripts/check_dependencies.py --install")
+    print(f"Or run: {sys.executable} {Path(__file__).parent / 'check_dependencies.py'} --install")
     sys.exit(1)
 
 # ── 脚注占位符（UUID 防冲突）──────────────────────────────────────────

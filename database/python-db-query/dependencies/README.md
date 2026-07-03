@@ -17,13 +17,14 @@ dependencies/
 Install them offline with:
 
 ```powershell
-python -m pip install --no-index --find-links .\dependencies\python-wheels -r .\dependencies\requirements-offline.txt
+$Python = Join-Path $env:USERPROFILE ".cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe"
+& $Python -m pip install --no-index --find-links .\dependencies\python-wheels -r .\dependencies\requirements-offline.txt
 ```
 
 Or use the helper from the skill root:
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File .\scripts\install_offline_dependencies.ps1 -Python python
+powershell -ExecutionPolicy Bypass -File .\scripts\install_offline_dependencies.ps1 -Python $Python
 ```
 
 The bundled `requirements-offline.txt` covers:

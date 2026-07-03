@@ -20,6 +20,15 @@ Claude Code 公众号完整发布管线：**排版** → **封面**（可选）�
 
 ## 安装
 
+Windows PowerShell：
+
+```powershell
+$Python = Join-Path $env:USERPROFILE ".cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe"
+& $Python .\scripts\check_dependencies.py --install
+```
+
+可移植 shell：
+
 ```bash
 cd ~/.claude/skills/
 git clone <repo-url> wechat-format
@@ -78,8 +87,9 @@ cp config.example.json config.json
 默认会优先使用 repo-local 一命令流程：
 
 ```powershell
+$Python = Join-Path $env:USERPROFILE ".cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe"
 $env:PYTHONIOENCODING = 'utf-8'
-python .\scripts\article_workflow.py --input ..\..\article.md --bytedance-preview --cover
+& $Python .\scripts\article_workflow.py --input ..\..\article.md --bytedance-preview --cover
 ```
 
 Portable shell：
@@ -96,12 +106,24 @@ PYTHONIOENCODING=utf-8 python3 ./scripts/article_workflow.py --input ../../artic
 python3 scripts/format.py --input article.md --gallery --recommend newspaper magazine coffee-house
 ```
 
+Windows PowerShell：
+
+```powershell
+& $Python .\scripts\format.py --input article.md --gallery --recommend newspaper magazine coffee-house
+```
+
 在浏览器中用真实文章预览 26 个全量主题，选好后回到 Claude 说主题名。
 
 ### 指定主题排版
 
 ```bash
 python3 scripts/format.py --input article.md --theme newspaper
+```
+
+Windows PowerShell：
+
+```powershell
+& $Python .\scripts\format.py --input article.md --theme newspaper
 ```
 
 ### 推送到公众号
@@ -111,6 +133,13 @@ python3 scripts/publish.py --dir ./.tmp/article-name/ --cover cover.jpg
 
 # 或从 Markdown 自动排版并推送，仍使用同一个已忽略输出目录
 python3 scripts/publish.py --input article.md --output ./.tmp --theme newspaper --cover cover.jpg
+```
+
+Windows PowerShell：
+
+```powershell
+& $Python .\scripts\publish.py --dir .\.tmp\article-name --cover .\cover.jpg
+& $Python .\scripts\publish.py --input .\article.md --output .\.tmp --theme newspaper --cover .\cover.jpg
 ```
 
 ## 主题一览
@@ -212,6 +241,15 @@ python3 scripts/generate.py \
   --out cover.jpg
 ```
 
+Windows PowerShell：
+
+```powershell
+& $Python .\scripts\generate.py `
+  --config .\wechat-cover\config.json `
+  --prompt-file .\prompt.md `
+  --out .\cover.jpg
+```
+
 或者在 Claude Code 里直接说：`给这篇文章配个封面`
 
 完整提示词模板和工作流详见 `wechat-cover/SKILL.md`。
@@ -232,10 +270,22 @@ python3 scripts/generate.py \
 python3 scripts/check_dependencies.py
 ```
 
+Windows PowerShell：
+
+```powershell
+& $Python .\scripts\check_dependencies.py
+```
+
 安装缺失依赖：
 
 ```bash
 python3 scripts/check_dependencies.py --install
+```
+
+Windows PowerShell：
+
+```powershell
+& $Python .\scripts\check_dependencies.py --install
 ```
 
 ## License

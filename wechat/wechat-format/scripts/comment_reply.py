@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""
+r"""
 微信公众号评论自动回复脚本
 
 功能：
@@ -9,9 +9,9 @@
 - 记录已回复的评论，避免重复
 
 用法：
-  python3 comment_reply.py                # 扫描并回复
-  python3 comment_reply.py --dry-run      # 只看不发
-  python3 comment_reply.py --articles 5   # 扫描最近 5 篇（默认 10）
+  Windows PowerShell: & $Python .\scripts\comment_reply.py
+  Portable shell: python3 scripts/comment_reply.py --dry-run      # 只看不发
+  Portable shell: python3 scripts/comment_reply.py --articles 5   # 扫描最近 5 篇（默认 10）
 """
 
 import argparse
@@ -20,14 +20,14 @@ import os
 import re
 import sys
 import time
+from pathlib import Path
 try:
     import requests
 except ModuleNotFoundError:
     print("Missing dependency: requests")
     print(f"Install it with: {sys.executable} -m pip install requests")
-    print("Or run: python scripts/check_dependencies.py --install")
+    print(f"Or run: {sys.executable} {Path(__file__).parent / 'check_dependencies.py'} --install")
     sys.exit(1)
-from pathlib import Path
 from datetime import datetime
 
 from config_loader import load_config as load_skill_config

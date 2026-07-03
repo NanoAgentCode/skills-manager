@@ -64,6 +64,17 @@ Archive historical mass-send articles for a WeChat official account the user own
 请先阅读 AGENTS.md，再阅读 wechat/wechat-format/SKILL.md，把这篇文章排版成公众号 HTML。
 ```
 
+## Windows Python 调用
+
+Windows 环境不要假设存在全局 `python` alias。Codex 本地运行时可优先使用：
+
+```powershell
+$Python = Join-Path $env:USERPROFILE ".cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe"
+& $Python --version
+```
+
+后续所有 Python 脚本示例都可以用 `& $Python <script.py> ...` 运行；可移植 shell 或 Linux/macOS 环境再使用 `python3 <script.py> ...`。
+
 ## 功能覆盖
 
 ### `dify/dify-console-admin-api`
@@ -248,9 +259,10 @@ py .\market\us-sector-index-impact-report\scripts\render_investment_bank_html.py
 示例：
 
 ```powershell
-python .\quality\skill-linter\scripts\lint_skill.py .\quality\skill-linter --repo-root .
-python .\quality\skill-linter\scripts\lint_skill.py . --repo-root .
-python .\quality\skill-linter\scripts\lint_skill.py . --repo-root . --json
+$Python = Join-Path $env:USERPROFILE ".cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe"
+& $Python .\quality\skill-linter\scripts\lint_skill.py .\quality\skill-linter --repo-root .
+& $Python .\quality\skill-linter\scripts\lint_skill.py . --repo-root .
+& $Python .\quality\skill-linter\scripts\lint_skill.py . --repo-root . --json
 ```
 
 ### `superpowers/superpowers`
@@ -401,14 +413,15 @@ superpowers/
 `quality/skill-linter` 可用于检查单个 skill 或整个仓库的 skill 质量：
 
 ```powershell
-python .\quality\skill-linter\scripts\lint_skill.py .\quality\skill-linter --repo-root .
-python .\quality\skill-linter\scripts\lint_skill.py . --repo-root .
+$Python = Join-Path $env:USERPROFILE ".cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe"
+& $Python .\quality\skill-linter\scripts\lint_skill.py .\quality\skill-linter --repo-root .
+& $Python .\quality\skill-linter\scripts\lint_skill.py . --repo-root .
 ```
 
 `dify/` 目录下提供一个无外部服务依赖的快速校验脚本，用于确认当前两个 Dify skill 的基本结构和关键引用仍然可用：
 
 ```powershell
-python .\dify\quick_validate.py
+& $Python .\dify\quick_validate.py
 ```
 
 该脚本会检查：

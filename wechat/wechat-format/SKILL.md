@@ -24,6 +24,17 @@ description: 公众号完整内容生产管线：排版、封面、推送。Use 
 | `scripts/comment_reply.py` | 评论自动回复（可选） |
 | `scripts/generate.py` | 封面生成脚本（需配合 `wechat-cover/config.json`） |
 
+## Python 调用约定
+
+Windows 不要假设全局 `python` alias 可用。优先使用 Codex bundled runtime：
+
+```powershell
+$Python = Join-Path $env:USERPROFILE ".cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe"
+& $Python --version
+```
+
+下面的 PowerShell 示例都使用 `& $Python`。在 Linux/macOS 或可移植 shell 中使用 `python3`。
+
 ## 配置
 
 纯排版无需创建 `config.json`。如果文件不存在，脚本会使用内置默认配置：
@@ -81,11 +92,23 @@ description: 公众号完整内容生产管线：排版、封面、推送。Use 
 
 首次使用，或用户环境不确定时，先检测依赖：
 
+```powershell
+& $Python {baseDir}/scripts/check_dependencies.py
+```
+
+Portable shell:
+
 ```bash
 python3 {baseDir}/scripts/check_dependencies.py
 ```
 
 如果提示缺少依赖，先询问用户是否允许安装。用户同意后执行：
+
+```powershell
+& $Python {baseDir}/scripts/check_dependencies.py --install
+```
+
+Portable shell:
 
 ```bash
 python3 {baseDir}/scripts/check_dependencies.py --install
@@ -115,8 +138,9 @@ python3 {baseDir}/scripts/check_dependencies.py --install
 PowerShell：
 
 ```powershell
+$Python = Join-Path $env:USERPROFILE ".cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe"
 $env:PYTHONIOENCODING = 'utf-8'
-python {baseDir}/scripts/article_workflow.py --input "文章路径.md" --bytedance-preview --cover
+& $Python {baseDir}/scripts/article_workflow.py --input "文章路径.md" --bytedance-preview --cover
 ```
 
 Portable shell：
@@ -127,15 +151,15 @@ PYTHONIOENCODING=utf-8 python3 {baseDir}/scripts/article_workflow.py --input "�
 
 常用变体：
 
-```bash
+```powershell
 # 已知主题，跳过交互式主题选择
-python3 {baseDir}/scripts/article_workflow.py --input "文章路径.md" --theme apple-code
+& $Python {baseDir}/scripts/article_workflow.py --input "文章路径.md" --theme apple-code
 
 # 不打开浏览器窗口，适合远程或批处理环境
-python3 {baseDir}/scripts/article_workflow.py --input "文章路径.md" --theme apple-code --no-open
+& $Python {baseDir}/scripts/article_workflow.py --input "文章路径.md" --theme apple-code --no-open
 
 # 没有 ai.url / ai.api_key / ai.model 时，只运行确定性的后续排版步骤
-python3 {baseDir}/scripts/article_workflow.py --input "文章路径.md" --skip-ai
+& $Python {baseDir}/scripts/article_workflow.py --input "文章路径.md" --skip-ai
 ```
 
 默认输出：
@@ -248,6 +272,15 @@ python3 {baseDir}/scripts/article_workflow.py --input "文章路径.md" --skip-a
 
 #### 第 3 步：打开主题画廊（手动流程）
 
+```powershell
+& $Python {baseDir}/scripts/format.py `
+  --input "文章路径.md" `
+  --gallery `
+  --recommend newspaper magazine coffee-house
+```
+
+Portable shell:
+
 ```bash
 python3 {baseDir}/scripts/format.py \
   --input "文章路径.md" \
@@ -262,6 +295,14 @@ python3 {baseDir}/scripts/format.py \
 #### 第 3 步（备选）：直接指定主题排版
 
 如果用户已经知道想用哪个主题，可以跳过画廊直接排版：
+
+```powershell
+& $Python {baseDir}/scripts/format.py `
+  --input "文章路径.md" `
+  --theme terracotta
+```
+
+Portable shell:
 
 ```bash
 python3 {baseDir}/scripts/format.py \
@@ -326,6 +367,14 @@ python3 {baseDir}/scripts/format.py \
 
 排版完成后，用户说"推送""发公众号"时执行。需要在 `config.json` 配置 `wechat.app_id` 和 `wechat.app_secret`。
 
+```powershell
+& $Python {baseDir}/scripts/publish.py `
+  --dir "排版输出目录" `
+  --cover "封面图路径（可选）"
+```
+
+Portable shell:
+
 ```bash
 python3 {baseDir}/scripts/publish.py \
   --dir "排版输出目录" \
@@ -340,6 +389,14 @@ python3 {baseDir}/scripts/publish.py \
 5. 返回 media_id，可在公众号后台「内容管理→草稿箱」查看
 
 也支持从 Markdown 直接推送（自动排版再推）：
+
+```powershell
+& $Python {baseDir}/scripts/publish.py `
+  --input "文章.md" `
+  --theme terracotta
+```
+
+Portable shell:
 
 ```bash
 python3 {baseDir}/scripts/publish.py \

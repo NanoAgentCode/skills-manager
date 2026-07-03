@@ -199,6 +199,7 @@ def validate_sample_workflow(v: Validator) -> None:
 
 
 def main() -> int:
+    print(f"[info] Python executable: {sys.executable}")
     v = Validator()
     validate_console_admin_skill(v)
     validate_dsl_app_builder_skill(v)

@@ -152,7 +152,7 @@ def call_chat_completion(ai_config: dict, system_prompt: str, user_prompt: str) 
     except ModuleNotFoundError:
         print("Missing dependency: requests")
         print(f"Install it with: {sys.executable} -m pip install requests")
-        print("Or run: python scripts/check_dependencies.py --install")
+        print(f"Or run: {sys.executable} {SCRIPT_DIR / 'check_dependencies.py'} --install")
         sys.exit(1)
 
     response = requests.post(

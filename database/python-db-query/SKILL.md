@@ -46,6 +46,13 @@ Copy-Item .\config.example.json .\config.json
 
 Then edit `config.json` locally. See `references/config.md` for config examples and field descriptions.
 
+On Windows, do not assume a global `python` alias is available. Prefer:
+
+```powershell
+$Python = Join-Path $env:USERPROFILE ".cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe"
+& $Python --version
+```
+
 The skill `.gitignore` ignores:
 
 - `config.json`
@@ -58,26 +65,26 @@ Native client binaries can be placed under `dependencies/`. That directory ignor
 Initialize a config without echoing the password:
 
 ```powershell
-python .\scripts\init_config.py --type oracle11g --host oracle-dev.lark.com --port 1521 --service-name ORCL --user LARK_MASTER --client-lib-dir "D:/lark-projects/skills-manager/database/python-db-query/dependencies/instantclient_11_2"
+& $Python .\scripts\init_config.py --type oracle11g --host oracle-dev.lark.com --port 1521 --service-name ORCL --user LARK_MASTER --client-lib-dir "D:/lark-projects/skills-manager/database/python-db-query/dependencies/instantclient_11_2"
 ```
 
 Or use an environment variable instead of writing a password:
 
 ```powershell
 $env:DB_PASSWORD="..."
-python .\scripts\init_config.py --type oracle11g --host oracle-dev.lark.com --port 1521 --service-name ORCL --user LARK_MASTER --password-env DB_PASSWORD --client-lib-dir "D:/lark-projects/skills-manager/database/python-db-query/dependencies/instantclient_11_2"
+& $Python .\scripts\init_config.py --type oracle11g --host oracle-dev.lark.com --port 1521 --service-name ORCL --user LARK_MASTER --password-env DB_PASSWORD --client-lib-dir "D:/lark-projects/skills-manager/database/python-db-query/dependencies/instantclient_11_2"
 ```
 
 Install bundled Python wheels offline:
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File .\scripts\install_offline_dependencies.ps1 -Python python
+powershell -ExecutionPolicy Bypass -File .\scripts\install_offline_dependencies.ps1 -Python $Python
 ```
 
 Check dependencies:
 
 ```powershell
-python .\scripts\check_dependencies.py --config .\config.json
+& $Python .\scripts\check_dependencies.py --config .\config.json
 ```
 
 ## Query Examples
@@ -85,82 +92,82 @@ python .\scripts\check_dependencies.py --config .\config.json
 Run inline SQL:
 
 ```powershell
-python .\scripts\query_db.py --config .\config.json --sql "select * from users limit 10"
+& $Python .\scripts\query_db.py --config .\config.json --sql "select * from users limit 10"
 ```
 
 Run SQL from a file:
 
 ```powershell
-python .\scripts\query_db.py --config .\config.json --sql-file .\queries\active_users.sql --format table
+& $Python .\scripts\query_db.py --config .\config.json --sql-file .\queries\active_users.sql --format table
 ```
 
 Export JSON:
 
 ```powershell
-python .\scripts\query_db.py --config .\config.json --sql "select id, name from users" --format json --out .\outputs\users.json
+& $Python .\scripts\query_db.py --config .\config.json --sql "select id, name from users" --format json --out .\outputs\users.json
 ```
 
 Export CSV:
 
 ```powershell
-python .\scripts\query_db.py --config .\config.json --sql "select * from orders limit 100" --format csv --out .\outputs\orders.csv
+& $Python .\scripts\query_db.py --config .\config.json --sql "select * from orders limit 100" --format csv --out .\outputs\orders.csv
 ```
 
 List tables:
 
 ```powershell
-python .\scripts\query_db.py --config .\config.json --list-tables
+& $Python .\scripts\query_db.py --config .\config.json --list-tables
 ```
 
 Describe a table:
 
 ```powershell
-python .\scripts\query_db.py --config .\config.json --describe FLOW_TOOL_NODE
+& $Python .\scripts\query_db.py --config .\config.json --describe FLOW_TOOL_NODE
 ```
 
 Count a table:
 
 ```powershell
-python .\scripts\query_db.py --config .\config.json --count FLOW_TOOL_NODE
+& $Python .\scripts\query_db.py --config .\config.json --count FLOW_TOOL_NODE
 ```
 
 Test a connection:
 
 ```powershell
-python .\scripts\query_db.py --config .\config.json --test-connection
+& $Python .\scripts\query_db.py --config .\config.json --test-connection
 ```
 
 MongoDB examples:
 
 ```powershell
-python .\scripts\query_db.py --config .\config.json --test-connection
-python .\scripts\query_db.py --config .\config.json --mongo-list-collections
-python .\scripts\query_db.py --config .\config.json --mongo-count TOPO
-python .\scripts\query_db.py --config .\config.json --mongo-find TOPO --filter "{}" --limit 5 --format json
+& $Python .\scripts\query_db.py --config .\config.json --test-connection
+& $Python .\scripts\query_db.py --config .\config.json --mongo-list-collections
+& $Python .\scripts\query_db.py --config .\config.json --mongo-count TOPO
+& $Python .\scripts\query_db.py --config .\config.json --mongo-find TOPO --filter "{}" --limit 5 --format json
 ```
 
 MongoDB writes require `--allow-write`:
 
 ```powershell
-python .\scripts\query_db.py --config .\config.json --mongo-insert-one TOPO --document "{""name"":""demo""}" --allow-write
+& $Python .\scripts\query_db.py --config .\config.json --mongo-insert-one TOPO --document "{""name"":""demo""}" --allow-write
 ```
 
 Redis examples:
 
 ```powershell
-python .\scripts\query_db.py --config .\config.json --test-connection
-python .\scripts\query_db.py --config .\config.json --redis-dbsize
-python .\scripts\query_db.py --config .\config.json --redis-scan "*" --limit 20
-python .\scripts\query_db.py --config .\config.json --redis-get my-key
+& $Python .\scripts\query_db.py --config .\config.json --test-connection
+& $Python .\scripts\query_db.py --config .\config.json --redis-dbsize
+& $Python .\scripts\query_db.py --config .\config.json --redis-scan "*" --limit 20
+& $Python .\scripts\query_db.py --config .\config.json --redis-get my-key
 ```
 
 Redis writes require `--allow-write`:
 
 ```powershell
-python .\scripts\query_db.py --config .\config.json --redis-set my-key my-value --allow-write
+& $Python .\scripts\query_db.py --config .\config.json --redis-set my-key my-value --allow-write
 ```
 
-If the current machine does not expose `python`, use the active Python executable available in the environment.
+For non-Windows environments, replace `& $Python` with the active Python executable for that shell, usually `python3`.
 
 ## Driver Notes
 

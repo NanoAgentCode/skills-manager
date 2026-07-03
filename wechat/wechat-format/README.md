@@ -18,6 +18,17 @@ A Claude Code skill for the full WeChat Official Account (公众号) publishing 
 
 ## Quick Start
 
+Windows PowerShell:
+
+```powershell
+$Python = Join-Path $env:USERPROFILE ".cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe"
+$env:PYTHONIOENCODING = 'utf-8'
+& $Python .\scripts\check_dependencies.py --install
+& $Python .\scripts\article_workflow.py --input article.md --bytedance-preview --cover
+```
+
+Portable shell:
+
 ```bash
 # Install
 cd ~/.claude/skills/
@@ -90,8 +101,9 @@ Default output layout:
 PowerShell:
 
 ```powershell
+$Python = Join-Path $env:USERPROFILE ".cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe"
 $env:PYTHONIOENCODING = 'utf-8'
-python .\scripts\article_workflow.py --input ..\..\article.md --bytedance-preview --cover
+& $Python .\scripts\article_workflow.py --input ..\..\article.md --bytedance-preview --cover
 ```
 
 Portable shell:
@@ -115,6 +127,13 @@ Keep using `scripts/format.py` when you only need theme preview/rendering, when 
 ```bash
 python3 scripts/format.py --input article.md --gallery --recommend newspaper magazine coffee-house
 python3 scripts/format.py --input article.md --theme newspaper
+```
+
+Windows PowerShell:
+
+```powershell
+& $Python .\scripts\format.py --input article.md --gallery --recommend newspaper magazine coffee-house
+& $Python .\scripts\format.py --input article.md --theme newspaper
 ```
 
 ## Themes (26)
@@ -255,6 +274,15 @@ python3 scripts/generate.py \
   --config wechat-cover/config.json \
   --prompt-file prompt.md \
   --out cover.jpg
+```
+
+Windows PowerShell:
+
+```powershell
+& $Python .\scripts\generate.py `
+  --config .\wechat-cover\config.json `
+  --prompt-file .\prompt.md `
+  --out .\cover.jpg
 ```
 
 Or with Claude Code, just say: `给这篇文章配个封面`

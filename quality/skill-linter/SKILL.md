@@ -11,16 +11,24 @@ Use this skill to inspect one skill folder or a repository of skills before call
 
 ## Quick Start
 
-Run the bundled linter against one skill:
+On Windows, do not assume `python` is on `PATH`. Prefer the bundled Codex runtime when available:
 
 ```powershell
-python .\quality\skill-linter\scripts\lint_skill.py .\mindmap\mindmap-builder --repo-root .
+$Python = Join-Path $env:USERPROFILE ".cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe"
+& $Python .\quality\skill-linter\scripts\lint_skill.py .\mindmap\mindmap-builder --repo-root .
 ```
 
 Run it against every `SKILL.md` under the current repository:
 
 ```powershell
-python .\quality\skill-linter\scripts\lint_skill.py . --repo-root .
+& $Python .\quality\skill-linter\scripts\lint_skill.py . --repo-root .
+```
+
+Portable shell:
+
+```bash
+python3 ./quality/skill-linter/scripts/lint_skill.py ./mindmap/mindmap-builder --repo-root .
+python3 ./quality/skill-linter/scripts/lint_skill.py . --repo-root .
 ```
 
 Use `--json` when another script or CI step needs machine-readable output. Use `--strict` when warnings should fail the command.

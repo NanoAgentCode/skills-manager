@@ -45,7 +45,8 @@ description: Archive or back up historical WeChat official-account mass-send art
 如果输入不是干净的一行一个链接，先运行：
 
 ```powershell
-C:\Users\13439\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe `
+$Python = Join-Path $env:USERPROFILE ".cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe"
+& $Python `
   .\wechat\wechat-history-article-archive\scripts\extract_mp_urls.py `
   --input .\history-source.txt `
   --output .\wechat\wechat-history-article-archive\output\history-urls.txt
@@ -64,7 +65,7 @@ python3 ./wechat/wechat-history-article-archive/scripts/extract_mp_urls.py \
 对整理好的 URL 清单运行：
 
 ```powershell
-C:\Users\13439\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe `
+& $Python `
   .\wechat\wechat-history-article-archive\scripts\archive_article_urls.py `
   --input .\wechat\wechat-history-article-archive\output\history-urls.txt `
   --output-dir .\wechat\wechat-history-article-archive\output\archive
@@ -89,7 +90,7 @@ python3 ./wechat/wechat-history-article-archive/scripts/archive_article_urls.py 
 如果已有一批 `article.html`，也可以后处理转换：
 
 ```powershell
-C:\Users\13439\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe `
+& $Python `
   .\wechat\wechat-history-article-archive\scripts\convert_archive_to_markdown.py `
   --archive-dir .\wechat\wechat-history-article-archive\output\archive `
   --delete-html

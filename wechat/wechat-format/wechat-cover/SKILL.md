@@ -102,6 +102,16 @@ image_size: "2K"
 ### 步骤 3：生成图片
 
 调用生图脚本，**必须传 `--config` 指向本技能自己的配置**：
+```powershell
+$Python = Join-Path $env:USERPROFILE ".cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe"
+& $Python <本仓库>\scripts\generate.py `
+  --config <本技能目录>\config.json `
+  --prompt-file <目标目录>\prompt.md `
+  --out <目标目录>\cover.jpg
+```
+
+可移植 shell：
+
 ```bash
 python3 <本仓库>/scripts/generate.py \
   --config <本技能目录>/config.json \
