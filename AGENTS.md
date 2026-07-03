@@ -24,6 +24,7 @@ This repository is a reusable skills library. Treat each `SKILL.md` as the sourc
 - `writing/technical-article-polisher/SKILL.md`: polish technical Chinese articles or machine-translated drafts by checking terminology accuracy in context and reporting terminology changes.
 - `database/python-db-query/SKILL.md`: run safe Python database queries using local ignored config files.
 - `debugging/backend-log-contract-trace/SKILL.md`: trace backend logs through API parameters, DTO/VOs, services, MyBatis XML, SQL columns, cross-service parameters, and database constraints; includes a concrete example in the recommended output shape.
+- `market/us-sector-index-impact-report/SKILL.md`: analyze last night's U.S. sector and Nasdaq/Nasdaq 100 moves, core gain/loss factors, U.S. AI capex fundamentals, and likely Hong Kong/A-share sector impact; renders an investment-bank style HTML report.
 - `quality/skill-linter/SKILL.md`: lint skill structure, trigger descriptions, references, metadata, README sync, and secret hygiene.
 - `superpowers/superpowers/skills/*/SKILL.md`: upstream software-development process skills for brainstorming, planning, TDD, reviews, debugging, and worktrees.
 

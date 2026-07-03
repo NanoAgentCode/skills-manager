@@ -2,6 +2,15 @@
 
 ## Recently Added Skills
 
+### `market/us-sector-index-impact-report`
+
+分析昨晚美股行业指数、纳斯达克指数和纳斯达克 100 指数，并输出投行风格 HTML 研究报告。
+
+- 拉取并核对最近一个完整美股交易日的指数、行业/板块涨跌数据。
+- 解释涨跌背后的核心因素和基本面变化，重点关注美国 AI 资本开支、云厂商数据中心投入、GPU/ASIC、光模块、PCB、电力和散热链条。
+- 分析对港股和 A 股相关行业的直接传导、情绪 beta 和潜在风险。
+- 使用内置脚本把结构化 JSON 渲染为可独立打开的 HTML 报告页。
+
 ### `debugging/backend-log-contract-trace`
 
 Trace backend logs to the exact code path and contract boundary.
@@ -19,7 +28,7 @@ Archive historical mass-send articles for a WeChat official account the user own
 - Save local HTML and metadata backups in batch.
 - Use this before migration, reformatting, or long-term archival of historical article content.
 
-本仓库用于管理可复用的 AI agent skills。目前包含 Dify、Mindmap、WeChat、Writing、Database、Debugging、Quality 和 Superpowers 八类 skill，并提供 Codex、Claude、Gemini、GLM、DeepSeek 的兼容入口。
+本仓库用于管理可复用的 AI agent skills。目前包含 Dify、Mindmap、WeChat、Writing、Database、Debugging、Market、Quality 和 Superpowers 九类 skill，并提供 Codex、Claude、Gemini、GLM、DeepSeek 的兼容入口。
 
 - Dify：覆盖 Dify Console Admin API 自动化与 Dify DSL 应用构建。
 - Mindmap：把 PDF、文本、大纲或文档内容转换为离线可双击打开的思维导图 HTML；支持长文档默认总览、章节按需展开和对话式展开；仅在用户明确要求发布时，将静态产物发布到配置好的 Web 静态目录。
@@ -27,6 +36,7 @@ Archive historical mass-send articles for a WeChat official account the user own
 - Writing：润色中文技术文章或机器翻译稿，结合上下文检查专业术语准确性，并输出术语修改记录。
 - Database：通过 Python 脚本执行数据库查询，连接配置单独存放到本地配置文件；缺少配置时通过对话收集必要字段。
 - Debugging：从后端日志一路追到接口参数、DTO/VO、实体字段、MyBatis XML、SQL 列名、跨服务参数和数据库约束。
+- Market：分析昨晚美股行业指数、纳斯达克指数和纳斯达克 100 指数，解释核心涨跌因素与美国 AI 资本开支基本面，并渲染港股/A 股影响的投行风格 HTML 报告。
 - Quality：检查 skill 结构、触发描述、资源引用、UI 元数据、多模型入口、敏感信息和 README 同步状态。
 - Superpowers：从 `obra/superpowers` 同步的软件开发方法论技能集，覆盖 brainstorm、计划编写、TDD、代码审查、并行子代理和工作树流程。
 
@@ -202,6 +212,25 @@ markmap-assets/
 - 修改前后都重新打开当前文件确认，避免基于旧记忆判断修复是否存在或是否被回滚。
 - 内置完整示例，展示如何按 `Trace / Finding / Evidence / Change / Verification` 输出排查结论。
 
+### `market/us-sector-index-impact-report`
+
+该 skill 适合做中英文均可的隔夜美股到中国市场传导分析，默认输出中文投行晨会风格 HTML 报告：
+
+- 确认最近一个完整美股交易日，避免把盘前、盘后或期货数据混入收盘复盘。
+- 覆盖 Nasdaq Composite、Nasdaq 100，以及相关行业/板块指数或可信 ETF 代理。
+- 拆解涨跌核心因素：利率、美元、商品、财报/指引、估值和仓位、政策与地缘风险。
+- 重点分析美国 AI 资本开支：云厂商 capex 指引、数据中心建设、GPU/ASIC、HBM、先进封装、AI 服务器、光模块/CPO、PCB、电力和散热。
+- 区分港股和 A 股的直接业绩传导、供应链订单传导和情绪 beta。
+- 使用 `scripts/render_investment_bank_html.py` 将结构化 JSON 渲染成 standalone HTML 页面。
+
+示例：
+
+```powershell
+py .\market\us-sector-index-impact-report\scripts\render_investment_bank_html.py `
+  --input .\report-data.json `
+  --output .\us-sector-impact-report.html
+```
+
 ### `quality/skill-linter`
 
 该 skill 适合在创建、修改、评审或发布 skill 前做结构和质量检查：
@@ -331,6 +360,16 @@ backend-log-contract-trace/
   SKILL.md
   agents/
     openai.yaml
+
+us-sector-index-impact-report/
+  SKILL.md
+  agents/
+    openai.yaml
+  references/
+    market-analysis-framework.md
+    report-schema.md
+  scripts/
+    render_investment_bank_html.py
 
 skill-linter/
   SKILL.md

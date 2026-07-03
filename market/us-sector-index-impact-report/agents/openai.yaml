@@ -1,0 +1,4 @@
+interface:
+  display_name: "US Sector Index Impact Report"
+  short_description: "Analyze US sectors and Asia market impact"
+  default_prompt: "Use $us-sector-index-impact-report to analyze last night's U.S. sector and Nasdaq moves, assess Hong Kong and A-share industry impact, and render an investment-bank style HTML report."
