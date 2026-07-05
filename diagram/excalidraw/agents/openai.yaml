@@ -1,0 +1,4 @@
+interface:
+  display_name: "Excalidraw"
+  short_description: "Generate clean Excalidraw diagrams"
+  default_prompt: "Use $excalidraw to create a clean hand-drawn style flowchart, architecture sketch, process diagram, or visualization and export it to SVG or PNG when available."

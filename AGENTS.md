@@ -22,6 +22,8 @@ This repository is a reusable skills library. Treat each `SKILL.md` as the sourc
 
 - `dify/dify-console-admin-api/SKILL.md`: automate Dify Console Admin API app creation, DSL export/import, overwrite import, and import confirmation.
 - `dify/dify-dsl-app-builder/SKILL.md`: design, generate, update, import, and verify Dify workflow or advanced-chat DSL.
+- `diagram/drawio-skill/SKILL.md`: generate polished `.drawio` diagrams for architecture, flowcharts, UML/sequence/class diagrams, ERDs, C4, ML/DL figures, codebase/IaC/API/schema visualizations, and exportable PNG/SVG/PDF/JPG outputs through the draw.io desktop CLI when available.
+- `diagram/excalidraw/SKILL.md`: generate clean `.excalidraw` diagrams and hand-drawn-style visualizations for flowcharts, architecture sketches, system explanations, data flows, and relationship maps; exports SVG through Kroki or PNG/SVG through the local Excalidraw CLI.
 - `mindmap/mindmap-builder/SKILL.md`: convert PDFs, notes, outlines, papers, reports, or books into offline markmap HTML; supports overview-first long document mode.
 - `mindmap/mindmap-publisher/SKILL.md`: publish an already generated offline mindmap HTML folder to a static hosting path and return a URL.
 - `media/video-transcriber/SKILL.md`: prefer existing subtitle/caption files, support YouTube captions and Bilibili AI subtitle JSON before audio extraction, then extract audio from local media, approved online video URLs, or user-authorized WeChat Channels/视频号 material; treat 视频号 share links as restricted when they hand off to phone WeChat, and request user credentials or exported artifacts when access requires them.

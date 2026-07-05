@@ -40,9 +40,10 @@ Archive historical mass-send articles for a WeChat official account the user own
 - Save Markdown, metadata JSON, index CSV/JSON, and local image backups in batch; keep raw HTML only when explicitly requested.
 - Use `scripts/reformat_archived_articles.py` to stage selected archived articles and run `wechat/wechat-format/scripts/article_workflow.py` for migration, reformatting, or republishing preparation.
 
-本仓库用于管理可复用的 AI agent skills。目前包含 Dify、Mindmap、Media、WeChat、Writing、Database、Debugging、Market、Quality 和 Superpowers 十类 skill，并提供 Codex、Claude、Gemini、GLM、DeepSeek 的兼容入口。
+本仓库用于管理可复用的 AI agent skills。目前包含 Dify、Diagram、Mindmap、Media、WeChat、Writing、Database、Debugging、Market、Quality 和 Superpowers 十一类 skill，并提供 Codex、Claude、Gemini、GLM、DeepSeek 的兼容入口。
 
 - Dify：覆盖 Dify Console Admin API 自动化与 Dify DSL 应用构建。
+- Diagram：生成 draw.io 与 Excalidraw 图表，覆盖架构图、流程图、UML/时序图、ERD、C4、代码结构、IaC、API、SQL schema 和白板风解释图。
 - Mindmap：把 PDF、文本、大纲或文档内容转换为离线可双击打开的思维导图 HTML；支持长文档默认总览、章节按需展开和对话式展开；仅在用户明确要求发布时，将静态产物发布到配置好的 Web 静态目录。
 - Media：优先使用已有字幕/平台字幕；没有字幕时，再从本地视频/音频、授权在线视频或微信视频号素材中提取音频并生成文字稿、字幕、摘要、会议纪要或文章草稿。
 - WeChat：把 Markdown、纯文本或粗糙笔记排版成微信公众号兼容 HTML；支持一命令文章包装、26 主题画廊、封面、草稿箱推送，以及自有公众号历史群发文章的合规 URL 归档。
@@ -112,6 +113,25 @@ $Python = Join-Path $env:USERPROFILE ".cache\codex-runtimes\codex-primary-runtim
 - 导入后重新导出远端 DSL，验证变量、节点和输出。
 - 提供常见节点参考：`start`、`end`、`answer`、`if-else`、`iteration`、`code`、`template-transform`、`parameter-extractor`、`llm`、`agent`、`http-request`、`tool`、`knowledge-retrieval`。
 - 提供专门的 [DSL 导入规则参考](dify/dify-dsl-app-builder/dsl-import-rules.md)，说明 edge 连接、迭代内部连接和通用 DSL builder 模式。
+
+### `diagram/drawio-skill`
+
+该 skill 适合生成专业、可编辑、可导出的 draw.io 图表：
+
+- 支持架构图、流程图、网络拓扑、UML/时序/类图、ERD、C4、ML/DL 模型图和系统关系图。
+- 可从 Python、JS/TS、Go、Rust 项目抽取 import graph，或从 Terraform、Kubernetes、docker-compose、OpenAPI、SQL DDL 等结构化输入生成图。
+- 自带 shape search、AI/LLM 品牌图标、Graphviz 自动布局、图表 diff、heatmap、HTML viewer、PPTX、Mermaid 转换等脚本工具。
+- 默认输出 `.drawio` XML，并在本机安装 draw.io desktop CLI 时导出 PNG/SVG/PDF/JPG。
+- 与 `diagram/excalidraw` 分工：需要精确、正式、品牌图标、复杂结构和可交付图片时优先用 draw.io。
+
+### `diagram/excalidraw`
+
+该 skill 适合生成清爽的 Excalidraw 图表和白板风解释图：
+
+- 支持流程图、架构草图、系统解释图、数据流、关系图、思维草图和对比图。
+- 生成 `.excalidraw` JSON，强调可编辑、CJK 文本尺寸、语义配色、箭头绑定和渲染后检查。
+- 可通过 Kroki API 零安装导出 SVG，也可通过本地 `excalidraw-brute-export-cli` 导出 PNG/SVG。
+- 与 `diagram/drawio-skill` 分工：需要轻量、讲解友好、白板感或文章插图时优先用 Excalidraw。
 
 ### `mindmap/mindmap-builder`
 
@@ -364,6 +384,24 @@ dify-console-admin-api/
   SKILL.md
   agents/
     openai.yaml
+
+drawio-skill/
+  SKILL.md
+  LICENSE
+  agents/
+    openai.yaml
+  data/
+  references/
+  scripts/
+  styles/
+
+excalidraw/
+  SKILL.md
+  LICENSE
+  agents/
+    openai.yaml
+  references/
+  scripts/
 
 mindmap-builder/
   SKILL.md

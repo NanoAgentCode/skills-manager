@@ -28,6 +28,9 @@ py .\market\us-sector-index-impact-report\scripts\render_investment_bank_html.py
 ## Other Categories
 
 - `dify/`: Dify Console Admin API automation and DSL app building.
+- `diagram/`: reusable visual-diagram generation.
+  - `diagram/drawio-skill/SKILL.md`: polished `.drawio` architecture, flowchart, UML, ERD, C4, ML/DL, codebase, IaC, OpenAPI, SQL schema, and system diagrams with local draw.io CLI export when available.
+  - `diagram/excalidraw/SKILL.md`: clean `.excalidraw` flowcharts, architecture sketches, process diagrams, relationship maps, and whiteboard-style visual explanations with Kroki SVG or local PNG/SVG export.
 - `mindmap/`: offline markmap HTML generation and optional static publishing.
 - `wechat/`: WeChat article production and authorized archive workflows.
   - `wechat/wechat-format/SKILL.md`: Markdown/plain-text/rough-note packaging into WeChat-compatible inline HTML through the repo-local `scripts/article_workflow.py` by default, including terminology polishing, structured/enhanced Markdown, a 26-theme gallery, final themed outputs, optional covers, and draft publishing.

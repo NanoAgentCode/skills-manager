@@ -1,0 +1,4 @@
+interface:
+  display_name: "Draw.io Skill"
+  short_description: "Generate polished draw.io diagrams"
+  default_prompt: "Use $drawio-skill to generate a polished architecture, flowchart, UML, ER, C4, ML, or system diagram and export it through draw.io when available."
