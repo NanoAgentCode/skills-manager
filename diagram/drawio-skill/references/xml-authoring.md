@@ -183,10 +183,14 @@ Rules: swatch colors come from the active palette (preset or the table above) wi
 
 **Routing corridors:** between shape rows/columns, leave an extra ~80px empty corridor where edges can route without crossing shapes. Never place a shape in a gap that edges need to traverse.
 
+**No-overlap zones:** before assigning coordinates, reserve rectangles for the title/subtitle, footer notes, legends, and any dense explanatory text. No card, container, arrowhead, or label may enter those zones. If the diagram becomes crowded, enlarge the canvas or split the diagram into pages instead of stacking cards.
+
 **Grid alignment:** snap all `x`, `y`, `width`, `height` values to **multiples of 10** — this ensures shapes align cleanly on draw.io's default grid and makes manual editing easier.
 
 **General rules:**
 - Plan a grid before assigning x/y coordinates — sketch node positions on paper/mentally first
+- Treat every node/card/container as an occupied rectangle with at least 30px padding around it; two occupied rectangles must never overlap
+- Keep all text fully inside its owning shape, or make it a deliberate standalone label in empty space
 - Group related nodes in the same horizontal or vertical band
 - Use `swimlane` cells for logical grouping with visible borders
 - Place heavily-connected "hub" nodes centrally so edges radiate outward instead of crossing
@@ -197,6 +201,7 @@ Rules: swatch colors come from the active palette (preset or the table above) wi
 - Horizontal connections (`exitX=1` or `exitX=0`) never cross vertical nodes in the same row; use them for peer-to-peer and publish connections
 
 **Avoiding edge-shape overlap:**
+- Draw connectors behind nodes only when visually necessary, but do not use z-order to excuse a line crossing text or a card body
 - Before finalizing coordinates, trace each edge path mentally — if it must cross an unrelated shape, either move the shape or add waypoints
 - For tree/hierarchical layouts: assign nodes to layers (rows), connect only between adjacent layers to minimize crossings
 - For star/hub layouts: place the hub center, satellites around it — edges stay short and radial

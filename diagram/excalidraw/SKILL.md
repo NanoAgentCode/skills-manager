@@ -82,6 +82,16 @@ sed -i '' 's/keyboard.press("Control+Shift+E")/keyboard.press("Meta+Shift+E")/' 
 - `fontFamily: 2` (Helvetica) — professional look; use `1` (Virgil) only for casual/sketch style, `3` (Cascadia) for code snippets
 - `fillStyle: "solid"` — default fill
 
+### Non-overlap first
+
+Treat every card, container, label, arrow label, title, subtitle, note, and legend as an occupied rectangle. The diagram is not acceptable if any occupied rectangles overlap, if a card covers another card, if a line or arrowhead crosses text, or if text escapes its card.
+
+- Reserve title/subtitle and footer-note zones before placing diagram elements.
+- Keep at least 40px between cards and at least 24px between a card and standalone text.
+- For radial or hub layouts, start spokes at the edge of the center shape and end them before the target card; never draw spokes through the center label.
+- Draw guide/relationship lines first, then draw cards and labels above them, but still route lines through whitespace rather than behind readable text.
+- If a layout becomes crowded, enlarge the canvas, reduce the number of visible nodes, or split into multiple diagrams.
+
 ### Containers: prefer typography over boxes
 
 A box around every label makes a diagram look like a wireframe. The cleanest Excalidraw diagrams use **free-floating text and lines** for structure and reserve filled boxes for things that are genuinely *components*.
@@ -493,6 +503,9 @@ excalidraw-brute-export-cli -i diagram.excalidraw -o diagram.svg -f svg -s 1 -b 
    |----------|-----|
    | Text clipped / overflowing its shape | Widen the shape (`max(160, charCount * 9)`, ×2 for CJK) or pre-wrap with `\n` |
    | Boxes or labels overlapping | Re-space using the Spacing Reference (≥40px gap) |
+   | Card covers another card | Move one card into a free area or enlarge the canvas; never use z-order to hide the overlap |
+   | Card overlaps title/subtitle/footer note | Move the card below or away from the reserved text zone |
+   | Line or arrowhead crosses text | Move endpoints to card edges, add waypoints, or route the line around the text zone |
    | Arrow cutting straight through a shape | Move endpoints to the shape borders, not centers |
    | Arrow invisible — only its label shows | Shrink the label `width` to fit the text |
    | Element off-canvas or floating with no connection | Reposition / connect it |
