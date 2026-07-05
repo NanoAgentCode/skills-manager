@@ -54,6 +54,16 @@ Archive historical mass-send articles for a WeChat official account the user own
 - Quality：检查 skill 结构、触发描述、资源引用、UI 元数据、多模型入口、敏感信息和 README 同步状态。
 - Superpowers：从 `obra/superpowers` 同步的软件开发方法论技能集，覆盖 brainstorm、计划编写、TDD、代码审查、并行子代理和工作树流程。
 
+按使用场景也可以归为以下能力域：
+
+| 能力域 | 包含目录 | 典型请求 |
+|---|---|---|
+| 内容生产 | `media/`、`writing/`、`wechat/` | 视频/音频转文字、技术文章润色、公众号排版、历史文章归档和封面生成 |
+| 知识与视觉产物 | `diagram/`、`mindmap/` | 架构图、流程图、白板图、文档/论文/书籍思维导图、本地 HTML 产物发布 |
+| 平台与数据自动化 | `dify/`、`database/` | Dify 应用/DSL 创建导入导出、数据库只读查询和结果导出 |
+| 工程质量 | `debugging/`、`quality/`、`superpowers/` | 后端链路排查、skill lint、TDD、计划、代码审查、并行开发流程 |
+| 研究与市场 | `market/` | 美股行业/Nasdaq 复盘、AI capex 基本面和港股/A 股影响分析 |
+
 ## 多模型兼容
 
 本仓库的能力本体是每个目录中的 `SKILL.md`。不同模型或客户端的差异主要在于是否能自动发现和触发 skill；只要模型能读取 `SKILL.md` 和相关资源，就可以按同一套流程执行。

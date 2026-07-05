@@ -2,20 +2,46 @@
 
 This document summarizes the reusable skills in this repository. Treat each `SKILL.md` as the source of truth.
 
-## Market
+## Content Production
 
-### `market/us-sector-index-impact-report/SKILL.md`
+Use this group when the request is about turning media, notes, drafts, or archived material into publishable content.
 
-Use this skill to analyze the most recent completed U.S. trading session and produce an investment-bank style HTML report for Hong Kong and A-share sector implications.
+- `media/video-transcriber/SKILL.md`: transcript, subtitle, summary, meeting-note, and article-draft workflows from local media, approved online videos, existing captions, YouTube captions, Bilibili subtitle JSON, or user-authorized WeChat Channels material.
+- `writing/technical-article-polisher/SKILL.md`: Chinese technical article polishing, machine-translation cleanup, terminology checks, and publication-ready Markdown.
+- `wechat/wechat-format/SKILL.md`: WeChat official-account article packaging through the repo-local `scripts/article_workflow.py`, including terminology polishing, structured/enhanced Markdown, a 26-theme gallery, themed outputs, optional covers, and draft publishing.
+- `wechat/wechat-history-article-archive/SKILL.md`: authorized historical WeChat article backup from lawful `mp.weixin.qq.com/s?...` URL sources, with Markdown, metadata, indexes, and local images by default.
+- `wechat/wechat-format/wechat-cover/SKILL.md`: cover-image generation for WeChat articles.
 
-Core coverage:
+## Knowledge And Visual Artifacts
 
-- Nasdaq Composite and Nasdaq 100 performance.
-- U.S. sector or industry-index gain/loss ranking.
-- Core drivers behind the session: macro factors, earnings/fundamentals, valuation/positioning, policy and geopolitics.
-- U.S. AI capital expenditure focus: hyperscaler capex, data-center buildout, GPU/ASIC, HBM, AI servers, optical networking/CPO, PCB, power and cooling.
-- Hong Kong and A-share impact split into direct read-through, supply-chain/order read-through, and sentiment beta.
-- Standalone HTML rendering through `scripts/render_investment_bank_html.py`.
+Use this group when the request is about diagrams, mindmaps, visual explanation, or offline knowledge views.
+
+- `diagram/drawio-skill/SKILL.md`: polished `.drawio` architecture, flowchart, UML, ERD, C4, ML/DL, codebase, IaC, OpenAPI, SQL schema, and system diagrams with local draw.io CLI export when available.
+- `diagram/excalidraw/SKILL.md`: clean `.excalidraw` flowcharts, architecture sketches, process diagrams, relationship maps, and whiteboard-style visual explanations with Kroki SVG or local PNG/SVG export.
+- `mindmap/mindmap-builder/SKILL.md`: offline markmap HTML generation from PDFs, notes, outlines, reports, papers, books, or other documents; supports overview-first long document mode.
+- `mindmap/mindmap-publisher/SKILL.md`: static publishing for already generated offline mindmap HTML folders when the user explicitly asks to publish or host.
+
+## Platform And Data Automation
+
+Use this group when the request is about Dify apps, DSL import/export, platform configuration, or database-backed lookup.
+
+- `dify/dify-console-admin-api/SKILL.md`: Dify Console Admin API automation for app creation, DSL export/import, overwrite import, and pending import confirmation.
+- `dify/dify-dsl-app-builder/SKILL.md`: Dify workflow or advanced-chat DSL design, generation, update, import, and verification.
+- `database/python-db-query/SKILL.md`: safe Python database querying with ignored local configs, read-only defaults, tabular/JSON/CSV output, and explicit authorization for writes.
+
+## Engineering Quality
+
+Use this group when the request is about diagnosing code paths, validating skills, or applying software-development process skills.
+
+- `debugging/backend-log-contract-trace/SKILL.md`: backend log-to-contract tracing across routes/controllers, DTO/VOs, services, mapper XML, SQL columns, cross-service parameters, and database constraints.
+- `quality/skill-linter/SKILL.md`: skill structure, trigger metadata, resource links, UI metadata, README sync, platform compatibility entrypoints, and secret hygiene checks.
+- `superpowers/superpowers/skills/*/SKILL.md`: upstream software-development process skills for brainstorming, planning, TDD, reviews, debugging, parallel agents, and worktrees.
+
+## Research And Markets
+
+Use this group when the request is about market research, public-market impact analysis, or investment-bank style output.
+
+- `market/us-sector-index-impact-report/SKILL.md`: most recent completed U.S. trading session analysis, Nasdaq/Nasdaq 100 and sector moves, core drivers, U.S. AI capex fundamentals, and Hong Kong/A-share sector implications rendered as standalone HTML.
 
 Primary command:
 
@@ -24,20 +50,3 @@ py .\market\us-sector-index-impact-report\scripts\render_investment_bank_html.py
   --input .\output\us-sector-index-impact-report\report-data.json `
   --output .\output\us-sector-index-impact-report\us-sector-impact-report.html
 ```
-
-## Other Categories
-
-- `dify/`: Dify Console Admin API automation and DSL app building.
-- `diagram/`: reusable visual-diagram generation.
-  - `diagram/drawio-skill/SKILL.md`: polished `.drawio` architecture, flowchart, UML, ERD, C4, ML/DL, codebase, IaC, OpenAPI, SQL schema, and system diagrams with local draw.io CLI export when available.
-  - `diagram/excalidraw/SKILL.md`: clean `.excalidraw` flowcharts, architecture sketches, process diagrams, relationship maps, and whiteboard-style visual explanations with Kroki SVG or local PNG/SVG export.
-- `mindmap/`: offline markmap HTML generation and optional static publishing.
-- `wechat/`: WeChat article production and authorized archive workflows.
-  - `wechat/wechat-format/SKILL.md`: Markdown/plain-text/rough-note packaging into WeChat-compatible inline HTML through the repo-local `scripts/article_workflow.py` by default, including terminology polishing, structured/enhanced Markdown, a 26-theme gallery, final themed outputs, optional covers, and draft publishing.
-  - `wechat/wechat-history-article-archive/SKILL.md`: self-owned or explicitly authorized historical mass-send article backup from lawful `mp.weixin.qq.com/s?...` URL sources, with URL normalization, batch archiving, Markdown/metadata/index/image outputs by default, and `scripts/reformat_archived_articles.py` for handing archived articles to `wechat-format/scripts/article_workflow.py`.
-  - `wechat/wechat-format/wechat-cover/SKILL.md`: cover-image generation for WeChat articles.
-- `writing/`: Chinese technical article polishing.
-- `database/`: safe Python database querying with local ignored configs.
-- `debugging/`: backend log-to-contract tracing.
-- `quality/`: skill linting and release checks.
-- `superpowers/`: upstream software-development process skills.
