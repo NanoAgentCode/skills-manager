@@ -11,17 +11,16 @@ Use this skill to inspect one skill folder or a repository of skills before call
 
 ## Quick Start
 
-On Windows, do not assume `python` is on `PATH`. Prefer the bundled Codex runtime when available:
+On Windows, do not assume `python` is on `PATH`. Use the repository launcher:
 
 ```powershell
-$Python = Join-Path $env:USERPROFILE ".cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe"
-& $Python .\quality\skill-linter\scripts\lint_skill.py .\mindmap\mindmap-builder --repo-root .
+.\scripts\run-python.ps1 .\quality\skill-linter\scripts\lint_skill.py .\mindmap\mindmap-builder --repo-root .
 ```
 
 Run it against every `SKILL.md` under the current repository:
 
 ```powershell
-& $Python .\quality\skill-linter\scripts\lint_skill.py . --repo-root .
+.\scripts\run-python.ps1 .\quality\skill-linter\scripts\lint_skill.py . --repo-root .
 ```
 
 Portable shell:
@@ -31,7 +30,7 @@ python3 ./quality/skill-linter/scripts/lint_skill.py ./mindmap/mindmap-builder -
 python3 ./quality/skill-linter/scripts/lint_skill.py . --repo-root .
 ```
 
-Use `--json` when another script or CI step needs machine-readable output. Use `--strict` when warnings should fail the command.
+Use `--json` when another script or CI step needs machine-readable output. Use `--strict` when warnings should fail the command. The Windows launcher resolves Python without relying on `python` or `py` being on `PATH`; if no interpreter is available, it reports the missing Python prerequisite and the checked locations.
 
 ## Review Workflow
 

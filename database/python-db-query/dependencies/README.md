@@ -17,15 +17,16 @@ dependencies/
 Install them offline with:
 
 ```powershell
-$Python = Join-Path $env:USERPROFILE ".cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe"
-& $Python -m pip install --no-index --find-links .\dependencies\python-wheels -r .\dependencies\requirements-offline.txt
+..\..\scripts\run-python.ps1 -m pip install --no-index --find-links .\dependencies\python-wheels -r .\dependencies\requirements-offline.txt
 ```
 
 Or use the helper from the skill root:
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File .\scripts\install_offline_dependencies.ps1 -Python $Python
+powershell -ExecutionPolicy Bypass -File .\scripts\install_offline_dependencies.ps1
 ```
+
+The repository launcher resolves Python without relying on `python` or `py` being on `PATH`. If it cannot find Python, it reports the missing Python interpreter prerequisite and the checked locations.
 
 The bundled `requirements-offline.txt` covers:
 

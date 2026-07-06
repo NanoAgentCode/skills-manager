@@ -46,11 +46,10 @@ Copy-Item .\config.example.json .\config.json
 
 Then edit `config.json` locally. See `references/config.md` for config examples and field descriptions.
 
-On Windows, do not assume a global `python` alias is available. Prefer:
+On Windows, do not assume a global `python` alias is available. Use the repository launcher:
 
 ```powershell
-$Python = Join-Path $env:USERPROFILE ".cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe"
-& $Python --version
+..\..\scripts\run-python.ps1 -c "import sys; print(sys.executable)"
 ```
 
 The skill `.gitignore` ignores:
@@ -65,26 +64,26 @@ Native client binaries can be placed under `dependencies/`. That directory ignor
 Initialize a config without echoing the password:
 
 ```powershell
-& $Python .\scripts\init_config.py --type oracle11g --host oracle-dev.lark.com --port 1521 --service-name ORCL --user LARK_MASTER --client-lib-dir "D:/lark-projects/skills-manager/database/python-db-query/dependencies/instantclient_11_2"
+..\..\scripts\run-python.ps1 .\scripts\init_config.py --type oracle11g --host oracle-dev.lark.com --port 1521 --service-name ORCL --user LARK_MASTER --client-lib-dir "D:/lark-projects/skills-manager/database/python-db-query/dependencies/instantclient_11_2"
 ```
 
 Or use an environment variable instead of writing a password:
 
 ```powershell
 $env:DB_PASSWORD="..."
-& $Python .\scripts\init_config.py --type oracle11g --host oracle-dev.lark.com --port 1521 --service-name ORCL --user LARK_MASTER --password-env DB_PASSWORD --client-lib-dir "D:/lark-projects/skills-manager/database/python-db-query/dependencies/instantclient_11_2"
+..\..\scripts\run-python.ps1 .\scripts\init_config.py --type oracle11g --host oracle-dev.lark.com --port 1521 --service-name ORCL --user LARK_MASTER --password-env DB_PASSWORD --client-lib-dir "D:/lark-projects/skills-manager/database/python-db-query/dependencies/instantclient_11_2"
 ```
 
 Install bundled Python wheels offline:
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File .\scripts\install_offline_dependencies.ps1 -Python $Python
+powershell -ExecutionPolicy Bypass -File .\scripts\install_offline_dependencies.ps1
 ```
 
 Check dependencies:
 
 ```powershell
-& $Python .\scripts\check_dependencies.py --config .\config.json
+..\..\scripts\run-python.ps1 .\scripts\check_dependencies.py --config .\config.json
 ```
 
 ## Query Examples
@@ -92,82 +91,84 @@ Check dependencies:
 Run inline SQL:
 
 ```powershell
-& $Python .\scripts\query_db.py --config .\config.json --sql "select * from users limit 10"
+..\..\scripts\run-python.ps1 .\scripts\query_db.py --config .\config.json --sql "select * from users limit 10"
 ```
 
 Run SQL from a file:
 
 ```powershell
-& $Python .\scripts\query_db.py --config .\config.json --sql-file .\queries\active_users.sql --format table
+..\..\scripts\run-python.ps1 .\scripts\query_db.py --config .\config.json --sql-file .\queries\active_users.sql --format table
 ```
 
 Export JSON:
 
 ```powershell
-& $Python .\scripts\query_db.py --config .\config.json --sql "select id, name from users" --format json --out .\outputs\users.json
+..\..\scripts\run-python.ps1 .\scripts\query_db.py --config .\config.json --sql "select id, name from users" --format json --out .\outputs\users.json
 ```
 
 Export CSV:
 
 ```powershell
-& $Python .\scripts\query_db.py --config .\config.json --sql "select * from orders limit 100" --format csv --out .\outputs\orders.csv
+..\..\scripts\run-python.ps1 .\scripts\query_db.py --config .\config.json --sql "select * from orders limit 100" --format csv --out .\outputs\orders.csv
 ```
 
 List tables:
 
 ```powershell
-& $Python .\scripts\query_db.py --config .\config.json --list-tables
+..\..\scripts\run-python.ps1 .\scripts\query_db.py --config .\config.json --list-tables
 ```
 
 Describe a table:
 
 ```powershell
-& $Python .\scripts\query_db.py --config .\config.json --describe FLOW_TOOL_NODE
+..\..\scripts\run-python.ps1 .\scripts\query_db.py --config .\config.json --describe FLOW_TOOL_NODE
 ```
 
 Count a table:
 
 ```powershell
-& $Python .\scripts\query_db.py --config .\config.json --count FLOW_TOOL_NODE
+..\..\scripts\run-python.ps1 .\scripts\query_db.py --config .\config.json --count FLOW_TOOL_NODE
 ```
 
 Test a connection:
 
 ```powershell
-& $Python .\scripts\query_db.py --config .\config.json --test-connection
+..\..\scripts\run-python.ps1 .\scripts\query_db.py --config .\config.json --test-connection
 ```
 
 MongoDB examples:
 
 ```powershell
-& $Python .\scripts\query_db.py --config .\config.json --test-connection
-& $Python .\scripts\query_db.py --config .\config.json --mongo-list-collections
-& $Python .\scripts\query_db.py --config .\config.json --mongo-count TOPO
-& $Python .\scripts\query_db.py --config .\config.json --mongo-find TOPO --filter "{}" --limit 5 --format json
+..\..\scripts\run-python.ps1 .\scripts\query_db.py --config .\config.json --test-connection
+..\..\scripts\run-python.ps1 .\scripts\query_db.py --config .\config.json --mongo-list-collections
+..\..\scripts\run-python.ps1 .\scripts\query_db.py --config .\config.json --mongo-count TOPO
+..\..\scripts\run-python.ps1 .\scripts\query_db.py --config .\config.json --mongo-find TOPO --filter "{}" --limit 5 --format json
 ```
 
 MongoDB writes require `--allow-write`:
 
 ```powershell
-& $Python .\scripts\query_db.py --config .\config.json --mongo-insert-one TOPO --document "{""name"":""demo""}" --allow-write
+..\..\scripts\run-python.ps1 .\scripts\query_db.py --config .\config.json --mongo-insert-one TOPO --document "{""name"":""demo""}" --allow-write
 ```
 
 Redis examples:
 
 ```powershell
-& $Python .\scripts\query_db.py --config .\config.json --test-connection
-& $Python .\scripts\query_db.py --config .\config.json --redis-dbsize
-& $Python .\scripts\query_db.py --config .\config.json --redis-scan "*" --limit 20
-& $Python .\scripts\query_db.py --config .\config.json --redis-get my-key
+..\..\scripts\run-python.ps1 .\scripts\query_db.py --config .\config.json --test-connection
+..\..\scripts\run-python.ps1 .\scripts\query_db.py --config .\config.json --redis-dbsize
+..\..\scripts\run-python.ps1 .\scripts\query_db.py --config .\config.json --redis-scan "*" --limit 20
+..\..\scripts\run-python.ps1 .\scripts\query_db.py --config .\config.json --redis-get my-key
 ```
 
 Redis writes require `--allow-write`:
 
 ```powershell
-& $Python .\scripts\query_db.py --config .\config.json --redis-set my-key my-value --allow-write
+..\..\scripts\run-python.ps1 .\scripts\query_db.py --config .\config.json --redis-set my-key my-value --allow-write
 ```
 
-For non-Windows environments, replace `& $Python` with the active Python executable for that shell, usually `python3`.
+The repository Windows launcher resolves Python without relying on `python` or `py` being on `PATH`. If it cannot find Python, it reports the missing Python interpreter prerequisite and the checked locations. To force a specific interpreter, set `SKILLS_MANAGER_PYTHON` to the full `python.exe` path before running the command.
+
+For non-Windows environments, replace the launcher with the active Python executable for that shell, usually `python3`.
 
 ## Driver Notes
 

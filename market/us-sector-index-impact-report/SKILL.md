@@ -76,12 +76,12 @@ Produce a current, citation-backed Chinese investment research report from overn
 Use the bundled renderer:
 
 ```powershell
-py .\market\us-sector-index-impact-report\scripts\render_investment_bank_html.py `
+.\scripts\run-python.ps1 .\market\us-sector-index-impact-report\scripts\render_investment_bank_html.py `
   --input .\output\us-sector-index-impact-report\report-data.json `
   --output .\output\us-sector-index-impact-report\us-sector-impact-report.html
 ```
 
-The script has no third-party Python dependencies. Read [references/report-schema.md](references/report-schema.md) before constructing the JSON payload. Read [references/market-analysis-framework.md](references/market-analysis-framework.md) when the cross-market logic needs a checklist.
+The Windows launcher resolves Python without relying on `python` or `py` being on `PATH`. If it cannot find Python, it reports the missing Python interpreter prerequisite and the checked locations. The renderer has no third-party Python dependencies. Read [references/report-schema.md](references/report-schema.md) before constructing the JSON payload. Read [references/market-analysis-framework.md](references/market-analysis-framework.md) when the cross-market logic needs a checklist.
 
 ## Final Response
 

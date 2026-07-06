@@ -292,6 +292,8 @@ $Python = Join-Path $env:USERPROFILE ".cache\codex-runtimes\codex-primary-runtim
 - 支持 SQLite 内置连接；PostgreSQL、MySQL、SQL Server、Oracle 11g、MongoDB 和 Redis 依赖相应 Python 驱动。
 - 支持表格、JSON、CSV 输出，并可导出查询结果到文件。
 
+Windows 下请通过仓库级启动器调用 Python 脚本，例如 `.\scripts\run-python.ps1 .\database\python-db-query\scripts\query_db.py ...`。启动器会在环境变量、本仓库虚拟环境、Windows 注册表和常见安装目录中查找解释器，不依赖 `python` 或 `py` 已加入 `PATH`；找不到时会明确提示缺少 Python 解释器这一前置条件。
+
 ### `debugging/backend-log-contract-trace`
 
 该 skill 适合排查后端日志到代码路径和数据契约的问题：
@@ -316,7 +318,7 @@ $Python = Join-Path $env:USERPROFILE ".cache\codex-runtimes\codex-primary-runtim
 示例：
 
 ```powershell
-py .\market\us-sector-index-impact-report\scripts\render_investment_bank_html.py `
+.\scripts\run-python.ps1 .\market\us-sector-index-impact-report\scripts\render_investment_bank_html.py `
   --input .\output\us-sector-index-impact-report\report-data.json `
   --output .\output\us-sector-index-impact-report\us-sector-impact-report.html
 ```
@@ -337,10 +339,9 @@ py .\market\us-sector-index-impact-report\scripts\render_investment_bank_html.py
 示例：
 
 ```powershell
-$Python = Join-Path $env:USERPROFILE ".cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe"
-& $Python .\quality\skill-linter\scripts\lint_skill.py .\quality\skill-linter --repo-root .
-& $Python .\quality\skill-linter\scripts\lint_skill.py . --repo-root .
-& $Python .\quality\skill-linter\scripts\lint_skill.py . --repo-root . --json
+.\scripts\run-python.ps1 .\quality\skill-linter\scripts\lint_skill.py .\quality\skill-linter --repo-root .
+.\scripts\run-python.ps1 .\quality\skill-linter\scripts\lint_skill.py . --repo-root .
+.\scripts\run-python.ps1 .\quality\skill-linter\scripts\lint_skill.py . --repo-root . --json
 ```
 
 ### `superpowers/superpowers`
@@ -529,9 +530,8 @@ superpowers/
 `quality/skill-linter` 可用于检查单个 skill 或整个仓库的 skill 质量：
 
 ```powershell
-$Python = Join-Path $env:USERPROFILE ".cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe"
-& $Python .\quality\skill-linter\scripts\lint_skill.py .\quality\skill-linter --repo-root .
-& $Python .\quality\skill-linter\scripts\lint_skill.py . --repo-root .
+.\scripts\run-python.ps1 .\quality\skill-linter\scripts\lint_skill.py .\quality\skill-linter --repo-root .
+.\scripts\run-python.ps1 .\quality\skill-linter\scripts\lint_skill.py . --repo-root .
 ```
 
 `dify/` 目录下提供一个无外部服务依赖的快速校验脚本，用于确认当前两个 Dify skill 的基本结构和关键引用仍然可用：

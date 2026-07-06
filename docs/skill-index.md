@@ -46,7 +46,20 @@ Use this group when the request is about market research, public-market impact a
 Primary command:
 
 ```powershell
-py .\market\us-sector-index-impact-report\scripts\render_investment_bank_html.py `
+.\scripts\run-python.ps1 .\market\us-sector-index-impact-report\scripts\render_investment_bank_html.py `
   --input .\output\us-sector-index-impact-report\report-data.json `
   --output .\output\us-sector-index-impact-report\us-sector-impact-report.html
 ```
+
+On Windows, use the repository launcher for Python-based skills so commands do not depend on `python` or `py` being on `PATH`. If Python is unavailable, the launcher reports the missing interpreter prerequisite and the locations it checked.
+
+## Other Categories
+
+- `dify/`: Dify Console Admin API automation and DSL app building.
+- `mindmap/`: offline markmap HTML generation and optional static publishing.
+- `wechat/`: WeChat article formatting, cover generation, and authorized archive workflows.
+- `writing/`: Chinese technical article polishing.
+- `database/`: safe Python database querying with local ignored configs.
+- `debugging/`: backend log-to-contract tracing.
+- `quality/`: skill linting and release checks.
+- `superpowers/`: upstream software-development process skills.
