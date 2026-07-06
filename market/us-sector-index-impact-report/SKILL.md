@@ -83,6 +83,14 @@ Use the bundled renderer:
 
 The Windows launcher resolves Python without relying on `python` or `py` being on `PATH`. If it cannot find Python, it reports the missing Python interpreter prerequisite and the checked locations. The renderer has no third-party Python dependencies. Read [references/report-schema.md](references/report-schema.md) before constructing the JSON payload. Read [references/market-analysis-framework.md](references/market-analysis-framework.md) when the cross-market logic needs a checklist.
 
+For a stable local renderer preview, use the checked-in fixture:
+
+```powershell
+.\market\us-sector-index-impact-report\scripts\preview_sample_report.ps1
+```
+
+The preview script renders [fixtures/sample-report.json](fixtures/sample-report.json) to `output/us-sector-index-impact-report-sample.html` by default. Pass `-Open` to launch the rendered file after generation, or `-Output .\path\report.html` to choose another output path. Keep the fixture aligned with [references/report-schema.md](references/report-schema.md) so renderer changes can be compared against a stable example.
+
 ## Final Response
 
 Return the generated HTML file path, the exact U.S. session date, and a short note about any data limitations. Do not paste the whole report into chat unless the user asks.

@@ -22,6 +22,7 @@ Turn local subtitle files, local video/audio files, approved online video URLs, 
 - 解释涨跌背后的核心因素和基本面变化，重点关注美国 AI 资本开支、云厂商数据中心投入、GPU/ASIC、光模块、PCB、电力和散热链条。
 - 分析对港股和 A 股相关行业的直接传导、情绪 beta 和潜在风险。
 - 使用内置脚本把结构化 JSON 渲染为可独立打开的 HTML 报告页。
+- 提供 checked-in 样例 fixture 和本地预览脚本，便于审查 renderer 改动。
 
 ### `debugging/backend-log-contract-trace`
 
@@ -314,6 +315,7 @@ Windows 下请通过仓库级启动器调用 Python 脚本，例如 `.\scripts\r
 - 重点分析美国 AI 资本开支：云厂商 capex 指引、数据中心建设、GPU/ASIC、HBM、先进封装、AI 服务器、光模块/CPO、PCB、电力和散热。
 - 区分港股和 A 股的直接业绩传导、供应链订单传导和情绪 beta。
 - 使用 `scripts/render_investment_bank_html.py` 将结构化 JSON 渲染成 standalone HTML 页面。
+- 提供 checked-in 样例 `fixtures/sample-report.json` 和本地预览脚本，便于 renderer 改动时用稳定输入审查 HTML 输出。
 
 示例：
 
@@ -321,6 +323,12 @@ Windows 下请通过仓库级启动器调用 Python 脚本，例如 `.\scripts\r
 .\scripts\run-python.ps1 .\market\us-sector-index-impact-report\scripts\render_investment_bank_html.py `
   --input .\output\us-sector-index-impact-report\report-data.json `
   --output .\output\us-sector-index-impact-report\us-sector-impact-report.html
+```
+
+预览内置样例：
+
+```powershell
+.\market\us-sector-index-impact-report\scripts\preview_sample_report.ps1
 ```
 
 ### `quality/skill-linter`
@@ -496,10 +504,13 @@ us-sector-index-impact-report/
   SKILL.md
   agents/
     openai.yaml
+  fixtures/
+    sample-report.json
   references/
     market-analysis-framework.md
     report-schema.md
   scripts/
+    preview_sample_report.ps1
     render_investment_bank_html.py
 
 skill-linter/

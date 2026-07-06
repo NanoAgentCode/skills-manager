@@ -41,7 +41,7 @@ Use this group when the request is about diagnosing code paths, validating skill
 
 Use this group when the request is about market research, public-market impact analysis, or investment-bank style output.
 
-- `market/us-sector-index-impact-report/SKILL.md`: most recent completed U.S. trading session analysis, Nasdaq/Nasdaq 100 and sector moves, core drivers, U.S. AI capex fundamentals, and Hong Kong/A-share sector implications rendered as standalone HTML.
+- `market/us-sector-index-impact-report/SKILL.md`: most recent completed U.S. trading session analysis, Nasdaq/Nasdaq 100 and sector moves, core drivers, U.S. AI capex fundamentals, and Hong Kong/A-share sector implications rendered as standalone HTML. Includes a stable checked-in renderer fixture at `fixtures/sample-report.json`.
 
 Primary command:
 
@@ -52,6 +52,12 @@ Primary command:
 ```
 
 On Windows, use the repository launcher for Python-based skills so commands do not depend on `python` or `py` being on `PATH`. If Python is unavailable, the launcher reports the missing interpreter prerequisite and the locations it checked.
+
+Preview the stable fixture:
+
+```powershell
+.\market\us-sector-index-impact-report\scripts\preview_sample_report.ps1
+```
 
 ## Other Categories
 

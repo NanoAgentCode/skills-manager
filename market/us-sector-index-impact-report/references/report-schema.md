@@ -102,3 +102,4 @@ Rules:
 - Omit optional fields only when the data is unavailable. Prefer `null` over invented values.
 - Use Chinese prose in narrative fields unless the user asks for English.
 - Always include `core_factors`, `ai_capex_analysis`, and `geopolitics_dollar_gold` for this skill. If the session was not AI-, geopolitics-, dollar-, or gold-driven, explain why the factor was not dominant.
+- Keep `../fixtures/sample-report.json` in this shape when adding or removing renderer-supported fields. It is the stable local fixture for visual review through `../scripts/preview_sample_report.ps1`.

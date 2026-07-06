@@ -1,0 +1,251 @@
+{
+  "title": "样例：美股AI链分化，港股与A股传导更偏硬件",
+  "subtitle": "Stable renderer fixture; illustrative data only",
+  "session_date": "2026-07-02",
+  "generated_at": "2026-07-03 09:30 CST",
+  "analyst": "Codex fixture",
+  "house_view": "样例报告用于回归预览 HTML 渲染效果；其中行情数值为结构化示例，不应作为真实交易日数据或投资建议。",
+  "executive_summary": [
+    "Nasdaq Composite 样例下跌 0.80%，Nasdaq 100 样例下跌 1.61%，科技权重股回撤但行业表现并不均匀。",
+    "半导体设备与AI基础设施链条相对抗跌，样例中的软件和非必需消费承压，显示估值和盈利兑现压力仍在。",
+    "美元走弱与黄金上涨同时出现，样例情景下更像实际利率和风险溢价再定价，而不是单纯风险偏好扩张。",
+    "对中国市场的传导重点不在泛科技 beta，而在 CPO、PCB、AI服务器、电力散热和港股平台估值修复的条件验证。"
+  ],
+  "indices": [
+    {
+      "name": "Nasdaq Composite",
+      "ticker": "IXIC",
+      "close": "20,601.10",
+      "change_points": "-166.84",
+      "change_pct": "-0.80%",
+      "note": "样例收盘数据，用于版式回归。"
+    },
+    {
+      "name": "Nasdaq 100",
+      "ticker": "NDX",
+      "close": "22,435.12",
+      "change_points": "-366.22",
+      "change_pct": "-1.61%",
+      "note": "样例收盘数据，用于版式回归。"
+    },
+    {
+      "name": "S&P 500",
+      "ticker": "SPX",
+      "close": "6,221.31",
+      "change_points": "-49.53",
+      "change_pct": "-0.79%",
+      "note": "样例宽基参照。"
+    },
+    {
+      "name": "Spot Gold",
+      "ticker": "XAUUSD",
+      "close": "3,356.40",
+      "change_points": "+41.50",
+      "change_pct": "+1.25%",
+      "note": "样例宏观变量。"
+    }
+  ],
+  "sectors": [
+    {
+      "rank": 1,
+      "name": "Semiconductor Equipment",
+      "ticker": "SOX proxy",
+      "close": "5,618.44",
+      "change_points": "+42.17",
+      "change_pct": "+0.76%",
+      "interpretation": "样例中设备和先进封装需求预期抵消了部分估值压力，市场继续关注AI集群扩容。"
+    },
+    {
+      "rank": 2,
+      "name": "AI Networking",
+      "ticker": "ETF proxy",
+      "close": "128.40",
+      "change_points": "+0.55",
+      "change_pct": "+0.43%",
+      "interpretation": "光模块、交换机和高速互联仍受益于数据中心资本开支，但涨幅受订单兑现节奏约束。"
+    },
+    {
+      "rank": 3,
+      "name": "Biotechnology",
+      "ticker": "NBI proxy",
+      "close": "4,812.09",
+      "change_points": "+3.85",
+      "change_pct": "+0.08%",
+      "interpretation": "防御性成长资产在样例中小幅跑赢，主要来自利率回落假设。"
+    },
+    {
+      "rank": 4,
+      "name": "Internet Platforms",
+      "ticker": "Platform basket",
+      "close": "932.18",
+      "change_points": "-6.51",
+      "change_pct": "-0.69%",
+      "interpretation": "平台股受广告与云收入预期支撑，但高估值权重调整拖累表现。"
+    },
+    {
+      "rank": 5,
+      "name": "Software",
+      "ticker": "IGV proxy",
+      "close": "103.77",
+      "change_points": "-1.54",
+      "change_pct": "-1.46%",
+      "interpretation": "样例中软件板块承压，市场担心AI投入提升折旧和销售费用而压缩自由现金流。"
+    },
+    {
+      "rank": 6,
+      "name": "Consumer Discretionary",
+      "ticker": "XLY proxy",
+      "close": "214.92",
+      "change_points": "-4.10",
+      "change_pct": "-1.87%",
+      "interpretation": "利率和就业预期不确定时，样例中高估值消费成长股出现更明显回撤。"
+    }
+  ],
+  "core_factors": [
+    {
+      "factor": "AI capital expenditure",
+      "direction": "Positive",
+      "evidence": "样例情景中，云厂商继续维持数据中心和AI训练集群投入，订单能见度支持半导体设备、服务器和高速互联。",
+      "market_impact": "利好AI硬件供应链，但也提高折旧、现金流和投资回报率审查强度。"
+    },
+    {
+      "factor": "Rates and valuation",
+      "direction": "Negative",
+      "evidence": "长端利率回落不足以抵消高估值科技权重股的获利了结，样例中纳指权重拖累更明显。",
+      "market_impact": "压制久期较长的软件和非必需消费成长股，对现金流扎实的硬件龙头影响较小。"
+    },
+    {
+      "factor": "Dollar and gold",
+      "direction": "Neutral",
+      "evidence": "样例中美元走弱、黄金走强，反映实际利率与风险溢价同步变化。",
+      "market_impact": "对港股和新兴市场流动性有边际支撑，但若黄金上涨来自避险，则风险偏好改善有限。"
+    },
+    {
+      "factor": "Geopolitical risk",
+      "direction": "Negative",
+      "evidence": "出口管制、供应链安全和能源安全预期在样例中抬升风险溢价。",
+      "market_impact": "利好防务和自主可控主题，压制对外部订单和海外合规高度敏感的环节。"
+    }
+  ],
+  "ai_capex_analysis": [
+    {
+      "heading": "Capex visibility",
+      "body": "样例中AI资本开支仍处于扩张阶段，训练和推理集群共同拉动GPU、ASIC、HBM、先进封装、AI服务器、交换机和光模块需求。投资线索应从泛AI叙事转向订单可见度、交付节奏和客户集中度。"
+    },
+    {
+      "heading": "Free-cash-flow pressure",
+      "body": "持续扩张的资本开支会推高折旧和电力散热支出。若云收入、广告和企业AI付费不能同步兑现，市场会从看收入增长切换到看ROIC和自由现金流。"
+    },
+    {
+      "heading": "China supply-chain read-through",
+      "body": "对A股更直接的样例传导在CPO、PCB、AI服务器、电源、液冷和国产半导体设备；对港股则更多体现为平台估值和云业务信心，业绩传导通常慢于情绪传导。"
+    }
+  ],
+  "geopolitics_dollar_gold": [
+    {
+      "heading": "Dollar policy channel",
+      "body": "样例中美元走弱可改善离岸人民币和港股流动性预期，但只有当弱美元来自降息预期且风险偏好稳定时，才更容易转化为中国资产估值修复。"
+    },
+    {
+      "heading": "Gold signal",
+      "body": "黄金上涨需要拆分为实际利率下降、美元走弱、央行购金和地缘避险四个来源。样例中黄金强而科技弱，提示市场并非单纯risk-on。"
+    },
+    {
+      "heading": "Geopolitics",
+      "body": "出口限制和供应链安全议题会同时支持国产替代和压制海外订单不确定性。报告中应把防务、自主可控和外需链条分开讨论。"
+    }
+  ],
+  "us_interpretation": [
+    {
+      "heading": "Narrow hardware leadership",
+      "body": "样例美股表现说明AI硬件链条仍有基本面支撑，但软件和平台权重的估值压力会让指数层面更脆弱。"
+    },
+    {
+      "heading": "Earnings delivery matters",
+      "body": "市场不再只奖励AI主题暴露，而是要求订单、毛利率、交付能力和现金流验证。行业分化会比指数方向更重要。"
+    }
+  ],
+  "hong_kong_impact": [
+    {
+      "sector": "Internet platforms",
+      "direction": "Neutral",
+      "rationale": "美股平台调整对港股互联网情绪有压制，但弱美元和云业务信心可提供估值支撑，最终取决于本地盈利与回购。",
+      "watchlist": "Hang Seng Tech, Tencent, Alibaba, Meituan"
+    },
+    {
+      "sector": "Semiconductors and hardware",
+      "direction": "Positive",
+      "rationale": "AI硬件订单能见度改善可带动港股半导体、服务器和电子供应链风险偏好，但直接收入暴露需逐家公司确认。",
+      "watchlist": "SMIC, Hua Hong, Lenovo, Sunny Optical"
+    },
+    {
+      "sector": "Gold and resources",
+      "direction": "Positive",
+      "rationale": "黄金上涨和美元走弱组合有利于贵金属和部分资源股，但若背后是避险升温，则高beta板块可能受压。",
+      "watchlist": "Gold miners, nonferrous metals, resource ETFs"
+    }
+  ],
+  "a_share_impact": [
+    {
+      "sector": "AI hardware",
+      "direction": "Positive",
+      "rationale": "样例中最直接的A股传导在光模块/CPO、PCB、服务器、电源、液冷和高速连接，关注海外订单、毛利率和产能兑现。",
+      "watchlist": "CPO, PCB, AI servers, liquid cooling, power modules"
+    },
+    {
+      "sector": "Domestic semiconductor equipment",
+      "direction": "Positive",
+      "rationale": "设备与先进封装需求预期叠加自主可控逻辑，可增强国产设备链条关注度。",
+      "watchlist": "Semiconductor equipment, advanced packaging, EDA"
+    },
+    {
+      "sector": "Software and applications",
+      "direction": "Neutral",
+      "rationale": "美股软件承压提示AI应用商业化仍需验证，A股软件更适合等待订单、续费和利润率信号。",
+      "watchlist": "AI applications, industrial software, data services"
+    },
+    {
+      "sector": "Gold and nonferrous",
+      "direction": "Positive",
+      "rationale": "黄金样例上涨可支撑贵金属链条，铜铝等工业金属还需看美元、需求和库存共同确认。",
+      "watchlist": "Gold, copper, aluminum, mining services"
+    }
+  ],
+  "scenarios": [
+    {
+      "case": "Bull",
+      "probability": "25%",
+      "view": "若美元继续走弱、利率下行且云厂商维持资本开支，港股科技和A股AI硬件可能同步修复。"
+    },
+    {
+      "case": "Base",
+      "probability": "50%",
+      "view": "指数层面震荡，资金更偏向订单明确的AI硬件、国产设备和贵金属，泛软件和高估值消费表现分化。"
+    },
+    {
+      "case": "Bear",
+      "probability": "25%",
+      "view": "若黄金上涨来自地缘避险、美元流动性转紧或AI资本开支回报率被下修，中国高beta科技链条可能先回撤。"
+    }
+  ],
+  "sources": [
+    {
+      "label": "Fixture note",
+      "url": "https://example.com/skills-manager/us-sector-index-impact-report-fixture",
+      "used_for": "说明本文件是渲染回归样例，数值为示例结构，不是实时市场数据。",
+      "retrieved_at": "2026-07-03"
+    },
+    {
+      "label": "Nasdaq market activity",
+      "url": "https://www.nasdaq.com/market-activity/index/comp",
+      "used_for": "真实报告可用作 Nasdaq Composite 行情来源；本 fixture 仅保留来源字段形态。",
+      "retrieved_at": "2026-07-03"
+    },
+    {
+      "label": "Cboe Global Indices",
+      "url": "https://www.cboe.com/us/indices/",
+      "used_for": "真实报告可用于行业或波动率指数交叉验证；本 fixture 仅保留来源字段形态。",
+      "retrieved_at": "2026-07-03"
+    }
+  ]
+}
