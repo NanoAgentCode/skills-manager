@@ -1,4 +1,4 @@
 interface:
   display_name: "Stock Analysis System"
-  short_description: "Run a local stock technical-analysis API"
-  default_prompt: "Use $stock-analysis-system to analyze a stock, ETF, or LOF by market and date range, or to run the local FastAPI stock analysis service."
+  short_description: "Analyze securities with a local tech-score API"
+  default_prompt: "Use $stock-analysis-system to analyze a stock, ETF, or LOF by market/date range, diagnose data retrieval, or run the local FastAPI technical-analysis service."
