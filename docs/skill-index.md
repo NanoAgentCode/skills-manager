@@ -41,6 +41,7 @@ Use this group when the request is about diagnosing code paths, validating skill
 
 Use this group when the request is about market research, public-market impact analysis, or investment-bank style output.
 
+- `market/stock-analysis-system/SKILL.md`: local Python FastAPI stock-analysis service for A-share, Hong Kong, U.S. stock, ETF, and LOF technical analysis, including AKShare data retrieval, technical indicators, scoring, and API smoke tests.
 - `market/us-sector-index-impact-report/SKILL.md`: most recent completed U.S. trading session analysis, Nasdaq/Nasdaq 100 and sector moves, core drivers, U.S. AI capex fundamentals, and Hong Kong/A-share sector implications rendered as standalone HTML. Includes a stable checked-in renderer fixture at `fixtures/sample-report.json`.
 
 Primary command:

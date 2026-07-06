@@ -24,6 +24,16 @@ Turn local subtitle files, local video/audio files, approved online video URLs, 
 - 使用内置脚本把结构化 JSON 渲染为可独立打开的 HTML 报告页。
 - 提供 checked-in 样例 fixture 和本地预览脚本，便于审查 renderer 改动。
 
+### `market/stock-analysis-system`
+
+把 `NanoAgentCode/stock.git` 并入为本地股票技术分析 API 技能，支持 A 股、港股、美股、ETF 和 LOF。
+
+- 使用 AKShare 等数据源获取多市场行情数据。
+- 计算 MA、RSI、MACD、布林带、成交量、ATR、波动率和 ROC 等技术指标。
+- 输出 0-100 技术评分和规则化投资建议。
+- 提供 FastAPI 服务入口、市场元数据接口、健康检查和本地 smoke test 脚本。
+- 保留上游 README 作为参考，并将源码放在该 skill 的 `scripts/` 下。
+
 ### `debugging/backend-log-contract-trace`
 
 Trace backend logs to the exact code path and contract boundary.
@@ -51,7 +61,7 @@ Archive historical mass-send articles for a WeChat official account the user own
 - Writing：润色中文技术文章或机器翻译稿，结合上下文检查专业术语准确性，并输出术语修改记录。
 - Database：通过 Python 脚本执行数据库查询，连接配置单独存放到本地配置文件；缺少配置时通过对话收集必要字段。
 - Debugging：从后端日志一路追到接口参数、DTO/VO、实体字段、MyBatis XML、SQL 列名、跨服务参数和数据库约束。
-- Market：分析昨晚美股行业指数、纳斯达克指数和纳斯达克 100 指数，解释核心涨跌因素与美国 AI 资本开支基本面，并渲染港股/A 股影响的投行风格 HTML 报告。
+- Market：提供本地股票技术分析 API，并分析昨晚美股行业指数、纳斯达克指数和纳斯达克 100 指数，解释核心涨跌因素与美国 AI 资本开支基本面，渲染港股/A 股影响的投行风格 HTML 报告。
 - Quality：检查 skill 结构、触发描述、资源引用、UI 元数据、多模型入口、敏感信息和 README 同步状态。
 - Superpowers：从 `obra/superpowers` 同步的软件开发方法论技能集，覆盖 brainstorm、计划编写、TDD、代码审查、并行子代理和工作树流程。
 
@@ -63,7 +73,7 @@ Archive historical mass-send articles for a WeChat official account the user own
 | 知识与视觉产物 | `diagram/`、`mindmap/` | 架构图、流程图、白板图、文档/论文/书籍思维导图、本地 HTML 产物发布 |
 | 平台与数据自动化 | `dify/`、`database/` | Dify 应用/DSL 创建导入导出、数据库只读查询和结果导出 |
 | 工程质量 | `debugging/`、`quality/`、`superpowers/` | 后端链路排查、skill lint、TDD、计划、代码审查、并行开发流程 |
-| 研究与市场 | `market/` | 美股行业/Nasdaq 复盘、AI capex 基本面和港股/A 股影响分析 |
+| 研究与市场 | `market/` | 股票技术分析 API、美股行业/Nasdaq 复盘、AI capex 基本面和港股/A 股影响分析 |
 
 ## 多模型兼容
 
@@ -331,6 +341,41 @@ Windows 下请通过仓库级启动器调用 Python 脚本，例如 `.\scripts\r
 .\market\us-sector-index-impact-report\scripts\preview_sample_report.ps1
 ```
 
+### `market/stock-analysis-system`
+
+该 skill 适合运行或改造从 `NanoAgentCode/stock.git` 并入的 Python 股票技术分析服务：
+
+- 支持 `A`、`HK`、`US`、`ETF`、`LOF` 市场类型。
+- 通过 AKShare 获取行情数据，计算均线、RSI、MACD、布林带、成交量、ATR、波动率和 ROC。
+- 提供 FastAPI 接口：`/analyze-stock/`、`/markets`、`/health`。
+- 输出技术指标摘要、0-100 综合评分和规则化建议。
+- `scripts/app_modular.py` 是推荐入口，`scripts/main_back.py` 保留为上游单文件版本参考。
+- 上游 README 保存在 `references/upstream-README.md`。
+
+本地启动示例：
+
+```powershell
+cd .\market\stock-analysis-system\scripts
+python -m uvicorn app_modular:app --host 0.0.0.0 --port 8000
+```
+
+示例请求：
+
+```http
+POST /analyze-stock/
+Authorization: Bearer xue123
+Content-Type: application/json
+
+{
+  "stock_code": "AAPL",
+  "market_type": "US"
+}
+```
+
+不传 `start_date` / `end_date` 时，服务默认使用截至当天的最近一年滚动窗口；需要历史区间回测时再传 `YYYYMMDD` 格式日期。响应报告会返回实际数据区间、最新行情日期和行情距今天数。
+
+注意：并入源码里带有本地测试用示例 token 和开放 CORS 配置。共享或部署前需要改成真实认证和受限来源，不要提交真实 API key 或私有凭据。
+
 ### `quality/skill-linter`
 
 该 skill 适合在创建、修改、评审或发布 skill 前做结构和质量检查：
@@ -512,6 +557,27 @@ us-sector-index-impact-report/
   scripts/
     preview_sample_report.ps1
     render_investment_bank_html.py
+
+stock-analysis-system/
+  SKILL.md
+  agents/
+    openai.yaml
+  references/
+    upstream-README.md
+  scripts/
+    app_modular.py
+    main_back.py
+    requirements.txt
+    pyproject.toml
+    test_markets.py
+    test_us_markets.py
+    modules/
+      auth.py
+      config.py
+      global_markets.py
+      indicators.py
+      models.py
+      stock_service.py
 
 skill-linter/
   SKILL.md

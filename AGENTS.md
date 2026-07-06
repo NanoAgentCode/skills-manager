@@ -49,6 +49,7 @@ This repository is a reusable skills library. Treat each `SKILL.md` as the sourc
 
 ### Research And Markets
 
+- `market/stock-analysis-system/SKILL.md`: run or adapt the imported Python FastAPI stock analysis service for A-share, Hong Kong, U.S. stock, ETF, and LOF technical analysis, using AKShare data retrieval, technical indicators, scoring, and smoke tests.
 - `market/us-sector-index-impact-report/SKILL.md`: analyze last night's U.S. sector and Nasdaq/Nasdaq 100 moves, core gain/loss factors, U.S. AI capex fundamentals, and likely Hong Kong/A-share sector impact; renders an investment-bank style HTML report.
 
 ## Platform Notes
