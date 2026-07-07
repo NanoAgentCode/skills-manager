@@ -31,11 +31,10 @@ Use this group when the request is about Dify apps, DSL import/export, platform 
 
 ## Engineering Quality
 
-Use this group when the request is about diagnosing code paths, validating skills, or applying software-development process skills.
+Use this group when the request is about diagnosing code paths or validating skills.
 
 - `debugging/backend-log-contract-trace/SKILL.md`: backend log-to-contract tracing across routes/controllers, DTO/VOs, services, mapper XML, SQL columns, cross-service parameters, and database constraints.
 - `quality/skill-linter/SKILL.md`: skill structure, trigger metadata, resource links, UI metadata, README sync, platform compatibility entrypoints, and secret hygiene checks.
-- `superpowers/superpowers/skills/*/SKILL.md`: upstream software-development process skills for brainstorming, planning, TDD, reviews, debugging, parallel agents, and worktrees.
 
 ## Research And Markets
 
@@ -69,4 +68,3 @@ Preview the stable fixture:
 - `database/`: safe Python database querying with local ignored configs.
 - `debugging/`: backend log-to-contract tracing.
 - `quality/`: skill linting and release checks.
-- `superpowers/`: upstream software-development process skills.

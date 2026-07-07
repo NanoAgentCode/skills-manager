@@ -1,4 +1,0 @@
-interface:
-  display_name: "Test Driven Development"
-  short_description: "Write a failing test before implementation"
-  default_prompt: "Use $test-driven-development when implementing features, bug fixes, refactors, or behavior changes before writing production code."

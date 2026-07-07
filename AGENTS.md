@@ -45,7 +45,6 @@ This repository is a reusable skills library. Treat each `SKILL.md` as the sourc
 
 - `debugging/backend-log-contract-trace/SKILL.md`: trace backend logs through API parameters, DTO/VOs, services, MyBatis XML, SQL columns, cross-service parameters, and database constraints; includes a concrete example in the recommended output shape.
 - `quality/skill-linter/SKILL.md`: lint skill structure, trigger descriptions, references, metadata, README sync, and secret hygiene.
-- `superpowers/superpowers/skills/*/SKILL.md`: upstream software-development process skills for brainstorming, planning, TDD, reviews, debugging, and worktrees.
 
 ### Research And Markets
 

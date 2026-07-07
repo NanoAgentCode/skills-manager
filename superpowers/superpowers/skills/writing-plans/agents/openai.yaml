@@ -1,4 +1,0 @@
-interface:
-  display_name: "Writing Plans"
-  short_description: "Turn requirements into executable plans"
-  default_prompt: "Use $writing-plans when requirements or a spec need to be turned into a multi-step implementation plan before code changes."

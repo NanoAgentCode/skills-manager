@@ -1,4 +1,0 @@
-interface:
-  display_name: "Executing Plans"
-  short_description: "Execute written implementation plans"
-  default_prompt: "Use $executing-plans when a written implementation plan should be executed in a separate session with review checkpoints."

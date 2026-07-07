@@ -1,4 +1,0 @@
-interface:
-  display_name: "Writing Skills"
-  short_description: "Create and verify reusable skills"
-  default_prompt: "Use $writing-skills when creating new skills, editing existing skills, or verifying that skills work before deployment."

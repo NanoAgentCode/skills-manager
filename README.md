@@ -51,7 +51,7 @@ Archive historical mass-send articles for a WeChat official account the user own
 - Save Markdown, metadata JSON, index CSV/JSON, and local image backups in batch; keep raw HTML only when explicitly requested.
 - Use `scripts/reformat_archived_articles.py` to stage selected archived articles and run `wechat/wechat-format/scripts/article_workflow.py` for migration, reformatting, or republishing preparation.
 
-本仓库用于管理可复用的 AI agent skills。目前包含 Dify、Diagram、Mindmap、Media、WeChat、Writing、Database、Debugging、Market、Quality 和 Superpowers 十一类 skill，并提供 Codex、Claude、Gemini、GLM、DeepSeek 的兼容入口。
+本仓库用于管理可复用的 AI agent skills。目前包含 Dify、Diagram、Mindmap、Media、WeChat、Writing、Database、Debugging、Market 和 Quality 十类 skill，并提供 Codex、Claude、Gemini、GLM、DeepSeek 的兼容入口。
 
 - Dify：覆盖 Dify Console Admin API 自动化与 Dify DSL 应用构建。
 - Diagram：生成 draw.io 与 Excalidraw 图表，覆盖架构图、流程图、UML/时序图、ERD、C4、代码结构、IaC、API、SQL schema 和白板风解释图。
@@ -63,7 +63,6 @@ Archive historical mass-send articles for a WeChat official account the user own
 - Debugging：从后端日志一路追到接口参数、DTO/VO、实体字段、MyBatis XML、SQL 列名、跨服务参数和数据库约束。
 - Market：提供本地股票技术分析 API，并分析昨晚美股行业指数、纳斯达克指数和纳斯达克 100 指数，解释核心涨跌因素与美国 AI 资本开支基本面，渲染港股/A 股影响的投行风格 HTML 报告。
 - Quality：检查 skill 结构、触发描述、资源引用、UI 元数据、多模型入口、敏感信息和 README 同步状态。
-- Superpowers：从 `obra/superpowers` 同步的软件开发方法论技能集，覆盖 brainstorm、计划编写、TDD、代码审查、并行子代理和工作树流程。
 
 按使用场景也可以归为以下能力域：
 
@@ -72,7 +71,7 @@ Archive historical mass-send articles for a WeChat official account the user own
 | 内容生产 | `media/`、`writing/`、`wechat/` | 视频/音频转文字、技术文章润色、公众号排版、历史文章归档和封面生成 |
 | 知识与视觉产物 | `diagram/`、`mindmap/` | 架构图、流程图、白板图、文档/论文/书籍思维导图、本地 HTML 产物发布 |
 | 平台与数据自动化 | `dify/`、`database/` | Dify 应用/DSL 创建导入导出、数据库只读查询和结果导出 |
-| 工程质量 | `debugging/`、`quality/`、`superpowers/` | 后端链路排查、skill lint、TDD、计划、代码审查、并行开发流程 |
+| 工程质量 | `debugging/`、`quality/` | 后端链路排查、skill lint |
 | 研究与市场 | `market/` | 股票技术分析 API、美股行业/Nasdaq 复盘、AI capex 基本面和港股/A 股影响分析 |
 
 ## 多模型兼容
@@ -397,37 +396,6 @@ Content-Type: application/json
 .\scripts\run-python.ps1 .\quality\skill-linter\scripts\lint_skill.py . --repo-root . --json
 ```
 
-### `superpowers/superpowers`
-
-该目录从 [obra/superpowers](https://github.com/obra/superpowers) 同步，包含一组面向 coding agent 的开发流程技能：
-
-- `brainstorming`：写代码前进行苏格拉底式需求澄清和方案讨论。
-- `dispatching-parallel-agents`：把相互独立的失败、任务或调查分派给并行 agent。
-- `executing-plans`：按已有实现计划在独立会话中执行并设置 review 检查点。
-- `finishing-a-development-branch`：在实现完成并验证后选择 merge、PR 或清理路径。
-- `receiving-code-review`：接收 review 反馈时先核实技术事实，再决定采纳或反驳。
-- `requesting-code-review`：在完成较大任务或合并前发起结构化代码审查。
-- `writing-plans`：把已确认设计拆成可执行的小任务计划。
-- `test-driven-development`：强调 red/green/refactor 的 TDD 流程。
-- `subagent-driven-development`：用子代理逐任务实现并进行两阶段 review。
-- `using-git-worktrees`：为并行开发创建隔离工作树。
-- `using-superpowers`：说明如何发现、选择并调用 superpowers 技能。
-- `systematic-debugging`：系统化调试和根因分析。
-- `verification-before-completion`：在声称完成、修复或通过前先运行验证命令。
-- `writing-skills`：用测试驱动的方式创建、修改和验证可复用 skill。
-
-该目录保留上游插件元数据（如 `.codex-plugin`、`.claude-plugin`），但不包含上游 `.git` 目录。
-
-目录中几个关键层级的含义：
-
-- `skills/`：真正的技能内容，每个子目录通常包含一个 `SKILL.md`，定义触发场景、执行流程和附加资源。
-- `.codex-plugin/`：Codex 插件入口，描述插件名称、版本、展示信息，并指向 `skills/` 目录。
-- `.claude-plugin/`：Claude Code 插件入口，描述 Claude 插件市场所需的名称、版本、作者和仓库信息。
-- `hooks/`：生命周期钩子，用于在会话启动、清空或压缩等时机自动执行初始化或提醒逻辑。
-- `docs/`、`tests/`、`assets/`：分别保存上游文档、测试和图标等辅助资源。
-
-因此，`skills/` 是能力本体；`.codex-plugin/` 和 `.claude-plugin/` 是不同平台的安装包装；`hooks/` 是自动触发机制。
-
 ## 使用方式
 
 把需要使用的 skill 目录安装或复制到目标 agent 可发现的 skills 目录中；如果目标 agent 没有自动发现机制，则在提示词中显式要求先读 `AGENTS.md` 和目标 `SKILL.md`。安装目录应保持目录名与 `SKILL.md` frontmatter 的 `name` 一致：
@@ -585,19 +553,6 @@ skill-linter/
     openai.yaml
   scripts/
     lint_skill.py
-
-superpowers/
-  superpowers/
-    README.md
-    .codex-plugin/
-    .claude-plugin/
-    hooks/
-    skills/
-      brainstorming/
-      writing-plans/
-      test-driven-development/
-      subagent-driven-development/
-      ...
 ```
 
 使用 DSL App Builder 处理涉及远程 Dify 创建或更新应用的任务时，应同时安装 `dify-console-admin-api`，因为前者会引用后者的 Admin API 流程。
