@@ -206,6 +206,18 @@ def render_sources(items: list[dict[str, Any]]) -> str:
     return "\n".join(rows)
 
 
+def render_cover_tiles(items: list[dict[str, Any]]) -> str:
+    styles = ["glass-blue", "glass-violet", "glass-rose", "glass-green"]
+    tiles = []
+    for index, item in enumerate(items[:4]):
+        style = styles[index % len(styles)]
+        tiles.append(
+            f"""
+        <div class="cover-tile {style}"><span>{esc(item.get("label"))}</span><strong>{esc(item.get("value"))}</strong><em>{esc(item.get("caption"))}</em></div>"""
+        )
+    return "\n".join(tiles)
+
+
 def render_report(data: dict[str, Any]) -> str:
     summary_items = data.get("executive_summary", [])
     index_items = data.get("indices", [])
@@ -229,6 +241,7 @@ def render_report(data: dict[str, Any]) -> str:
     cn_cards = render_impact_cards(cn_items)
     scenarios = render_scenarios(scenario_items)
     sources = render_sources(data.get("sources", []))
+    cover_tiles = render_cover_tiles(data.get("cover_tiles", []))
     summary_grid = balanced_grid_class("summary", summary_items)
     metrics_grid = balanced_grid_class("metrics", index_items)
     sector_grid = balanced_grid_class("sector-grid", sector_items)
@@ -552,10 +565,7 @@ def render_report(data: dict[str, Any]) -> str:
         <span>AI capex / 美元 / 黄金 / 港股A股</span>
       </div>
       <div class="cover-grid">
-        <div class="cover-tile glass-blue"><span>纳指</span><strong>-0.80%</strong><em>Nasdaq Composite</em></div>
-        <div class="cover-tile glass-violet"><span>纳百</span><strong>-1.61%</strong><em>Nasdaq 100</em></div>
-        <div class="cover-tile glass-rose"><span>黄金</span><strong>+1.25%</strong><em>Global Gold</em></div>
-        <div class="cover-tile glass-green"><span>主线</span><strong>AI Capex</strong><em>Capital Spending</em></div>
+{cover_tiles}
       </div>
     </header>
 
