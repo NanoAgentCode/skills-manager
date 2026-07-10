@@ -30,6 +30,7 @@ This repository is a reusable skills library. Treat each `SKILL.md` as the sourc
 
 ### Knowledge And Visual Artifacts
 
+- `knowledge/technical-cognition-framework/SKILL.md`: build evidence-based technical cognition frameworks that connect definitions, concepts, motivations, construction methods, application boundaries, common confusions, and bidirectional LLM/Agent relationships; includes a worked Ontology reference.
 - `diagram/drawio-skill/SKILL.md`: generate polished `.drawio` diagrams for architecture, flowcharts, UML/sequence/class diagrams, ERDs, C4, ML/DL figures, codebase/IaC/API/schema visualizations, and exportable PNG/SVG/PDF/JPG outputs through the draw.io desktop CLI when available.
 - `diagram/excalidraw/SKILL.md`: generate clean `.excalidraw` diagrams and hand-drawn-style visualizations for flowcharts, architecture sketches, system explanations, data flows, and relationship maps; exports SVG through Kroki or PNG/SVG through the local Excalidraw CLI.
 - `mindmap/mindmap-builder/SKILL.md`: convert PDFs, notes, outlines, papers, reports, or books into offline markmap HTML; supports overview-first long document mode.

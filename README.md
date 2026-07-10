@@ -2,6 +2,16 @@
 
 ## Recently Added Skills
 
+### `knowledge/technical-cognition-framework`
+
+围绕一个技术主题建立可迁移的认知框架，以 Ontology 为完整示例。
+
+- 串联回答“是什么、核心概念、为什么、如何构建、应用场景、易混概念、与 LLM/Agent 的关系”。
+- 把定义、机制、方法、边界和选型组织成因果链，而不是堆砌术语。
+- 按标准、原始论文、官方文档和时效性对证据分层，并区分事实与分析。
+- 内置 Ontology 示例，明确区分 Ontology、Taxonomy、Schema、Knowledge Graph、RDF/OWL、SHACL 和 Embedding。
+- 支持快速入门、完整认知、技术选型和落地设计四种深度。
+
 ### `media/video-transcriber`
 
 Turn local subtitle files, local video/audio files, approved online video URLs, or user-authorized WeChat Channels/视频号 material into transcripts, subtitles, summaries, or article-ready notes.
@@ -51,7 +61,7 @@ Archive historical mass-send articles for a WeChat official account the user own
 - Save Markdown, metadata JSON, index CSV/JSON, and local image backups in batch; keep raw HTML only when explicitly requested.
 - Use `scripts/reformat_archived_articles.py` to stage selected archived articles and run `wechat/wechat-format/scripts/article_workflow.py` for migration, reformatting, or republishing preparation.
 
-本仓库用于管理可复用的 AI agent skills。目前包含 Dify、Diagram、Mindmap、Media、WeChat、Writing、Database、Debugging、Market 和 Quality 十类 skill，并提供 Codex、Claude、Gemini、GLM、DeepSeek 的兼容入口。
+本仓库用于管理可复用的 AI agent skills。目前包含 Dify、Diagram、Mindmap、Media、WeChat、Writing、Knowledge、Database、Debugging、Market 和 Quality 十一类 skill，并提供 Codex、Claude、Gemini、GLM、DeepSeek 的兼容入口。
 
 - Dify：覆盖 Dify Console Admin API 自动化与 Dify DSL 应用构建。
 - Diagram：生成 draw.io 与 Excalidraw 图表，覆盖架构图、流程图、UML/时序图、ERD、C4、代码结构、IaC、API、SQL schema 和白板风解释图。
@@ -59,6 +69,7 @@ Archive historical mass-send articles for a WeChat official account the user own
 - Media：优先使用已有字幕/平台字幕；没有字幕时，再从本地视频/音频、授权在线视频或微信视频号素材中提取音频并生成文字稿、字幕、摘要、会议纪要或文章草稿。
 - WeChat：把 Markdown、纯文本或粗糙笔记排版成微信公众号兼容 HTML；支持一命令文章包装、26 主题画廊、封面、草稿箱推送，以及自有公众号历史群发文章的合规 URL 归档。
 - Writing：润色中文技术文章或机器翻译稿，结合上下文检查专业术语准确性，并输出术语修改记录。
+- Knowledge：围绕技术主题建立证据驱动的认知框架，覆盖定义、概念关系、动机、构建方法、应用边界、概念辨析和 LLM/Agent 集成。
 - Database：通过 Python 脚本执行数据库查询，连接配置单独存放到本地配置文件；缺少配置时通过对话收集必要字段。
 - Debugging：从后端日志一路追到接口参数、DTO/VO、实体字段、MyBatis XML、SQL 列名、跨服务参数和数据库约束。
 - Market：提供本地股票技术分析 API，并分析昨晚美股行业指数、纳斯达克指数和纳斯达克 100 指数，解释核心涨跌因素与美国 AI 资本开支基本面，渲染港股/A 股影响的投行风格 HTML 报告。
@@ -69,7 +80,7 @@ Archive historical mass-send articles for a WeChat official account the user own
 | 能力域 | 包含目录 | 典型请求 |
 |---|---|---|
 | 内容生产 | `media/`、`writing/`、`wechat/` | 视频/音频转文字、技术文章润色、公众号排版、历史文章归档和封面生成 |
-| 知识与视觉产物 | `diagram/`、`mindmap/` | 架构图、流程图、白板图、文档/论文/书籍思维导图、本地 HTML 产物发布 |
+| 知识与视觉产物 | `knowledge/`、`diagram/`、`mindmap/` | 技术认知框架、架构图、流程图、白板图、文档/论文/书籍思维导图、本地 HTML 产物发布 |
 | 平台与数据自动化 | `dify/`、`database/` | Dify 应用/DSL 创建导入导出、数据库只读查询和结果导出 |
 | 工程质量 | `debugging/`、`quality/` | 后端链路排查、skill lint |
 | 研究与市场 | `market/` | 股票技术分析 API、美股行业/Nasdaq 复盘、AI capex 基本面和港股/A 股影响分析 |
@@ -291,6 +302,16 @@ $Python = Join-Path $env:USERPROFILE ".cache\codex-runtimes\codex-primary-runtim
 - 保留作者原意，不把技术判断改写成泛泛的产品话术。
 - 输出润色后的 Markdown 文章。
 - 最后列出术语修改记录和不确定术语。
+
+### `knowledge/technical-cognition-framework`
+
+该 skill 适合系统理解一个技术主题，或把一组相关问题组织成可用于学习、选型和设计的认知框架：
+
+- 默认回答技术是什么、有哪些核心概念、为什么需要、如何构建、适用与不适用场景、易混概念，以及与 LLM/Agent 的双向关系。
+- 使用“问题 -> 定义与边界 -> 概念与机制 -> 方法 -> 场景 -> 替代方案 -> AI 集成 -> 决策”的连贯链路。
+- 对稳定基础与快速变化的生态结论分别取证，优先标准、原始论文、官方文档和权威学术材料。
+- 输出可按快速入门、完整认知、技术选型或落地设计四种深度调整。
+- 内置 [Ontology 完整示例](knowledge/technical-cognition-framework/references/ontology-example.md) 和 [通用框架模板](knowledge/technical-cognition-framework/references/framework-template.md)。
 
 ### `database/python-db-query`
 

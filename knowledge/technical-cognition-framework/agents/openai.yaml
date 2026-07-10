@@ -1,0 +1,4 @@
+interface:
+  display_name: "Technical Cognition Framework"
+  short_description: "Build evidence-based frameworks for technical concepts"
+  default_prompt: "使用 $technical-cognition-framework 系统解释 Ontology，覆盖核心概念、构建方法、应用场景、概念辨析以及与 LLM 和 Agent 的关系，并用简体中文输出最终文档。"
