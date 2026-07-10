@@ -14,8 +14,9 @@ Use this group when the request is about turning media, notes, drafts, or archiv
 
 ## Knowledge And Visual Artifacts
 
-Use this group when the request is about diagrams, mindmaps, visual explanation, or offline knowledge views.
+Use this group when the request is about systematic technical understanding, diagrams, mindmaps, visual explanation, or offline knowledge views.
 
+- `knowledge/technical-cognition-framework/SKILL.md`: evidence-based frameworks for systematically understanding a technology through its definition, concept relationships, motivation, construction methods, scenarios, boundaries, common confusions, and relationship with LLMs and agents; includes Ontology as a worked reference.
 - `diagram/drawio-skill/SKILL.md`: polished `.drawio` architecture, flowchart, UML, ERD, C4, ML/DL, codebase, IaC, OpenAPI, SQL schema, and system diagrams with local draw.io CLI export when available.
 - `diagram/excalidraw/SKILL.md`: clean `.excalidraw` flowcharts, architecture sketches, process diagrams, relationship maps, and whiteboard-style visual explanations with Kroki SVG or local PNG/SVG export.
 - `mindmap/mindmap-builder/SKILL.md`: offline markmap HTML generation from PDFs, notes, outlines, reports, papers, books, or other documents; supports overview-first long document mode.
@@ -61,6 +62,7 @@ Preview the stable fixture:
 
 ## Other Categories
 
+- `knowledge/`: systematic technical cognition frameworks and worked concept references.
 - `dify/`: Dify Console Admin API automation and DSL app building.
 - `mindmap/`: offline markmap HTML generation and optional static publishing.
 - `wechat/`: WeChat article formatting, cover generation, and authorized archive workflows.
