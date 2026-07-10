@@ -1,0 +1,71 @@
+# Business Scenario Directory Structure
+
+The repository groups reusable skills by the business outcome they support, rather than by an implementation technology or model provider.
+
+## Layout
+
+```text
+skills/
+  content-operations/
+    technical-article-polisher/
+    video-transcriber/
+    wechat-cover/
+    wechat-format/
+    wechat-history-article-archive/
+  knowledge-visualization/
+    drawio-skill/
+    excalidraw/
+    mindmap-builder/
+    mindmap-publisher/
+  ai-application-delivery/
+    dify-console-admin-api/
+    dify-dsl-app-builder/
+    context-json-validator-workflow.yml
+    quick_validate.py
+  engineering-operations/
+    backend-log-contract-trace/
+    python-db-query/
+  market-intelligence/
+    stock-analysis-system/
+    us-sector-index-impact-report/
+  skill-governance/
+    skill-linter/
+```
+
+Generated artifacts do not live under `skills/`. Put them in `output/<skill-name>/` unless the user provides another output path.
+
+## Scenario Boundaries
+
+| Scenario | Responsibility | Typical handoff |
+|---|---|---|
+| `content-operations` | Turn source media, drafts, and archived material into publication-ready content. | A transcript can flow to technical polishing and then WeChat formatting. |
+| `knowledge-visualization` | Turn systems or documents into diagrams, mindmaps, and publishable visual knowledge artifacts. | Mindmap Builder produces offline HTML; Mindmap Publisher handles explicit hosting requests. |
+| `ai-application-delivery` | Design, create, import, update, and verify Dify applications and DSL. | DSL App Builder uses Console Admin API for remote delivery work. |
+| `engineering-operations` | Query operational data safely and trace backend failures through code and data contracts. | A log trace may use read-only database evidence when the user authorizes it. |
+| `market-intelligence` | Run technical market analysis and produce cross-market impact research. | Structured market data is rendered into a standalone research report. |
+| `skill-governance` | Validate skill structure, metadata, references, compatibility, and secret hygiene. | Run before committing, installing, or releasing a skill. |
+
+## Migration Map
+
+| Previous category | New business scenario |
+|---|---|
+| `media/`, `writing/`, `wechat/` | `skills/content-operations/` |
+| `diagram/`, `mindmap/` | `skills/knowledge-visualization/` |
+| `dify/` | `skills/ai-application-delivery/` |
+| `database/`, `debugging/` | `skills/engineering-operations/` |
+| `market/` | `skills/market-intelligence/` |
+| `quality/` | `skills/skill-governance/` |
+
+## Maintenance Rules
+
+1. Keep the concrete skill folder name equal to the `name` in its `SKILL.md` frontmatter.
+2. Add a skill to the scenario that best matches the user's requested outcome. Do not add a new scenario for a single implementation technology.
+3. Keep cross-skill references repository-relative when documenting invocation paths. Use relative Markdown links only when the linked file is inside the same scenario and the relationship is stable.
+4. Keep generated files, local configs, credentials, and test outputs under ignored paths. Default generated artifacts belong under the repository-level `output/` directory.
+5. When moving or adding a skill, update `docs/skill-index.md` and any affected operational documentation. Keep `README.md` and `AGENTS.md` as concise entrypoints, then check scripts for hard-coded parent-directory depth and repository-relative commands.
+6. Validate the result from the repository root:
+
+   ```powershell
+   .\scripts\run-python.ps1 .\skills\skill-governance\skill-linter\scripts\lint_skill.py . --repo-root .
+   & $Python .\skills\ai-application-delivery\quick_validate.py
+   ```

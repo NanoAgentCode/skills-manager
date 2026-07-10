@@ -1,20 +1,7 @@
-# Gemini Compatibility Entry
+# Gemini Entry
 
-Use this repository as a skills library.
+Read `AGENTS.md`, choose the matching skill from `docs/skill-index.md`, then read the selected `SKILL.md` completely and follow it.
 
-Start by reading `AGENTS.md` for the skill index and shared rules. When the user request matches a skill, read the selected `SKILL.md` completely before acting.
-
-Recommended direct prompt:
-
-```text
-Read AGENTS.md, then read <skill-path>/SKILL.md, and follow that skill for this task.
-```
-
-Notes for Gemini:
-
-- `SKILL.md` is the source of truth.
-- `agents/openai.yaml` is Codex UI metadata and can usually be ignored.
-- If a skill references scripts, inspect the script arguments before running them.
-- If a skill uses PowerShell examples and the current environment is not Windows, translate commands to the local shell while preserving behavior.
+Detailed Gemini and shell-portability guidance lives in `docs/platform-compatibility.md`.
 
 @./AGENTS.md
