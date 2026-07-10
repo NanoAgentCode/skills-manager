@@ -17,6 +17,7 @@ skills/
     excalidraw/
     mindmap-builder/
     mindmap-publisher/
+    technical-cognition-framework/
   ai-application-delivery/
     dify-console-admin-api/
     dify-dsl-app-builder/
@@ -39,7 +40,7 @@ Generated artifacts do not live under `skills/`. Put them in `output/<skill-name
 | Scenario | Responsibility | Typical handoff |
 |---|---|---|
 | `content-operations` | Turn source media, drafts, and archived material into publication-ready content. | A transcript can flow to technical polishing and then WeChat formatting. |
-| `knowledge-visualization` | Turn systems or documents into diagrams, mindmaps, and publishable visual knowledge artifacts. | Mindmap Builder produces offline HTML; Mindmap Publisher handles explicit hosting requests. |
+| `knowledge-visualization` | Turn technical topics, systems, or documents into cognition frameworks, diagrams, mindmaps, and publishable knowledge artifacts. | Technical Cognition Framework builds the conceptual model; visual skills turn structures into diagrams or offline views. |
 | `ai-application-delivery` | Design, create, import, update, and verify Dify applications and DSL. | DSL App Builder uses Console Admin API for remote delivery work. |
 | `engineering-operations` | Query operational data safely and trace backend failures through code and data contracts. | A log trace may use read-only database evidence when the user authorizes it. |
 | `market-intelligence` | Run technical market analysis and produce cross-market impact research. | Structured market data is rendered into a standalone research report. |

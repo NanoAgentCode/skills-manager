@@ -20,7 +20,7 @@
 | 场景 | 目录 | 主要能力 |
 |---|---|---|
 | 内容运营 | `skills/content-operations/` | 转写、技术文章润色、公众号排版、封面与历史文章归档 |
-| 知识可视化 | `skills/knowledge-visualization/` | draw.io、Excalidraw、离线思维导图与静态发布 |
+| 知识可视化 | `skills/knowledge-visualization/` | 技术认知框架、draw.io、Excalidraw、离线思维导图与静态发布 |
 | AI 应用交付 | `skills/ai-application-delivery/` | Dify 应用创建、DSL 设计、导入、更新与验证 |
 | 工程运维 | `skills/engineering-operations/` | 数据库安全查询、后端日志与数据契约追踪 |
 | 市场研究 | `skills/market-intelligence/` | 股票技术分析、美股行业复盘与跨市场影响研究 |
@@ -37,6 +37,7 @@
 
 ## 常用入口
 
+- 技术认知框架：[`skills/knowledge-visualization/technical-cognition-framework`](skills/knowledge-visualization/technical-cognition-framework/SKILL.md)
 - Dify Console API：[`skills/ai-application-delivery/dify-console-admin-api`](skills/ai-application-delivery/dify-console-admin-api/SKILL.md)
 - Dify DSL Builder：[`skills/ai-application-delivery/dify-dsl-app-builder`](skills/ai-application-delivery/dify-dsl-app-builder/SKILL.md)
 - Dify DSL 导入规则：[`skills/ai-application-delivery/dify-dsl-app-builder/dsl-import-rules.md`](skills/ai-application-delivery/dify-dsl-app-builder/dsl-import-rules.md)
