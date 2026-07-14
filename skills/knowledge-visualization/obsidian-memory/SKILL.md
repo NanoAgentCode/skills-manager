@@ -11,7 +11,7 @@ description: 将本地 Obsidian Vault 作为 Codex 可检索、可审核、可�
 
 1. 确认 Vault 路径存在。
 2. 读取 Vault 根目录的 `AGENTS.md`、`90-System/Memory-Rules.md` 和 `90-System/Codex-Memory-Index.md`。
-3. 从当前任务提取 2 到 5 个关键词，运行 `scripts/search-memory.ps1`。只读取命中的少量相关笔记，不遍历整个 Vault。
+3. 从当前任务提取 2 到 5 个关键词，运行 `scripts/search-memory.ps1`。多关键词默认要求同一文件全部命中，并按文件名、标题、标签和正文相关度排序；只读取排名靠前的少量相关笔记，不遍历整个 Vault。
 4. 仅采用与当前任务相关、状态有效且来源清楚的记忆。用户当前指令始终优先于历史记忆。
 5. 完成用户任务。
 6. 判断是否出现值得长期保存的信息。只有稳定偏好、重要决策、可复用知识、项目长期背景或已验证方案才进入候选记忆。
@@ -28,6 +28,16 @@ powershell -ExecutionPolicy Bypass -File .\skills\knowledge-visualization\obsidi
 ```
 
 需要限制范围时，传入 `-Scope "30-Decisions"`。检索结果只用于定位文件；读取后还要检查 `scope`、`status`、`source` 和适用场景。
+
+多关键词以空格或中英文逗号、分号分隔，双引号可以保留短语。默认 `-MatchMode All` 要求同一文件命中全部关键词；需要扩大召回范围时使用 `-MatchMode Any`：
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\skills\knowledge-visualization\obsidian-memory\scripts\search-memory.ps1 `
+  -Query 'RAG "向量检索"' -MatchMode All -Scope "20-Knowledge" -Limit 10 `
+  -VaultPath "D:\WorkSpace\AgentVault"
+```
+
+结果按文件去重，`Limit` 表示最多返回的文件数；每条结果包含相关度分数、实际命中的关键词和代表性内容行。
 
 ## 写入候选记忆
 
@@ -57,6 +67,7 @@ powershell -ExecutionPolicy Bypass -File .\skills\knowledge-visualization\obsidi
 
 ## 资源
 
-- `scripts/search-memory.ps1`：按关键词搜索中文 Markdown 记忆。
+- `scripts/search-memory.ps1`：按单关键词或多关键词搜索中文 Markdown 记忆，支持 All/Any 匹配和相关度排序。
+- `tests/test-search-memory.ps1`：多关键词解析、匹配模式、排序、范围和限制参数的回归测试。
 - `scripts/rebuild-index.ps1`：根据正式记忆目录重建 Obsidian 双向链接索引。
 - `references/memory-schema.md`：记忆分类、字段和生命周期规范。

@@ -16,7 +16,7 @@ Use this group when the request is about turning media, notes, drafts, or archiv
 
 Use this group when the request is about systematic technical understanding, knowledge frameworks, diagrams, mindmaps, visual explanation, or offline knowledge views.
 
-- `skills/knowledge-visualization/obsidian-memory/SKILL.md`: local Obsidian Vault workflow for retrieving Chinese long-term memory, drafting reviewable candidate memories, handling stale or superseded records, and rebuilding a visual bidirectional-link index.
+- `skills/knowledge-visualization/obsidian-memory/SKILL.md`: local Obsidian Vault workflow with ranked single- or multi-keyword retrieval, All/Any matching, reviewable candidate memories, stale or superseded record handling, and a visual bidirectional-link index.
 - `skills/knowledge-visualization/technical-cognition-framework/SKILL.md`: evidence-based frameworks for systematically understanding a technology through its definition, concept relationships, motivation, construction methods, scenarios, boundaries, common confusions, and relationship with LLMs and agents; includes Ontology as a worked reference.
 - `skills/knowledge-visualization/drawio-skill/SKILL.md`: polished `.drawio` architecture, flowchart, UML, ERD, C4, ML/DL, codebase, IaC, OpenAPI, SQL schema, and system diagrams with local draw.io CLI export when available.
 - `skills/knowledge-visualization/excalidraw/SKILL.md`: clean `.excalidraw` flowcharts, architecture sketches, process diagrams, relationship maps, and whiteboard-style visual explanations with Kroki SVG or local PNG/SVG export.
