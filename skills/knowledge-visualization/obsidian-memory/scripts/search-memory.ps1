@@ -2,7 +2,9 @@
 param(
     [Parameter(Mandatory = $true)]
     [string]$Query,
-    [string]$VaultPath = "D:\WorkSpace\AgentVault",
+    [Parameter(Mandatory = $true)]
+    [ValidateNotNullOrEmpty()]
+    [string]$VaultPath,
     [ValidateSet("", "00-Inbox", "10-Projects", "20-Knowledge", "30-Decisions", "40-Preferences", "90-System")]
     [string]$Scope = "",
     [ValidateSet("All", "Any")]

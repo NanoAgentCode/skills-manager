@@ -1,5 +1,9 @@
 ﻿[CmdletBinding()]
-param([string]$VaultPath = "D:\WorkSpace\AgentVault")
+param(
+    [Parameter(Mandatory = $true)]
+    [ValidateNotNullOrEmpty()]
+    [string]$VaultPath
+)
 
 $ErrorActionPreference = "Stop"
 if (-not (Test-Path -LiteralPath $VaultPath -PathType Container)) { throw "找不到 Obsidian Vault：$VaultPath" }

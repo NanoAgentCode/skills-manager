@@ -1,6 +1,7 @@
 $ErrorActionPreference = "Stop"
 
 $scriptPath = Join-Path $PSScriptRoot "..\scripts\search-memory.ps1"
+$rebuildScriptPath = Join-Path $PSScriptRoot "..\scripts\rebuild-index.ps1"
 $tempRoot = Join-Path ([IO.Path]::GetTempPath()) ("obsidian-memory-search-test-" + [guid]::NewGuid().ToString("N"))
 
 function Assert-True {
@@ -17,6 +18,9 @@ function Write-Fixture {
 }
 
 try {
+    Assert-True ((Get-Command $scriptPath).Parameters["VaultPath"].Attributes.Mandatory) "检索脚本必须显式要求 VaultPath"
+    Assert-True ((Get-Command $rebuildScriptPath).Parameters["VaultPath"].Attributes.Mandatory) "索引脚本必须显式要求 VaultPath"
+
     Write-Fixture "20-Knowledge\rag-vector.md" @"
 ---
 tags:
