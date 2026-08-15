@@ -1,6 +1,6 @@
 ---
 name: wechat-format
-description: 公众号完整内容生产管线：排版、封面、推送。Use when the user asks to format Markdown, plain text, rough notes, or articles into WeChat official-account compatible HTML, generate or insert a WeChat article cover, publish to WeChat drafts, handle comment replies, or run WeChat article production workflows.
+description: 公众号完整内容生产管线：技术来源改写、视觉资产交接、排版、封面、推送。Use when the user asks to turn raw technical sources or approved Markdown into WeChat official-account compatible HTML, preserve source/claim notes and visual plans, stage local article images, generate or insert a WeChat cover, publish to WeChat drafts, handle comment replies, or run end-to-end WeChat article production workflows.
 ---
 
 # wechat-format
@@ -17,7 +17,7 @@ description: 公众号完整内容生产管线：排版、封面、推送。Use 
 
 | 脚本 | 用途 |
 |------|------|
-| `scripts/article_workflow.py` | 默认一命令文章包装流程：术语检查、结构化、增强、画廊、最终主题输出、可选封面 |
+| `scripts/article_workflow.py` | 默认一命令文章包装流程：上游台账与视觉资产交接、术语检查、结构化、增强、画廊、最终主题输出、可选封面 |
 | `scripts/check_dependencies.py` | 检测依赖；带 `--install` 时安装缺失 Python 包 |
 | `scripts/format.py` | 排版：Markdown → 微信兼容 HTML |
 | `scripts/publish.py` | 推送：HTML → 公众号草稿箱 |
@@ -123,6 +123,32 @@ python3 {baseDir}/scripts/check_dependencies.py --install
 2. 如果没给路径，问用户要文章路径
 3. 读取文章内容，确认标题和字数
 
+#### 第 1.0 步：技术来源到公众号的集成链路
+
+当输入仍是论文、文档、报告、转录、仓库说明或粗糙技术材料，并且用户要求公众号成稿时，不要直接交给排版脚本：
+
+1. 读取并遵循 [`../technical-source-to-public-article/SKILL.md`](../technical-source-to-public-article/SKILL.md)，生成稳定的 `article.md` 和 `source-notes.md`。
+2. 用户要求正文配图、图解或完整视觉时，读取并遵循 [`../technical-article-visual-director/SKILL.md`](../technical-article-visual-director/SKILL.md)。使用 Produce 模式生成 `article-with-visuals.md`、`visual-plan.md` 和 `images/`；仅规划时不要伪称已有视觉资产。
+3. 内容、章节、图片路径和图注稳定后，使用本技能的 `article_workflow.py` 完成排版。最终稿必须加 `--preserve-content`，避免再次改写已经核查和配图的正文。
+4. 使用 `--source-notes`、`--visual-plan` 和 `--assets-dir` 传递上游产物，并加 `--strict-assets` 阻止缺图文章进入最终渲染。
+
+完整交接命令：
+
+```powershell
+& $Python {baseDir}/scripts/article_workflow.py `
+  --input "<visual-output>/article-with-visuals.md" `
+  --source-notes "<source-output>/source-notes.md" `
+  --visual-plan "<visual-output>/visual-plan.md" `
+  --assets-dir "<visual-output>/images" `
+  --preserve-content `
+  --strict-assets `
+  --theme apple-code `
+  --no-open `
+  --non-interactive
+```
+
+如果用户不需要正文视觉，直接把 `article.md` 作为 `--input`，传入 `--source-notes` 并省略 `--visual-plan` 与 `--assets-dir`。如果用户已经提供审核通过的最终 Markdown，也可以从本步骤直接进入排版。
+
 #### 第 1.1 步：默认使用一命令文章包装流程
 
 对重复性的文章包装任务，默认使用 `scripts/article_workflow.py`。除非用户明确要求手动控制结构化、主题渲染或只运行单步排版，不要把 `format.py --gallery` 当作首选入口。
@@ -130,11 +156,12 @@ python3 {baseDir}/scripts/check_dependencies.py --install
 `article_workflow.py` 会执行本技能的 repo-local 标准流程：
 
 1. 检测依赖
-2. 复制源文到稳定的 workflow 目录
-3. 生成术语润色稿和术语修改表
-4. 生成 structured / enhanced Markdown
-5. 打开 26 主题 gallery，或用 `--theme` 直接指定主题
-6. 保存最终主题输出、manifest，可选生成 ByteDance 预览和封面
+2. 复制源文，并归档可选来源台账和视觉方案
+3. 生成术语润色稿和术语修改表，或保留已审核最终稿
+4. 生成 structured / enhanced Markdown，或保留已审核结构
+5. 搬运 Markdown 引用的本地图片并重写为稳定的 `render/images/` 路径
+6. 打开 26 主题 gallery，或用 `--theme` 直接指定主题
+7. 保存最终主题输出、manifest，可选生成 ByteDance 预览和封面
 
 PowerShell：
 
@@ -168,8 +195,9 @@ PYTHONIOENCODING=utf-8 python3 {baseDir}/scripts/article_workflow.py --input "�
 ```text
 {repoRoot}/output/wechat-format/article-workflows/<article-slug>/
   source/
+  upstream/
   markdown/
-  render/
+  render/images/
   gallery/
   selection/
   final/<theme>/
@@ -428,9 +456,14 @@ python3 {baseDir}/scripts/publish.py \
 - `--bytedance-preview`：额外输出 ByteDance 主题预览
 - `--cover`：生成封面提示词并调用同级 `../wechat-cover/config.json` 配置的封面生成流程
 - `--skip-ai`：跳过术语、结构化和增强的 AI 生成，直接使用源文排版
+- `--preserve-content`：把输入视为已经审核的最终 Markdown，保留措辞、结构、图片引用和图注
 - `--skip-terminology`：跳过术语润色，仍继续结构化和增强
 - `--auto-accept-terminology`：术语润色后不暂停确认
 - `--structured-input` / `--enhanced-input`：复用已有中间稿
+- `--source-notes`：归档 `technical-source-to-public-article` 的来源与主张说明
+- `--visual-plan`：归档 `technical-article-visual-director` 的视觉方案
+- `--assets-dir`：补充本地图片解析目录；可重复传入
+- `--strict-assets`：任何本地 Markdown 图片无法解析时，在渲染前失败
 - `--no-open`：不自动打开浏览器
 - `--non-interactive`：缺少 `--theme` 或术语确认时直接失败，不进入提示
 - `--keep-existing`：复用已有 workflow 目录，不自动归档旧目录
@@ -503,6 +536,7 @@ python3 {baseDir}/scripts/publish.py \
 - **列表模拟**：`<ul>/<ol>` 改为 `<section>` + flexbox 模拟
 - **外链转脚注**：`[text](url)` 自动变成正文 `text[1]` + 文末脚注列表
 - **图片处理**：`![[image.jpg]]` 自动搜索 Vault 并复制到输出目录
+- **上游图片交接**：`article_workflow.py` 把标准 Markdown 本地图片搬运到 `render/images/`，处理同名冲突，并把来源到暂存路径的映射写入 manifest
 - **多类型提示框**：`[!tip]`/`[!note]`/`[!important]`/`[!warning]`/`[!caution]` 各有独立配色
 - **图说识别**：图片后紧跟的斜体段落自动变为居中灰色图说
 - **对话气泡**：`:::dialogue[标题]` → 左右交替聊天气泡

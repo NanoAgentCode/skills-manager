@@ -8,7 +8,9 @@ Use this group when the request is about turning media, notes, drafts, or archiv
 
 - `skills/content-operations/video-transcriber/SKILL.md`: transcript, subtitle, summary, meeting-note, and article-draft workflows from local media, approved online videos, existing captions, YouTube captions, Bilibili subtitle JSON, or user-authorized WeChat Channels material.
 - `skills/content-operations/technical-article-polisher/SKILL.md`: Chinese technical article polishing, machine-translation cleanup, terminology checks, and publication-ready Markdown.
-- `skills/content-operations/wechat-format/SKILL.md`: WeChat official-account article packaging through the repo-local `scripts/article_workflow.py`, including terminology polishing, structured/enhanced Markdown, a 26-theme gallery, themed outputs, optional covers, and draft publishing.
+- `skills/content-operations/technical-source-to-public-article/SKILL.md`: evidence-grounded transformation of papers, documentation, reports, transcripts, repositories, web pages, or mixed technical sources into readable publication-ready Simplified Chinese public articles with traceable claims.
+- `skills/content-operations/technical-article-visual-director/SKILL.md`: coherent visual direction, production routing, asset generation when supported, inspection, captions, accessibility, and Markdown placement for technical articles.
+- `skills/content-operations/wechat-format/SKILL.md`: WeChat official-account packaging through `scripts/article_workflow.py`, including upstream source-note and visual-plan handoff, local asset staging, terminology/structure processing, a 26-theme gallery, themed outputs, optional covers, and draft publishing.
 - `skills/content-operations/wechat-history-article-archive/SKILL.md`: authorized historical WeChat article backup from lawful `mp.weixin.qq.com/s?...` URL sources, with Markdown, metadata, indexes, and local images by default.
 - `skills/content-operations/wechat-cover/SKILL.md`: cover-image generation for WeChat articles; installed alongside `wechat-format` and reuses its image-generation script.
 

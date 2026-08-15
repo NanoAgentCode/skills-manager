@@ -1,0 +1,4 @@
+interface:
+  display_name: "Technical Article Visual Director"
+  short_description: "Direct evidence-grounded visuals for technical articles"
+  default_prompt: "Use $technical-article-visual-director to design and produce a coherent visual system for this technical article."
