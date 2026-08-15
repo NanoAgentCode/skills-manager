@@ -74,11 +74,11 @@ Claude will use the repo-local workflow script by default:
 
 `scripts/article_workflow.py` is the default path for repeated article packaging runs. It wraps the local workflow into one command:
 
-1. Copy the source article into a stable workflow folder
-2. Generate a terminology-polished Markdown draft plus a standalone terminology change table
-3. Generate `structured` and `enhanced` Markdown with the `ai` config from `config.json`
+1. Copy the source article and optional source/claim notes and visual plan into a stable workflow folder
+2. Preserve an approved final draft, or generate terminology-polished, `structured`, and `enhanced` Markdown
+3. Stage referenced local Markdown images under `render/images/` with collision-safe names
 4. Open the 26-theme gallery flow
-5. Save the chosen final theme output into a predictable directory
+5. Save the chosen final theme output and upstream asset mapping into a predictable manifest
 6. Optionally emit a ByteDance preview and cover artifact
 
 Default output layout:
@@ -86,10 +86,11 @@ Default output layout:
 ```text
 ../../../output/wechat-format/article-workflows/<article-slug>/
   source/
+  upstream/
   markdown/
     <article>-polished.md
     <article>-terminology-changes.md
-  render/
+  render/images/
   gallery/
   selection/
   final/<theme>/
@@ -112,11 +113,24 @@ Portable shell:
 PYTHONIOENCODING=utf-8 python3 ./scripts/article_workflow.py --input ../../../article.md --bytedance-preview --cover
 ```
 
+For an article produced by `technical-source-to-public-article` and `technical-article-visual-director`:
+
+```powershell
+& $Python .\scripts\article_workflow.py `
+  --input ..\..\..\output\technical-article-visual-director\my-article\article-with-visuals.md `
+  --source-notes ..\..\..\output\technical-source-to-public-article\my-article\source-notes.md `
+  --visual-plan ..\..\..\output\technical-article-visual-director\my-article\visual-plan.md `
+  --assets-dir ..\..\..\output\technical-article-visual-director\my-article\images `
+  --preserve-content --strict-assets --theme apple-code --no-open --non-interactive
+```
+
 Notes:
 
 - After terminology polishing, the script pauses for manual confirmation before continuing to the structured/enhanced steps.
 - If `--theme` is omitted, the script opens the gallery and then prompts in the terminal for the selected theme ID.
 - If `ai.url`, `ai.api_key`, or `ai.model` is missing in `config.json`, pass `--skip-ai` or provide `--structured-input` / `--enhanced-input`.
+- Use `--preserve-content` for an approved article with stable visuals; pass `--source-notes`, `--visual-plan`, and one or more `--assets-dir` values to archive the upstream package.
+- Use `--strict-assets` for final packaging so unresolved local image references fail before rendering.
 - Use `--skip-terminology` when you want to keep the source text unchanged and only run the later formatting steps.
 - Use `--auto-accept-terminology` when you need a non-interactive run after the terminology step.
 

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Technical Source To Public Article"
+  short_description: "Turn technical sources into accurate public articles"
+  default_prompt: "Use $technical-source-to-public-article to turn these technical sources into an accurate, readable Simplified Chinese public article with traceable claims."

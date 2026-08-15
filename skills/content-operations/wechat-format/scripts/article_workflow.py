@@ -21,6 +21,9 @@ SKILL_DIR = SCRIPT_DIR.parent
 REPO_ROOT = SKILL_DIR.parents[2]
 WECHAT_COVER_DIR = SKILL_DIR.parent / "wechat-cover"
 DEFAULT_RECOMMEND = ["apple-code", "github", "bytedance", "sspai"]
+LOCAL_IMAGE_SUFFIXES = {".avif", ".bmp", ".gif", ".jpeg", ".jpg", ".png", ".svg", ".webp"}
+
+
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description="Generate structured/enhanced markdown, open the gallery flow, and save final WeChat outputs."
@@ -58,6 +61,11 @@ def parse_args() -> argparse.Namespace:
         help="Skip AI structured/enhanced generation and copy the source forward unchanged",
     )
     parser.add_argument(
+        "--preserve-content",
+        action="store_true",
+        help="Treat the input as final approved Markdown and preserve its wording, structure, image links, and captions",
+    )
+    parser.add_argument(
         "--skip-terminology",
         action="store_true",
         help="Skip the terminology-polish step and start from the source article directly",
@@ -74,6 +82,25 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--enhanced-input",
         help="Use an existing enhanced Markdown file instead of generating it",
+    )
+    parser.add_argument(
+        "--source-notes",
+        help="Source/claim notes from technical-source-to-public-article to archive with the workflow",
+    )
+    parser.add_argument(
+        "--visual-plan",
+        help="Visual plan from technical-article-visual-director to archive with the workflow",
+    )
+    parser.add_argument(
+        "--assets-dir",
+        action="append",
+        default=[],
+        help="Additional directory used to resolve local Markdown image assets; may be repeated",
+    )
+    parser.add_argument(
+        "--strict-assets",
+        action="store_true",
+        help="Fail before rendering when a local Markdown image cannot be resolved",
     )
     parser.add_argument(
         "--no-open",
@@ -340,6 +367,126 @@ def copy_source(src: Path, dst: Path) -> None:
     shutil.copy2(src, dst)
 
 
+def require_file(value: str | None, label: str) -> Path | None:
+    if not value:
+        return None
+    path = Path(value).expanduser().resolve()
+    if not path.is_file():
+        raise SystemExit(f"{label} file does not exist: {path}")
+    return path
+
+
+def require_directories(values: list[str], label: str) -> list[Path]:
+    paths: list[Path] = []
+    for value in values:
+        path = Path(value).expanduser().resolve()
+        if not path.is_dir():
+            raise SystemExit(f"{label} directory does not exist: {path}")
+        if path not in paths:
+            paths.append(path)
+    return paths
+
+
+def _markdown_image_source(raw_value: str) -> str:
+    value = raw_value.strip()
+    if value.startswith("<") and ">" in value:
+        return value[1 : value.index(">")].strip()
+    title_match = re.match(r"^(.*?)(?:\s+[\"'].*[\"'])$", value)
+    return title_match.group(1).strip() if title_match else value
+
+
+def _resolve_local_asset(source: str, input_dir: Path, asset_roots: list[Path]) -> Path | None:
+    if not source or source.startswith(("http://", "https://", "data:", "#")):
+        return None
+    source_path = Path(source).expanduser()
+    if source_path.suffix.lower() not in LOCAL_IMAGE_SUFFIXES:
+        return None
+
+    candidates: list[Path] = []
+    if source_path.is_absolute():
+        candidates.append(source_path)
+    else:
+        candidates.append(input_dir / source_path)
+        for root in asset_roots:
+            candidates.extend((root / source_path, root / source_path.name))
+
+    for candidate in candidates:
+        resolved = candidate.resolve()
+        if resolved.is_file():
+            return resolved
+    return None
+
+
+def _staged_asset_name(source: Path, used_names: dict[str, Path]) -> str:
+    name = source.name
+    previous = used_names.get(name.casefold())
+    if previous is None or previous == source:
+        used_names[name.casefold()] = source
+        return name
+
+    index = 2
+    while True:
+        candidate = f"{source.stem}-{index}{source.suffix.lower()}"
+        previous = used_names.get(candidate.casefold())
+        if previous is None or previous == source:
+            used_names[candidate.casefold()] = source
+            return candidate
+        index += 1
+
+
+def stage_markdown_assets(
+    content: str,
+    input_path: Path,
+    render_dir: Path,
+    asset_roots: list[Path],
+) -> tuple[str, list[dict[str, str]], list[str]]:
+    """Copy local Markdown images next to the render input and rewrite their paths."""
+    images_dir = render_dir / "images"
+    staged_by_source: dict[Path, str] = {}
+    used_names: dict[str, Path] = {}
+    staged_assets: list[dict[str, str]] = []
+    unresolved_assets: list[str] = []
+
+    def replace_image(match: re.Match[str]) -> str:
+        alt = match.group(1)
+        raw_source = match.group(2)
+        source_value = _markdown_image_source(raw_source)
+        if source_value.startswith(("http://", "https://", "data:", "#")):
+            return match.group(0)
+
+        source_path = _resolve_local_asset(source_value, input_path.parent, asset_roots)
+        if source_path is None:
+            if source_value and source_value not in unresolved_assets:
+                unresolved_assets.append(source_value)
+            return match.group(0)
+
+        staged_name = staged_by_source.get(source_path)
+        if staged_name is None:
+            staged_name = _staged_asset_name(source_path, used_names)
+            destination = images_dir / staged_name
+            destination.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(source_path, destination)
+            staged_by_source[source_path] = staged_name
+            staged_assets.append(
+                {
+                    "source": str(source_path),
+                    "staged": str(destination),
+                    "markdown_path": f"images/{staged_name}",
+                }
+            )
+        return f"![{alt}](images/{staged_name})"
+
+    rewritten = re.sub(r"!\[([^\]]*)\]\(([^)]+)\)", replace_image, content)
+    return rewritten, staged_assets, unresolved_assets
+
+
+def enforce_asset_resolution(unresolved_assets: list[str], strict: bool) -> None:
+    if strict and unresolved_assets:
+        raise SystemExit(
+            "Unresolved local Markdown assets: " + ", ".join(unresolved_assets)
+        )
+
+
 def run_subprocess(cmd: list[str], env: dict[str, str]) -> subprocess.CompletedProcess:
     print("Running:", " ".join(f'"{part}"' if " " in part else part for part in cmd))
     result = subprocess.run(cmd, capture_output=True, text=True, encoding="utf-8", env=env)
@@ -475,6 +622,12 @@ def main() -> None:
     input_path = Path(args.input).expanduser().resolve()
     if not input_path.exists():
         raise SystemExit(f"Input file does not exist: {input_path}")
+    source_notes_input = require_file(args.source_notes, "Source notes")
+    visual_plan_input = require_file(args.visual_plan, "Visual plan")
+    asset_roots = require_directories(args.assets_dir, "Asset root")
+    structured_input = require_file(args.structured_input, "Structured input")
+    enhanced_input = require_file(args.enhanced_input, "Enhanced input")
+    preserve_content = args.skip_ai or args.preserve_content
 
     original_content = input_path.read_text(encoding="utf-8")
     article_slug = slugify(input_path.stem)
@@ -491,6 +644,7 @@ def main() -> None:
     final_root = workflow_root / "final"
     bytedance_root = workflow_root / "bytedance"
     cover_dir = workflow_root / "cover"
+    upstream_dir = workflow_root / "upstream"
 
     source_copy = source_dir / input_path.name
     polished_path = markdown_dir / f"{article_slug}-polished.md"
@@ -502,6 +656,14 @@ def main() -> None:
     manifest_path = workflow_root / "manifest.json"
 
     copy_source(input_path, source_copy)
+    source_notes_copy = None
+    visual_plan_copy = None
+    if source_notes_input:
+        source_notes_copy = upstream_dir / "source-notes.md"
+        copy_source(source_notes_input, source_notes_copy)
+    if visual_plan_input:
+        visual_plan_copy = upstream_dir / "visual-plan.md"
+        copy_source(visual_plan_input, visual_plan_copy)
     env = os.environ.copy()
     env["PYTHONIOENCODING"] = "utf-8"
 
@@ -510,7 +672,7 @@ def main() -> None:
     terminology_changes: list[dict] = []
     uncertain_terms: list[str] = []
 
-    if args.skip_ai or args.skip_terminology:
+    if preserve_content or args.skip_terminology:
         polished_content = original_content
     else:
         ai_config = require_ai_config(config)
@@ -526,7 +688,7 @@ def main() -> None:
     write_terminology_table(terminology_table_path, terminology_changes)
     write_uncertain_terms(uncertain_terms_path, uncertain_terms)
 
-    if not args.skip_ai and not args.skip_terminology and not args.auto_accept_terminology:
+    if not preserve_content and not args.skip_terminology and not args.auto_accept_terminology:
         if args.non_interactive:
             raise SystemExit(
                 "Terminology confirmation is required. Re-run interactively, or pass "
@@ -543,9 +705,9 @@ def main() -> None:
                 "with --structured-input / --enhanced-input or accept terminology next time."
             )
 
-    if args.structured_input:
-        structured_content = Path(args.structured_input).expanduser().read_text(encoding="utf-8")
-    elif args.skip_ai:
+    if structured_input:
+        structured_content = structured_input.read_text(encoding="utf-8")
+    elif preserve_content:
         structured_content = polished_content
     else:
         ai_config = require_ai_config(config)
@@ -554,17 +716,27 @@ def main() -> None:
         structured_content = call_chat_completion(ai_config, system_prompt, user_prompt)
     write_text(structured_path, structured_content)
 
-    if args.enhanced_input:
-        enhanced_content = Path(args.enhanced_input).expanduser().read_text(encoding="utf-8")
-    elif args.skip_ai:
+    if enhanced_input:
+        enhanced_content = enhanced_input.read_text(encoding="utf-8")
+        render_source_path = enhanced_input
+    elif preserve_content:
         enhanced_content = structured_content
+        render_source_path = structured_input or input_path
     else:
         ai_config = require_ai_config(config)
         system_prompt, user_prompt = build_enhancement_prompts(title, structured_content)
         print("Generating enhanced Markdown...")
         enhanced_content = call_chat_completion(ai_config, system_prompt, user_prompt)
+        render_source_path = structured_input or input_path
     write_text(enhanced_path, enhanced_content)
-    write_text(render_input, enhanced_content)
+    render_content, staged_assets, unresolved_assets = stage_markdown_assets(
+        enhanced_content,
+        render_source_path,
+        render_dir,
+        asset_roots,
+    )
+    enforce_asset_resolution(unresolved_assets, args.strict_assets)
+    write_text(render_input, render_content)
 
     gallery_dir = run_format(
         render_input,
@@ -620,8 +792,17 @@ def main() -> None:
     manifest = {
         "title": title,
         "input": str(input_path),
+        "preserve_content": preserve_content,
         "workflow_root": str(workflow_root),
         "source_copy": str(source_copy),
+        "source_notes_input": str(source_notes_input) if source_notes_input else None,
+        "source_notes": str(source_notes_copy) if source_notes_copy else None,
+        "visual_plan_input": str(visual_plan_input) if visual_plan_input else None,
+        "visual_plan": str(visual_plan_copy) if visual_plan_copy else None,
+        "asset_roots": [str(path) for path in asset_roots],
+        "strict_assets": args.strict_assets,
+        "staged_assets": staged_assets,
+        "unresolved_assets": unresolved_assets,
         "polished_markdown": str(polished_path),
         "terminology_changes": str(terminology_table_path),
         "uncertain_terms": str(uncertain_terms_path) if uncertain_terms else None,
@@ -645,6 +826,14 @@ def main() -> None:
 
     print("\nWorkflow complete")
     print(f"- Workflow root: {workflow_root}")
+    if source_notes_copy:
+        print(f"- Source notes: {source_notes_copy}")
+    if visual_plan_copy:
+        print(f"- Visual plan: {visual_plan_copy}")
+    if staged_assets:
+        print(f"- Staged local assets: {len(staged_assets)}")
+    if unresolved_assets:
+        print(f"- Unresolved local assets: {', '.join(unresolved_assets)}")
     print(f"- Polished Markdown: {polished_path}")
     print(f"- Terminology changes: {terminology_table_path}")
     if uncertain_terms:

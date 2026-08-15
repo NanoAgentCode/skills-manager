@@ -100,6 +100,19 @@ PYTHONIOENCODING=utf-8 python3 ./scripts/article_workflow.py --input ../../../ar
 
 该脚本会完成依赖检测、术语润色、结构化、排版增强、主题画廊、最终主题输出、manifest 记录，并可选生成字节蓝预览和封面。重复性的文章包装任务优先用它；只有需要单独调试排版或已经准备好 enhanced Markdown 时，才走下面的手动画廊路径。
 
+如果文章来自 `technical-source-to-public-article` 和 `technical-article-visual-director`，使用完整交接参数：
+
+```powershell
+& $Python .\scripts\article_workflow.py `
+  --input ..\..\..\output\technical-article-visual-director\my-article\article-with-visuals.md `
+  --source-notes ..\..\..\output\technical-source-to-public-article\my-article\source-notes.md `
+  --visual-plan ..\..\..\output\technical-article-visual-director\my-article\visual-plan.md `
+  --assets-dir ..\..\..\output\technical-article-visual-director\my-article\images `
+  --preserve-content --strict-assets --theme apple-code --no-open --non-interactive
+```
+
+该模式会把来源台账和视觉方案归档到 `upstream/`，把正文引用的本地图片搬运到 `render/images/`，并在 `manifest.json` 中记录资产来源、暂存位置和未解析项目。最终包装应始终使用 `--strict-assets`。
+
 ### 主题画廊（手动路径）
 
 ```bash

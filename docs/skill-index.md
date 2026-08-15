@@ -8,7 +8,9 @@ Use this group when the request is about turning media, notes, drafts, or archiv
 
 - `skills/content-operations/video-transcriber/SKILL.md`: transcript, subtitle, summary, meeting-note, and article-draft workflows from local media, approved online videos, existing captions, YouTube captions, Bilibili subtitle JSON, or user-authorized WeChat Channels material.
 - `skills/content-operations/technical-article-polisher/SKILL.md`: Chinese technical article polishing, machine-translation cleanup, terminology checks, and publication-ready Markdown.
-- `skills/content-operations/wechat-format/SKILL.md`: WeChat official-account article packaging through the repo-local `scripts/article_workflow.py`, including terminology polishing, structured/enhanced Markdown, a 26-theme gallery, themed outputs, optional covers, and draft publishing.
+- `skills/content-operations/technical-source-to-public-article/SKILL.md`: evidence-grounded transformation of papers, documentation, reports, transcripts, repositories, web pages, or mixed technical sources into readable publication-ready Simplified Chinese public articles with traceable claims.
+- `skills/content-operations/technical-article-visual-director/SKILL.md`: coherent visual direction, production routing, asset generation when supported, inspection, captions, accessibility, and Markdown placement for technical articles.
+- `skills/content-operations/wechat-format/SKILL.md`: WeChat official-account packaging through `scripts/article_workflow.py`, including upstream source-note and visual-plan handoff, local asset staging, terminology/structure processing, a 26-theme gallery, themed outputs, optional covers, and draft publishing.
 - `skills/content-operations/wechat-history-article-archive/SKILL.md`: authorized historical WeChat article backup from lawful `mp.weixin.qq.com/s?...` URL sources, with Markdown, metadata, indexes, and local images by default.
 - `skills/content-operations/wechat-cover/SKILL.md`: cover-image generation for WeChat articles; installed alongside `wechat-format` and reuses its image-generation script.
 
@@ -18,7 +20,7 @@ Use this group when the request is about systematic technical understanding, kno
 
 - `skills/knowledge-visualization/obsidian-memory/SKILL.md`: local Obsidian Vault workflow with ranked single- or multi-keyword retrieval, All/Any matching, reviewable candidate memories, stale or superseded record handling, and a visual bidirectional-link index.
 - `skills/knowledge-visualization/technical-cognition-framework/SKILL.md`: evidence-based frameworks for systematically understanding a technology through its definition, concept relationships, motivation, construction methods, scenarios, boundaries, common confusions, and relationship with LLMs and agents; includes Ontology as a worked reference.
-- `skills/knowledge-visualization/drawio-skill/SKILL.md`: polished `.drawio` architecture, flowchart, UML, ERD, C4, ML/DL, codebase, IaC, OpenAPI, SQL schema, and system diagrams with local draw.io CLI export when available.
+- `skills/knowledge-visualization/drawio-skill/SKILL.md`: code dependency analysis and editable `.drawio` import/module/package dependency graphs for Python, JavaScript/TypeScript, Go, and Rust codebases, with local draw.io CLI export when available; do not select it for general visualization requests.
 - `skills/knowledge-visualization/excalidraw/SKILL.md`: clean `.excalidraw` flowcharts, architecture sketches, process diagrams, relationship maps, and whiteboard-style visual explanations with Kroki SVG or local PNG/SVG export.
 - `skills/knowledge-visualization/mindmap-builder/SKILL.md`: offline markmap HTML generation from PDFs, notes, outlines, reports, papers, books, or other documents; supports overview-first long document mode.
 - `skills/knowledge-visualization/mindmap-publisher/SKILL.md`: static publishing for already generated offline mindmap HTML folders when the user explicitly asks to publish or host.

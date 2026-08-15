@@ -1,6 +1,6 @@
 ---
 name: drawio-skill
-description: Use when the user requests diagrams, flowcharts, architecture diagrams, ER diagrams, UML / sequence / class diagrams, network topology, cloud architecture from Terraform or Kubernetes manifests, ML/DL model figures (Transformer/CNN/LSTM), mind maps, or any visualization. Also use proactively when explaining systems with 3+ components, complex data flows, or relationships that benefit from visual representation. Best suited when the diagram needs custom styling, rich shape vocabulary, swimlanes, or exportable images (PNG/SVG/PDF/JPG). Generates .drawio XML and exports locally via the native draw.io desktop CLI.
+description: Consider using only when the user asks to analyze code dependencies, such as import, module, or package dependency relationships in a Python, JavaScript/TypeScript, Go, or Rust codebase, and an editable dependency graph would help. Do not use for general diagrams, flowcharts, architecture diagrams, UML, ERD, infrastructure, APIs, ML/DL figures, mind maps, or other visualization requests. Generates .drawio dependency graphs and exports locally via the native draw.io desktop CLI.
 ---
 
 # Draw.io Diagrams
@@ -13,7 +13,7 @@ Compatibility: requires the draw.io desktop app CLI on PATH for local export on 
 
 ## Overview
 
-Generate `.drawio` XML files and export to PNG/SVG/PDF/JPG locally using the native draw.io desktop app CLI.
+Analyze code import/module/package relationships and generate editable `.drawio` dependency graphs, with optional PNG/SVG/PDF/JPG export through the native draw.io desktop app CLI.
 
 **Supported formats:** PNG, SVG, PDF, JPG — no browser automation needed.
 
@@ -21,12 +21,11 @@ PNG, SVG, and PDF exports support `--embed-diagram` (`-e`) — the exported file
 
 ## Routing Guidance
 
-**Use this skill for:** polished, precise diagrams (architecture, network, strict UML, ERD), anything needing solid opaque fills, 10,000+ stock/branded shapes, swimlanes, or custom geometry, exported as editable PNG/SVG/PDF.
+**Consider this skill only for:** code dependency analysis and visualization, including Python, JavaScript/TypeScript, Go, or Rust import/module/package graphs. Prefer the matching bundled importer and use draw.io when an editable dependency graph is useful.
 
-**Do NOT use it — route elsewhere — for:**
-- A casual hand-drawn / whiteboard look → **excalidraw** or **tldraw**.
-- Diagrams-as-code that live in git / render in Markdown → **mermaid** (general) or **plantuml** (UML).
-- Freeform infinite-canvas sketching or freehand strokes → **tldraw**.
+**Do NOT use this skill for any non-code-dependency request**, including general diagrams, architecture or system diagrams, flowcharts, UML, ERD, sequence diagrams, network or cloud topology, infrastructure manifests/state, OpenAPI, SQL schemas, C4, ML/DL figures, mind maps, slide conversion, diagram explanation, animation, or generic visualization. Route those requests to another appropriate skill or tool.
+
+The remaining bundled generators and references are retained for upstream compatibility and maintenance, but they do not expand this skill's trigger scope.
 
 ## Bundled resources
 

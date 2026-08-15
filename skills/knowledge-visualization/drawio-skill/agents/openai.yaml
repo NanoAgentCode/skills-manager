@@ -1,4 +1,4 @@
 interface:
-  display_name: "Draw.io Skill"
-  short_description: "Generate polished draw.io diagrams"
-  default_prompt: "Use $drawio-skill to generate a polished architecture, flowchart, UML, ER, C4, ML, or system diagram and export it through draw.io when available."
+  display_name: "Draw.io Code Dependencies"
+  short_description: "Analyze code dependencies as draw.io graphs"
+  default_prompt: "Use $drawio-skill only to analyze import, module, or package dependencies in a codebase and generate an editable draw.io dependency graph."
