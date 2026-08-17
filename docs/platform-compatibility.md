@@ -38,12 +38,6 @@ Read AGENTS.md, then read <skill-path>/SKILL.md, and follow that skill for this 
 - Starts from `GLM.md`.
 - When automatic skill discovery is unavailable, explicitly selects a path from `docs/skill-index.md` and reads its `SKILL.md`.
 
-## DeepSeek
-
-- Starts from `DEEPSEEK.md`.
-- Prefers `SKILL.md` over duplicated prose and loads referenced resources only when needed.
-- Answers Chinese tasks in Chinese unless the user requests another language.
-
 ## Root Entrypoints
 
 The following files remain in the repository root because clients look for them there:
@@ -53,6 +47,5 @@ The following files remain in the repository root because clients look for them 
 - `CLAUDE.md`: Claude discovery entrypoint.
 - `GEMINI.md`: Gemini discovery entrypoint.
 - `GLM.md`: GLM discovery entrypoint.
-- `DEEPSEEK.md`: DeepSeek discovery entrypoint.
 
 Do not move these files into `docs/`; move detailed explanations here instead.

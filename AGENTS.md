@@ -27,7 +27,7 @@ Skills live under `skills/<business-scenario>/<skill-name>/`. Directory boundari
 
 ## Platform Entrypoints
 
-Codex uses this `AGENTS.md`. Compatibility entrypoints for other clients remain at the repository root as `CLAUDE.md`, `GEMINI.md`, `GLM.md`, and `DEEPSEEK.md`. Every entrypoint must direct the client back to `AGENTS.md` and the selected `SKILL.md`.
+Codex uses this `AGENTS.md`. Compatibility entrypoints for other clients remain at the repository root as `CLAUDE.md`, `GEMINI.md`, and `GLM.md`. Every entrypoint must direct the client back to `AGENTS.md` and the selected `SKILL.md`.
 
 ## Portability Rules
 

@@ -71,17 +71,17 @@ class RepositoryEntrypointTests(unittest.TestCase):
             root = Path(temp)
             findings = lint_skill.check_repository_entrypoints(root, root)
 
-        self.assertEqual(len(findings), 5)
+        self.assertEqual(len(findings), 4)
         self.assertIn("missing-agents-guide", {item.code for item in findings})
         platform_findings = [item for item in findings if item.code == "missing-platform-entrypoint"]
-        self.assertEqual(len(platform_findings), 4)
+        self.assertEqual(len(platform_findings), 3)
         self.assertIn("CLAUDE.md", {item.path for item in findings})
 
     def test_stale_platform_entrypoint_is_reported(self) -> None:
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp)
             (root / "AGENTS.md").write_text(
-                "Use SKILL.md with CLAUDE.md, GEMINI.md, GLM.md, and DEEPSEEK.md.\n",
+                "Use SKILL.md with CLAUDE.md, GEMINI.md, and GLM.md.\n",
                 encoding="utf-8",
             )
             for filename in lint_skill.REPOSITORY_ENTRYPOINTS:
@@ -89,7 +89,7 @@ class RepositoryEntrypointTests(unittest.TestCase):
 
             findings = lint_skill.check_repository_entrypoints(root, root)
 
-        self.assertEqual(len(findings), 4)
+        self.assertEqual(len(findings), 3)
         self.assertTrue(all(item.code == "stale-platform-entrypoint" for item in findings))
         self.assertIn("AGENTS.md", findings[0].message)
         self.assertIn("SKILL.md", findings[0].message)
@@ -100,7 +100,7 @@ class RepositoryEntrypointTests(unittest.TestCase):
             write_skill(root)
             (root / "README.md").write_text("demo-skill\n", encoding="utf-8")
             (root / "AGENTS.md").write_text(
-                "Use SKILL.md with CLAUDE.md, GEMINI.md, GLM.md, and DEEPSEEK.md.\n",
+                "Use SKILL.md with CLAUDE.md, GEMINI.md, and GLM.md.\n",
                 encoding="utf-8",
             )
             for filename in lint_skill.REPOSITORY_ENTRYPOINTS:

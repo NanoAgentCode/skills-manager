@@ -1,6 +1,8 @@
 # skills-manager
 
-按业务场景组织的可复用 AI agent skills 仓库，兼容 Codex、Claude、Gemini、GLM 和 DeepSeek。技能执行流程以各自的 `SKILL.md` 为准，根目录只保留项目入口，详细说明统一维护在 `docs/`。
+按业务场景组织的可复用 AI agent skills 仓库，兼容 Codex、Claude、Gemini 和 GLM。技能执行流程以各自的 `SKILL.md` 为准，根目录只保留项目入口，详细说明统一维护在 `docs/`。
+
+![Skills 业务场景地图](images/skills-map.png)
 
 ## 快速开始
 
@@ -19,7 +21,7 @@
 
 | 场景 | 目录 | 主要能力 |
 |---|---|---|
-| 内容运营 | `skills/content-operations/` | 转写、技术文章润色、公众号排版、封面与历史文章归档 |
+| 内容运营 | `skills/content-operations/` | 转写、技术来源成文、文章润色、视觉策划、公众号排版、封面与历史文章归档 |
 | 知识可视化 | `skills/knowledge-visualization/` | 支持多关键词相关度检索的 Obsidian 外部记忆、技术认知框架、draw.io、Excalidraw、离线思维导图与静态发布 |
 | AI 应用交付 | `skills/ai-application-delivery/` | Dify 应用创建、DSL 设计、导入、更新与验证 |
 | 工程运维 | `skills/engineering-operations/` | 数据库安全查询、后端日志与数据契约追踪 |
@@ -33,10 +35,13 @@
 - [技能索引](docs/skill-index.md)：正式的仓库技能目录和使用场景。
 - [业务场景目录说明](docs/directory-structure.md)：目录树、场景边界和维护规则。
 - [仓库操作指南](docs/repository-operations.md)：调用、Python 启动器、校验、输出和安全约定。
-- [平台兼容说明](docs/platform-compatibility.md)：Codex、Claude、Gemini、GLM、DeepSeek 的入口和差异。
+- [平台兼容说明](docs/platform-compatibility.md)：Codex、Claude、Gemini、GLM 的入口和差异。
 
 ## 常用入口
 
+- 技术来源转公众文章：[`skills/content-operations/technical-source-to-public-article`](skills/content-operations/technical-source-to-public-article/SKILL.md)
+- 技术文章视觉策划：[`skills/content-operations/technical-article-visual-director`](skills/content-operations/technical-article-visual-director/SKILL.md)
+- 微信公众号排版：[`skills/content-operations/wechat-format`](skills/content-operations/wechat-format/SKILL.md)
 - Obsidian 外部记忆：[`skills/knowledge-visualization/obsidian-memory`](skills/knowledge-visualization/obsidian-memory/SKILL.md)，支持多关键词 All/Any 匹配与相关度排序
 - 技术认知框架：[`skills/knowledge-visualization/technical-cognition-framework`](skills/knowledge-visualization/technical-cognition-framework/SKILL.md)
 - Dify Console API：[`skills/ai-application-delivery/dify-console-admin-api`](skills/ai-application-delivery/dify-console-admin-api/SKILL.md)
@@ -45,7 +50,7 @@
 
 ## 根目录入口
 
-`README.md` 和 `AGENTS.md` 是共享入口；`CLAUDE.md`、`GEMINI.md`、`GLM.md`、`DEEPSEEK.md` 为对应客户端保留自动发现入口。详细平台规则不在根目录重复维护，统一见 [平台兼容说明](docs/platform-compatibility.md)。
+`README.md` 和 `AGENTS.md` 是共享入口；`CLAUDE.md`、`GEMINI.md`、`GLM.md` 为对应客户端保留自动发现入口。详细平台规则不在根目录重复维护，统一见 [平台兼容说明](docs/platform-compatibility.md)。
 
 ## 校验
 

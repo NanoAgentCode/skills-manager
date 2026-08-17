@@ -46,7 +46,6 @@ REPOSITORY_ENTRYPOINTS = {
     "CLAUDE.md": "Claude",
     "GEMINI.md": "Gemini",
     "GLM.md": "GLM",
-    "DEEPSEEK.md": "DeepSeek",
 }
 REPOSITORY_GUIDE = "AGENTS.md"
 REPOSITORY_CATALOGS = ("docs/skill-index.md", "README.md")
