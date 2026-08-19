@@ -36,7 +36,7 @@ Use this group when the request is about Dify apps, DSL import/export, platform 
 
 Use this group when the request is about database-backed lookup or diagnosing backend code and contract paths.
 
-- `skills/engineering-operations/python-db-query/SKILL.md`: safe Python database querying with ignored local configs, read-only defaults, tabular/JSON/CSV output, and explicit authorization for writes.
+- `skills/engineering-operations/python-db-query/SKILL.md`: safe Python database querying with schema, table, view, index, primary-key and execution-plan inspection, ignored local configs, read-only defaults, tabular/JSON/CSV output, and explicit authorization for writes.
 - `skills/engineering-operations/backend-log-contract-trace/SKILL.md`: backend log-to-contract tracing across routes/controllers, DTO/VOs, services, mapper XML, SQL columns, cross-service parameters, and database constraints.
 
 ## Market Intelligence

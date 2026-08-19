@@ -1,4 +1,4 @@
 interface:
   display_name: "Python DB Query"
-  short_description: "Run safe Python database queries"
-  default_prompt: "Use $python-db-query to run a database query from Python. If no config file exists, ask me for the database connection details and keep them in a local config file."
+  short_description: "Query databases and inspect metadata safely"
+  default_prompt: "Use $python-db-query to inspect database metadata or run a safe query from Python. If no config file exists, ask me for the required connection details before creating a local config."

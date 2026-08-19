@@ -1,6 +1,6 @@
 ---
 name: python-db-query
-description: Use when Codex needs to run database queries with Python, inspect query results, export query output, or help configure a database connection. Supports config-file based connection management; if no config exists, collect database type, host/path, credentials, and database name from the user through conversation before running queries.
+description: Use when Codex needs to run database queries with Python, inspect schemas, tables, views, indexes, primary keys or execution plans, export results, or configure a database connection. Supports config-file based connection management; if no config exists, collect the required connection details before running queries.
 ---
 
 # Python DB Query
@@ -26,6 +26,8 @@ Do not commit real credentials. The skill includes `config.example.json`; create
 5. Optionally run `scripts/check_dependencies.py --config .\config.json` before the first connection.
 6. Run the query with `scripts/query_db.py`.
 7. Summarize results without exposing credentials.
+
+For an unfamiliar relational database, discover structure in this order: schemas, tables/views, columns, keys/indexes, then a small query or execution plan. Skip steps when the user already supplied the relevant schema.
 
 ## Safety Rules
 
@@ -123,6 +125,28 @@ Describe a table:
 ```powershell
 ..\..\..\scripts\run-python.ps1 .\scripts\query_db.py --config .\config.json --describe FLOW_TOOL_NODE
 ```
+
+List schemas and views:
+
+```powershell
+..\..\..\scripts\run-python.ps1 .\scripts\query_db.py --config .\config.json --list-schemas
+..\..\..\scripts\run-python.ps1 .\scripts\query_db.py --config .\config.json --list-views
+```
+
+Inspect indexes and a primary key. Schema-qualified names are supported:
+
+```powershell
+..\..\..\scripts\run-python.ps1 .\scripts\query_db.py --config .\config.json --list-indexes public.users
+..\..\..\scripts\run-python.ps1 .\scripts\query_db.py --config .\config.json --primary-key public.users
+```
+
+Show a read-only query execution plan without running the query:
+
+```powershell
+..\..\..\scripts\run-python.ps1 .\scripts\query_db.py --config .\config.json --explain --sql "select * from users where email = :email" --params '{"email":"a@example.com"}'
+```
+
+Execution-plan output is dialect-specific. SQLite uses `EXPLAIN QUERY PLAN`, PostgreSQL and MySQL request JSON plans, SQL Server uses `SHOWPLAN_TEXT`, and Oracle uses `DBMS_XPLAN` with a temporary `PLAN_TABLE` entry that is cleaned up and rolled back. `--explain` accepts only SQL that passes the read-only guard.
 
 Count a table:
 

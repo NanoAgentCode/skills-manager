@@ -14,6 +14,7 @@ import os
 import re
 import sqlite3
 import sys
+import uuid
 from pathlib import Path
 from typing import Any, Iterable
 
@@ -58,7 +59,9 @@ def read_sql(args: argparse.Namespace) -> str:
         return args.sql
     if args.sql_file:
         return Path(args.sql_file).read_text(encoding="utf-8")
-    raise SystemExit("Provide --sql, --sql-file, --list-tables, --describe, --count, or --test-connection.")
+    raise SystemExit(
+        "Provide --sql/--sql-file, a metadata command, --count, or --test-connection."
+    )
 
 
 def normalized_db_type(config: dict[str, Any]) -> str:
@@ -89,6 +92,25 @@ def validate_identifier(name: str) -> str:
     return name
 
 
+def identifier_parts(name: str) -> list[str]:
+    validate_identifier(name)
+    parts = name.split(".")
+    if len(parts) > 3:
+        raise SystemExit(f"Unsupported qualified table identifier: {name}")
+    return parts
+
+
+def table_schema_parts(name: str, default_schema: str | None = None) -> tuple[str | None, str]:
+    parts = identifier_parts(name)
+    if len(parts) == 1:
+        return default_schema, parts[0]
+    return parts[-2], parts[-1]
+
+
+def sql_literal(value: str) -> str:
+    return "'" + value.replace("'", "''") + "'"
+
+
 def metadata_sql(config: dict[str, Any], args: argparse.Namespace) -> str | None:
     dialect = normalized_db_type(config)
     if args.test_connection:
@@ -113,21 +135,130 @@ def metadata_sql(config: dict[str, Any], args: argparse.Namespace) -> str | None
                 "where table_type = 'BASE TABLE' order by table_schema, table_name"
             )
 
-    if args.describe:
-        table = validate_identifier(args.describe)
-        bare_table = table.split(".")[-1]
+    if args.list_schemas:
         if dialect == "sqlite":
-            return f"pragma table_info({table})"
+            return "pragma database_list"
         if dialect == "oracle":
-            return (
-                "select column_name, data_type, data_length, nullable from user_tab_columns "
-                f"where table_name = '{bare_table.upper()}' order by column_id"
-            )
+            return "select username as schema_name from all_users order by username"
+        return "select schema_name from information_schema.schemata order by schema_name"
+
+    if args.list_views:
+        if dialect == "sqlite":
+            return "select name as view_name, sql from sqlite_master where type = 'view' order by name"
+        if dialect == "oracle":
+            return "select view_name, text_length from user_views order by view_name"
         if dialect in {"postgres", "mysql", "sqlserver"}:
             return (
-                "select column_name, data_type, is_nullable from information_schema.columns "
-                f"where table_name = '{bare_table}' order by ordinal_position"
+                "select table_schema, table_name as view_name from information_schema.views "
+                "order by table_schema, table_name"
             )
+
+    if args.describe:
+        table = validate_identifier(args.describe)
+        schema, bare_table = table_schema_parts(table, config.get("schema"))
+        if dialect == "sqlite":
+            pragma_schema = f"{schema}." if schema else ""
+            return f"pragma {pragma_schema}table_info({sql_literal(bare_table)})"
+        if dialect == "oracle":
+            if schema:
+                return (
+                    "select owner as table_schema, column_name, data_type, data_length, nullable "
+                    "from all_tab_columns "
+                    f"where owner = {sql_literal(schema.upper())} and table_name = {sql_literal(bare_table.upper())} "
+                    "order by column_id"
+                )
+            return (
+                "select column_name, data_type, data_length, nullable from user_tab_columns "
+                f"where table_name = {sql_literal(bare_table.upper())} order by column_id"
+            )
+        if dialect in {"postgres", "mysql", "sqlserver"}:
+            schema_filter = f" and table_schema = {sql_literal(schema)}" if schema else ""
+            return (
+                "select column_name, data_type, is_nullable from information_schema.columns "
+                f"where table_name = {sql_literal(bare_table)}{schema_filter} order by ordinal_position"
+            )
+
+    if args.list_indexes:
+        table = validate_identifier(args.list_indexes)
+        schema, bare_table = table_schema_parts(table, config.get("schema"))
+        if dialect == "sqlite":
+            pragma_schema = f"{schema}." if schema else ""
+            return f"pragma {pragma_schema}index_list({sql_literal(bare_table)})"
+        if dialect == "oracle":
+            if schema:
+                return (
+                    "select i.owner as table_schema, i.index_name, i.uniqueness, c.column_name, c.column_position "
+                    "from all_indexes i join all_ind_columns c on c.index_owner = i.owner and c.index_name = i.index_name "
+                    f"where i.table_owner = {sql_literal(schema.upper())} and i.table_name = {sql_literal(bare_table.upper())} "
+                    "order by i.index_name, c.column_position"
+                )
+            return (
+                "select i.index_name, i.uniqueness, c.column_name, c.column_position "
+                "from user_indexes i join user_ind_columns c on c.index_name = i.index_name "
+                f"where i.table_name = {sql_literal(bare_table.upper())} order by i.index_name, c.column_position"
+            )
+        if dialect == "postgres":
+            schema_filter = f" and schemaname = {sql_literal(schema)}" if schema else ""
+            return (
+                "select schemaname as table_schema, indexname as index_name, indexdef "
+                f"from pg_indexes where tablename = {sql_literal(bare_table)}{schema_filter} "
+                "order by schemaname, indexname"
+            )
+        if dialect == "mysql":
+            selected_schema = schema or config.get("database")
+            schema_filter = f" and table_schema = {sql_literal(str(selected_schema))}" if selected_schema else ""
+            return (
+                "select table_schema, index_name, non_unique, column_name, seq_in_index "
+                "from information_schema.statistics "
+                f"where table_name = {sql_literal(bare_table)}{schema_filter} order by index_name, seq_in_index"
+            )
+        if dialect == "sqlserver":
+            schema_filter = f" and s.name = {sql_literal(schema)}" if schema else ""
+            return (
+                "select s.name as table_schema, i.name as index_name, i.is_unique, i.type_desc, "
+                "c.name as column_name, ic.key_ordinal "
+                "from sys.indexes i join sys.tables t on t.object_id = i.object_id "
+                "join sys.schemas s on s.schema_id = t.schema_id "
+                "left join sys.index_columns ic on ic.object_id = i.object_id and ic.index_id = i.index_id "
+                "left join sys.columns c on c.object_id = ic.object_id and c.column_id = ic.column_id "
+                f"where t.name = {sql_literal(bare_table)}{schema_filter} and i.name is not null "
+                "order by s.name, i.name, ic.key_ordinal"
+            )
+
+    if args.primary_key:
+        table = validate_identifier(args.primary_key)
+        schema, bare_table = table_schema_parts(table, config.get("schema"))
+        if dialect == "sqlite":
+            schema_arg = f", {sql_literal(schema)}" if schema else ""
+            return (
+                "select name as column_name, pk as key_ordinal from pragma_table_info"
+                f"({sql_literal(bare_table)}{schema_arg}) where pk > 0 order by pk"
+            )
+        if dialect == "oracle":
+            owner_filter = f" and c.owner = {sql_literal(schema.upper())}" if schema else ""
+            if schema:
+                join_condition = "cc.constraint_name = c.constraint_name and cc.owner = c.owner"
+                scope = "all_constraints"
+                columns = "all_cons_columns"
+            else:
+                join_condition = "cc.constraint_name = c.constraint_name"
+                scope = "user_constraints"
+                columns = "user_cons_columns"
+            return (
+                "select cc.column_name, cc.position as key_ordinal "
+                f"from {scope} c join {columns} cc on {join_condition} "
+                f"where c.constraint_type = 'P' and c.table_name = {sql_literal(bare_table.upper())}{owner_filter} "
+                "order by cc.position"
+            )
+        schema_filter = f" and tc.table_schema = {sql_literal(schema)}" if schema else ""
+        return (
+            "select kcu.column_name, kcu.ordinal_position as key_ordinal "
+            "from information_schema.table_constraints tc join information_schema.key_column_usage kcu "
+            "on kcu.constraint_name = tc.constraint_name and kcu.table_schema = tc.table_schema "
+            "and kcu.table_name = tc.table_name "
+            f"where tc.constraint_type = 'PRIMARY KEY' and tc.table_name = {sql_literal(bare_table)}{schema_filter} "
+            "order by kcu.ordinal_position"
+        )
 
     if args.count:
         table = validate_identifier(args.count)
@@ -407,6 +538,55 @@ def execute_query(conn, sql: str, params: dict[str, Any] | list[Any] | None, lim
     return columns, normalize_rows(rows, columns)
 
 
+def execute_explain(
+    conn,
+    dialect: str,
+    sql: str,
+    params: dict[str, Any] | list[Any] | None,
+    limit: int | None,
+):
+    if dialect == "sqlite":
+        return execute_query(conn, f"explain query plan {sql}", params, limit)
+    if dialect == "postgres":
+        return execute_query(conn, f"explain (format json) {sql}", params, limit)
+    if dialect == "mysql":
+        return execute_query(conn, f"explain format=json {sql}", params, limit)
+    if dialect == "sqlserver":
+        cur = conn.cursor()
+        try:
+            cur.execute("set showplan_text on")
+            cur.execute(sql, params or {})
+            columns = [col[0] for col in cur.description]
+            rows = cur.fetchall()
+            if limit:
+                rows = rows[:limit]
+            return columns, normalize_rows(rows, columns)
+        finally:
+            try:
+                cur.execute("set showplan_text off")
+            except Exception:
+                pass
+    if dialect == "oracle":
+        statement_id = f"PYDB_{uuid.uuid4().hex[:20].upper()}"
+        cur = conn.cursor()
+        try:
+            cur.execute(f"explain plan set statement_id = {sql_literal(statement_id)} for {sql}", params or {})
+            cur.execute(
+                "select plan_table_output from table(dbms_xplan.display('PLAN_TABLE', :statement_id, 'BASIC +PREDICATE'))",
+                {"statement_id": statement_id},
+            )
+            columns = [col[0] for col in cur.description]
+            rows = cur.fetchmany(limit) if limit else cur.fetchall()
+            return columns, normalize_rows(rows, columns)
+        finally:
+            try:
+                cur.execute("delete from plan_table where statement_id = :statement_id", {"statement_id": statement_id})
+                conn.rollback()
+            except Exception:
+                pass
+    raise SystemExit(f"Execution plans are not supported for database type: {dialect}")
+
+
 def normalize_rows(rows: Iterable[Any], columns: list[str]) -> list[dict[str, Any]]:
     out: list[dict[str, Any]] = []
     for row in rows:
@@ -566,7 +746,12 @@ def main() -> int:
     parser.add_argument("--sql")
     parser.add_argument("--sql-file")
     parser.add_argument("--list-tables", action="store_true", help="List tables visible to the configured user.")
+    parser.add_argument("--list-schemas", action="store_true", help="List schemas or SQLite attached databases.")
+    parser.add_argument("--list-views", action="store_true", help="List views visible to the configured user.")
     parser.add_argument("--describe", metavar="TABLE", help="Describe columns for a table.")
+    parser.add_argument("--list-indexes", metavar="TABLE", help="List indexes and indexed columns for a table.")
+    parser.add_argument("--primary-key", metavar="TABLE", help="Show primary-key columns for a table.")
+    parser.add_argument("--explain", action="store_true", help="Show the execution plan for --sql or --sql-file without running it.")
     parser.add_argument("--count", metavar="TABLE", help="Count rows in a table.")
     parser.add_argument("--test-connection", action="store_true", help="Run a minimal connection test query.")
     parser.add_argument("--params", help="JSON object or array of query parameters.")
@@ -594,14 +779,48 @@ def main() -> int:
     parser.add_argument("--value", help="Value for Redis set.")
     args = parser.parse_args()
 
+    metadata_commands = [
+        args.list_tables,
+        args.list_schemas,
+        args.list_views,
+        bool(args.describe),
+        bool(args.list_indexes),
+        bool(args.primary_key),
+        bool(args.count),
+        args.test_connection,
+    ]
+    if sum(bool(command) for command in metadata_commands) > 1:
+        parser.error("Choose only one metadata, count, or connection-test command at a time.")
+    if (args.sql or args.sql_file) and any(metadata_commands):
+        parser.error("Do not combine --sql/--sql-file with a metadata, count, or connection-test command.")
+    if args.sql and args.sql_file:
+        parser.error("Choose either --sql or --sql-file, not both.")
+    if args.explain and args.allow_write:
+        parser.error("--explain cannot be combined with --allow-write.")
+
     config = load_config(Path(args.config))
     if is_document_or_kv(config):
+        relational_only = [args.list_schemas, args.list_views, args.describe, args.list_indexes, args.primary_key, args.explain]
+        if any(relational_only):
+            raise SystemExit("Schemas, views, indexes, primary keys, and SQL execution plans require a relational database config.")
         conn = connect(config)
         try:
             if normalized_db_type(config) == "mongo":
                 columns, rows = run_mongo(conn, config, args)
             else:
                 columns, rows = run_redis(conn, args)
+            write_output(rows, columns, args)
+        finally:
+            conn.close()
+        return 0
+
+    if args.explain:
+        sql = read_sql(args)
+        assert_query_allowed(sql, False)
+        params = parse_params(args.params)
+        conn = connect(config)
+        try:
+            columns, rows = execute_explain(conn, normalized_db_type(config), sql, params, args.limit)
             write_output(rows, columns, args)
         finally:
             conn.close()

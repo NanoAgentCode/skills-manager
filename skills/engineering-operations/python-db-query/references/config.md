@@ -127,6 +127,20 @@ If no config exists, collect only the fields needed for the selected database ty
 
 Ask whether the user wants the config saved locally before writing it.
 
+## Metadata Query Behavior
+
+The query script supports the same metadata commands across relational databases:
+
+- `--list-schemas`
+- `--list-tables`
+- `--list-views`
+- `--describe [schema.]table`
+- `--list-indexes [schema.]table`
+- `--primary-key [schema.]table`
+- `--explain` together with `--sql` or `--sql-file`
+
+SQLite reports attached databases as schemas. When a server database config contains a `schema` field, unqualified table names use it for metadata filtering. An explicitly qualified table name takes precedence.
+
 ## MongoDB
 
 ```json
