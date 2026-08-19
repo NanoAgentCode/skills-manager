@@ -10,9 +10,9 @@ from pathlib import Path
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Initialize a local database config.json.")
+    parser = argparse.ArgumentParser(description="Initialize a local database or MinIO config.json.")
     parser.add_argument("--out", default=str(Path(__file__).resolve().parents[1] / "config.json"))
-    parser.add_argument("--type", required=True, choices=["sqlite", "postgres", "mysql", "sqlserver", "oracle", "oracle11g", "mongo", "mongodb", "redis"])
+    parser.add_argument("--type", required=True, choices=["sqlite", "postgres", "mysql", "sqlserver", "oracle", "oracle11g", "mongo", "mongodb", "redis", "minio"])
     parser.add_argument("--host")
     parser.add_argument("--port", type=int)
     parser.add_argument("--database")
@@ -25,6 +25,14 @@ def main() -> int:
     parser.add_argument("--service-name")
     parser.add_argument("--sid")
     parser.add_argument("--client-lib-dir")
+    parser.add_argument("--endpoint", help="MinIO HTTP(S) endpoint.")
+    parser.add_argument("--access-key")
+    parser.add_argument("--access-key-env")
+    parser.add_argument("--secret-key-env")
+    parser.add_argument("--session-token-env")
+    parser.add_argument("--mc-path", help="Optional MinIO Client mc/mc.exe path.")
+    parser.add_argument("--anonymous", action="store_true", help="Use anonymous MinIO access.")
+    parser.add_argument("--insecure", action="store_true", help="Disable TLS certificate verification for mc.")
     parser.add_argument("--no-password", action="store_true", help="Do not prompt for or write a password.")
     args = parser.parse_args()
 
@@ -62,6 +70,35 @@ def main() -> int:
                 config["password_env"] = args.password_env
             elif not args.no_password:
                 config["password"] = getpass.getpass("Redis password: ")
+    elif args.type == "minio":
+        if not args.endpoint:
+            raise SystemExit("--endpoint is required for minio")
+        config["endpoint"] = args.endpoint
+        if args.mc_path:
+            config["mc_path"] = args.mc_path
+        if args.insecure:
+            config["insecure"] = True
+        if args.anonymous:
+            if args.access_key or args.access_key_env or args.secret_key_env or args.session_token_env:
+                raise SystemExit("--anonymous cannot be combined with MinIO credential options")
+            config["anonymous"] = True
+        else:
+            if args.access_key and args.access_key_env:
+                raise SystemExit("Choose --access-key or --access-key-env, not both")
+            if args.access_key_env:
+                config["access_key_env"] = args.access_key_env
+            elif args.access_key:
+                config["access_key"] = args.access_key
+            else:
+                raise SystemExit("MinIO requires --access-key, --access-key-env, or --anonymous")
+            if args.secret_key_env:
+                config["secret_key_env"] = args.secret_key_env
+            elif not args.no_password:
+                config["secret_key"] = getpass.getpass("MinIO secret key: ")
+            else:
+                raise SystemExit("MinIO requires --secret-key-env unless a secret key can be prompted")
+            if args.session_token_env:
+                config["session_token_env"] = args.session_token_env
     else:
         for key in ["host", "port", "database", "user"]:
             value = getattr(args, key)

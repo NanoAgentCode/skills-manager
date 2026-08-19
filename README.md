@@ -24,7 +24,7 @@
 | 内容运营 | `skills/content-operations/` | 转写、技术来源成文、文章润色、视觉策划、公众号排版、封面与历史文章归档 |
 | 知识可视化 | `skills/knowledge-visualization/` | 支持多关键词相关度检索的 Obsidian 外部记忆、技术认知框架、draw.io、Excalidraw、离线思维导图与静态发布 |
 | AI 应用交付 | `skills/ai-application-delivery/` | Dify 应用创建、DSL 设计、导入、更新与验证 |
-| 工程运维 | `skills/engineering-operations/` | 数据库安全查询与元数据/执行计划检查、后端日志与数据契约追踪 |
+| 工程运维 | `skills/engineering-operations/` | 数据库安全查询、Windows/Linux MinIO 对象检查、元数据/执行计划检查、后端日志与数据契约追踪 |
 | 市场研究 | `skills/market-intelligence/` | 股票技术分析、美股行业复盘与跨市场影响研究 |
 | 技能治理 | `skills/skill-governance/` | skill 结构、元数据、链接、兼容入口与敏感信息检查 |
 

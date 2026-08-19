@@ -1,30 +1,31 @@
 ---
 name: python-db-query
-description: Use when Codex needs to run database queries with Python, inspect schemas, tables, views, indexes, primary keys or execution plans, export results, or configure a database connection. Supports config-file based connection management; if no config exists, collect the required connection details before running queries.
+description: Use when Codex needs to query a database or inspect MinIO/S3-compatible object storage, including database metadata and plans or MinIO buckets, objects, metadata and downloads. Supports local config files, read-only defaults, Python database drivers, and the cross-platform MinIO mc client.
 ---
 
 # Python DB Query
 
 ## Overview
 
-Use this skill to run SQL queries through `scripts/query_db.py` while keeping database connection settings in a local config file.
+Use this skill to run database queries through `scripts/query_db.py` or read MinIO object storage through `scripts/minio_mc.py`, while keeping connection settings in a local config file.
 
-Do not commit real credentials. The skill includes `config.example.json`; create a local `config.json` or another ignored config file for actual connections.
+Do not commit real credentials. Create an ignored local `config.json` with `scripts/init_config.py`, or use another ignored config path.
 
 ## Workflow
 
-1. Confirm the query goal and target database.
+1. Confirm the query goal and target database or MinIO endpoint.
 2. Look for a config file in this order:
    - User-provided `--config` path.
    - `skills/engineering-operations/python-db-query/config.json`.
    - A project-local config path the user names.
 3. If no config exists, ask the user for the required connection fields:
-   - `type`: `sqlite`, `postgres`, `mysql`, `sqlserver`, `oracle`, `oracle11g`, `mongo`, or `redis`.
+   - `type`: `sqlite`, `postgres`, `mysql`, `sqlserver`, `oracle`, `oracle11g`, `mongo`, `redis`, or `minio`.
    - Host/port/database/user/password for server databases, or `path` for SQLite.
+   - Endpoint plus access/secret-key environment variable names for MinIO, or confirm anonymous access.
    - Optional schema and SSL/options if needed.
 4. Save real settings only to an ignored local config file after the user provides them.
 5. Optionally run `scripts/check_dependencies.py --config .\config.json` before the first connection.
-6. Run the query with `scripts/query_db.py`.
+6. Run database work with `scripts/query_db.py`. For `type=minio`, read [references/minio.md](references/minio.md), then use `scripts/minio_mc.py`.
 7. Summarize results without exposing credentials.
 
 For an unfamiliar relational database, discover structure in this order: schemas, tables/views, columns, keys/indexes, then a small query or execution plan. Skip steps when the user already supplied the relevant schema.
@@ -33,10 +34,12 @@ For an unfamiliar relational database, discover structure in this order: schemas
 
 - Default to read-only SQL. The script blocks write statements unless `--allow-write` is explicitly passed.
 - Do not print passwords, tokens, DSNs with credentials, or full config contents in final answers.
-- Prefer `password_env` over plain `password` when users can set an environment variable.
+- Prefer credential environment-variable references over literal secrets in config.
 - Ask before running potentially expensive queries, broad table scans, or write operations.
 - Prefer `--limit` for exploratory queries.
 - For unknown schemas, first query metadata tables or run small sample queries.
+- MinIO operations in this skill are read-only except for downloading to a user-selected local path. Never overwrite a local destination unless `--overwrite` is explicit.
+- Do not run `mc alias set`; the wrapper uses a temporary `MC_HOST_skillsmanager` child-process environment variable so credentials do not persist in the user's global mc config.
 
 ## Config
 
@@ -190,6 +193,16 @@ Redis writes require `--allow-write`:
 ..\..\..\scripts\run-python.ps1 .\scripts\query_db.py --config .\config.json --redis-set my-key my-value --allow-write
 ```
 
+## MinIO
+
+For MinIO or S3-compatible object storage, read [references/minio.md](references/minio.md). The separate cross-platform wrapper discovers `mc.exe` on Windows and `mc` on Linux, then supports connection testing, bucket/object listing, object metadata, and guarded downloads.
+
+Quick connection test:
+
+```powershell
+..\..\..\scripts\run-python.ps1 .\scripts\minio_mc.py --config .\config.json test-connection
+```
+
 The repository Windows launcher resolves Python without relying on `python` or `py` being on `PATH`. If it cannot find Python, it reports the missing Python interpreter prerequisite and the checked locations. To force a specific interpreter, set `SKILLS_MANAGER_PYTHON` to the full `python.exe` path before running the command.
 
 For non-Windows environments, replace the launcher with the active Python executable for that shell, usually `python3`.
@@ -203,5 +216,6 @@ For non-Windows environments, replace the launcher with the active Python execut
 - Oracle 11g requires `oracledb==2.5.1` in Thick mode with Oracle Instant Client 11.2 or another compatible client, or the legacy `cx_Oracle` driver.
 - MongoDB requires `pymongo`.
 - Redis requires `redis`.
+- MinIO requires the official MinIO Client binary: `mc.exe` on Windows or `mc` on Linux. It does not require a Python MinIO SDK.
 
 If a driver is missing, do not install automatically. Tell the user which package is required and ask before installing dependencies.

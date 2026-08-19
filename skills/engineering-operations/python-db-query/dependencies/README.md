@@ -2,7 +2,16 @@
 
 Put local database client dependencies here when a driver needs native files.
 
-This directory is intentionally ignored by git because database clients can be large and may contain machine-specific binaries.
+This directory is intentionally ignored by git because database and object-storage clients can be large and may contain machine-specific binaries.
+
+## MinIO Client
+
+The MinIO wrapper discovers the official client here before checking `PATH`:
+
+- Windows: `dependencies/mc.exe`
+- Linux: `dependencies/mc`
+
+Do not commit the binary. See `references/minio.md` for user-approved installation commands and config fields.
 
 ## Python wheels
 

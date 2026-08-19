@@ -7,6 +7,7 @@ import argparse
 import importlib
 import importlib.util
 import json
+import subprocess
 import sys
 from pathlib import Path
 
@@ -51,6 +52,26 @@ def check_oracle(config: dict | None) -> bool:
     return ok
 
 
+def check_minio(config: dict, config_path: Path) -> bool:
+    from minio_mc import find_mc
+
+    try:
+        mc_path = find_mc(config, config_path)
+    except SystemExit as exc:
+        status(False, str(exc))
+        return False
+    result = subprocess.run(
+        [str(mc_path), "--version"],
+        capture_output=True,
+        text=True,
+        encoding="utf-8",
+        errors="replace",
+    )
+    version = (result.stdout or result.stderr).strip().splitlines()
+    status(result.returncode == 0, f"MinIO Client: {version[0] if version else mc_path}")
+    return result.returncode == 0
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="Check database query skill dependencies.")
     parser.add_argument("--config", help="Optional config.json path for client-specific checks.")
@@ -60,16 +81,20 @@ def main() -> int:
     print(f"Version: {sys.version.split()[0]}")
 
     config = None
+    config_path = None
     if args.config:
-        path = Path(args.config)
-        if not path.exists():
-            status(False, f"config file not found: {path}")
+        config_path = Path(args.config).expanduser().resolve()
+        if not config_path.exists():
+            status(False, f"config file not found: {config_path}")
             return 2
-        config = json.loads(path.read_text(encoding="utf-8"))
+        config = json.loads(config_path.read_text(encoding="utf-8"))
 
     status(True, "sqlite3 is built in")
     if config and str(config.get("type", "")).lower() in {"oracle", "oracle11g"}:
         return 0 if check_oracle(config) else 1
+    if config and str(config.get("type", "")).lower() == "minio":
+        assert config_path is not None
+        return 0 if check_minio(config, config_path) else 1
 
     ok = True
     for module_name, label in [

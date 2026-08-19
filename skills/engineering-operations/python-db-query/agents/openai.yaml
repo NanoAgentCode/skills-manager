@@ -1,4 +1,4 @@
 interface:
-  display_name: "Python DB Query"
-  short_description: "Query databases and inspect metadata safely"
-  default_prompt: "Use $python-db-query to inspect database metadata or run a safe query from Python. If no config file exists, ask me for the required connection details before creating a local config."
+  display_name: "Database & MinIO Query"
+  short_description: "Query databases and MinIO object storage safely"
+  default_prompt: "Use $python-db-query to inspect database metadata, run a safe query, or inspect MinIO buckets and objects. If no config exists, ask me for the required connection details before creating one."
