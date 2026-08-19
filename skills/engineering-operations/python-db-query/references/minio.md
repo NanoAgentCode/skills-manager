@@ -4,16 +4,15 @@ Use the official MinIO Client (`mc`) for MinIO and other S3-compatible object st
 
 The wrapper supplies a temporary `MC_HOST_skillsmanager` environment variable to the child process. It does not run `mc alias set`, modify `~/.mc/config.json`, or put access/secret keys in command-line arguments.
 
-## Install `mc`
+## Bundled `mc`
 
-Do not download or install software without user approval. A user may instead supply an existing binary through `mc_path`.
+The skill includes official MinIO Client `RELEASE.2025-08-13T08-35-41Z` binaries for Windows AMD64 and Linux AMD64. The wrapper selects the matching dependency before checking `PATH`, so those platforms do not need a separate installation.
 
 ### Windows x64
 
-Download the official binary to the ignored dependency directory:
+The bundled client is:
 
 ```powershell
-Invoke-WebRequest https://dl.min.io/client/mc/release/windows-amd64/mc.exe -OutFile .\dependencies\mc.exe
 .\dependencies\mc.exe --version
 ```
 
@@ -21,15 +20,15 @@ The wrapper searches `dependencies/mc.exe` and then `PATH`. A custom path can be
 
 ### Linux
 
-For x64:
+For AMD64, the bundled executable can be checked with:
 
 ```bash
-curl -fL https://dl.min.io/client/mc/release/linux-amd64/mc -o ./dependencies/mc
-chmod +x ./dependencies/mc
 ./dependencies/mc --version
 ```
 
-For ARM64, replace `linux-amd64` with `linux-arm64`. The wrapper searches `dependencies/mc` and then `PATH`.
+Linux ARM64 is not bundled. After explicit user approval, download the official `linux-arm64/mc` binary to another local path and select it with `mc_path`. Do not replace the tracked AMD64 binary with a different architecture under the same filename.
+
+When updating either bundled binary, download it only from the official URLs in the MinIO Client Quickstart, verify its published SHA-256 value, rerun Windows/Linux connection tests, and update the recorded release version in this reference and `dependencies/README.md`.
 
 ## Config
 

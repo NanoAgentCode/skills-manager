@@ -2,16 +2,16 @@
 
 Put local database client dependencies here when a driver needs native files.
 
-This directory is intentionally ignored by git because database and object-storage clients can be large and may contain machine-specific binaries.
+This directory ignores machine-specific database clients by default. The official Windows AMD64 `mc.exe` and Linux AMD64 `mc` binaries are intentional tracked exceptions so MinIO queries work without a separate client download on those platforms.
 
-## MinIO Client
+## Bundled MinIO Client
 
-The MinIO wrapper discovers the official client here before checking `PATH`:
+The MinIO wrapper discovers the bundled official client here before checking `PATH`:
 
-- Windows: `dependencies/mc.exe`
-- Linux: `dependencies/mc`
+- Windows AMD64: `dependencies/mc.exe`
+- Linux AMD64: `dependencies/mc` (tracked as executable)
 
-Do not commit the binary. See `references/minio.md` for user-approved installation commands and config fields.
+Both binaries are MinIO Client `RELEASE.2025-08-13T08-35-41Z` and were verified against the SHA-256 files from the official download server before being added. See `references/minio.md` for config fields and update guidance.
 
 ## Python wheels
 
@@ -73,4 +73,4 @@ Then point `client_lib_dir` in `config.json` to the absolute path:
 }
 ```
 
-Do not commit real database credentials or client binaries.
+Do not commit real database credentials or additional machine-specific client binaries. The two documented MinIO Client files are the only intentional binary exceptions.
