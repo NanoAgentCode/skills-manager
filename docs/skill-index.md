@@ -34,8 +34,9 @@ Use this group when the request is about Dify apps, DSL import/export, platform 
 
 ## Engineering Operations
 
-Use this group when the request is about database-backed lookup or diagnosing backend code and contract paths.
+Use this group when the request is about dependency packaging, database-backed lookup, or diagnosing backend code and contract paths.
 
+- `skills/engineering-operations/python-offline-dependency-packager/SKILL.md`: exact-version Python package download with the full transitive dependency closure, target interpreter/platform selectors, file hashes, and one-click offline installers for PowerShell and POSIX shells.
 - `skills/engineering-operations/python-db-query/SKILL.md`: safe Python database querying plus Windows/Linux MinIO `mc` integration for bucket/object inspection and guarded downloads, with ignored local configs, read-only defaults, structured output, and explicit authorization boundaries.
 - `skills/engineering-operations/backend-log-contract-trace/SKILL.md`: backend log-to-contract tracing across routes/controllers, DTO/VOs, services, mapper XML, SQL columns, cross-service parameters, and database constraints.
 
