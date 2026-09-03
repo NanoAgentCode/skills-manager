@@ -1,4 +1,4 @@
 interface:
   display_name: "Python Offline Dependency Packager"
   short_description: "Download pinned Python packages for offline installation"
-  default_prompt: "Use $python-offline-dependency-packager to ask for an exact package version and target Python X.Y or X.Y.x line, then create one-click offline installers with all transitive dependencies."
+  default_prompt: "Use $python-offline-dependency-packager interactively: collect the dependency name, show available package versions without downloading when the exact version or target Python is missing, and create the offline bundle only after both are explicit."

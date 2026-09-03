@@ -86,15 +86,20 @@ fi
 
 def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="Download an exact Python package version and all dependencies."
+        description=(
+            "Interactively inspect versions or download an exact Python package "
+            "version and all dependencies."
+        )
     )
-    parser.add_argument("--package", required=True, help="Distribution name, optionally with extras")
-    parser.add_argument("--version", required=True, help="Exact distribution version, not a range")
+    parser.add_argument(
+        "--package",
+        help="Distribution name, optionally with extras; prompted for when omitted",
+    )
+    parser.add_argument("--version", help="Exact distribution version, not a range")
     parser.add_argument("--output", type=Path, help="Bundle directory")
     parser.add_argument("--platform", help="Target platform tag accepted by pip")
     parser.add_argument(
         "--python-version",
-        required=True,
         help="Target Python line in X.Y or X.Y.x form, for example 3.11.x",
     )
     parser.add_argument("--implementation", default="cp", help="Target implementation tag (default: cp)")
@@ -107,12 +112,40 @@ def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
     return parser.parse_args(argv)
 
 
-def validate_requirement(package: str, version: str) -> str:
+def validate_package(package: str) -> str:
     if not PACKAGE_RE.fullmatch(package):
         raise ValueError(f"Invalid package name or extras: {package!r}")
+    return package
+
+
+def validate_requirement(package: str, version: str) -> str:
+    validate_package(package)
     if not VERSION_RE.fullmatch(version):
         raise ValueError(f"Invalid exact version: {version!r}")
     return f"{package}=={version}"
+
+
+def version_query_package(package: str) -> str:
+    validate_package(package)
+    return package.split("[", 1)[0]
+
+
+def list_available_versions(package: str) -> str:
+    command = [
+        sys.executable,
+        "-m",
+        "pip",
+        "index",
+        "versions",
+        "--ignore-requires-python",
+        version_query_package(package),
+    ]
+    result = subprocess.run(command, check=False, capture_output=True, text=True)
+    if result.returncode != 0:
+        detail = (result.stderr or result.stdout).strip()
+        suffix = f": {detail}" if detail else ""
+        raise RuntimeError(f"Could not list versions for {package!r}{suffix}")
+    return result.stdout.strip()
 
 
 def validate_python_version(version: str) -> tuple[int, int]:
@@ -247,7 +280,34 @@ def create_bundle(args: argparse.Namespace) -> Path:
 
 def main(argv: Sequence[str] | None = None) -> int:
     args = parse_args(argv)
+    if not args.package:
+        try:
+            args.package = input("Dependency name: ").strip()
+        except EOFError:
+            print("error: dependency name is required", file=sys.stderr)
+            return 2
+
     try:
+        validate_package(args.package)
+        if args.version:
+            validate_requirement(args.package, args.version)
+        if args.python_version:
+            validate_python_version(args.python_version)
+        if not args.version or not args.python_version:
+            if not args.version:
+                versions = list_available_versions(args.package)
+                print(f"Available versions for {version_query_package(args.package)}:")
+                print(versions)
+            if not args.python_version:
+                print(
+                    "Target Python version is missing. Specify --python-version "
+                    "with X.Y or X.Y.x, for example 3.11 or 3.11.x."
+                )
+            print(
+                "No packages were downloaded. Re-run with both --version and "
+                "--python-version to create the offline bundle."
+            )
+            return 0
         output = create_bundle(args)
     except (ValueError, FileExistsError, RuntimeError) as exc:
         print(f"error: {exc}", file=sys.stderr)

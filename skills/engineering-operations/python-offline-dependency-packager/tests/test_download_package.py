@@ -7,7 +7,7 @@ from pathlib import Path
 import subprocess
 import tempfile
 import unittest
-from contextlib import redirect_stderr
+from contextlib import redirect_stderr, redirect_stdout
 from unittest import mock
 
 
@@ -86,14 +86,99 @@ class DownloadPackageTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             download_package.validate_requirement("requests", "latest")
 
-    def test_missing_required_versions_never_runs_pip(self) -> None:
-        missing_python = ["--package", "requests", "--version", "2.32.5"]
-        missing_package_version = ["--package", "requests", "--python-version", "3.11"]
+    def test_prompts_for_package_and_lists_versions_without_downloading(self) -> None:
+        query_result = subprocess.CompletedProcess(
+            [],
+            0,
+            stdout="requests (2.32.5)\nAvailable versions: 2.32.5, 2.32.4\n",
+            stderr="",
+        )
+        stdout = io.StringIO()
+        with (
+            mock.patch("builtins.input", return_value="requests") as prompt,
+            mock.patch.object(
+                download_package.subprocess, "run", return_value=query_result
+            ) as run,
+            redirect_stdout(stdout),
+        ):
+            result = download_package.main([])
+
+        self.assertEqual(result, 0)
+        prompt.assert_called_once_with("Dependency name: ")
+        command = run.call_args.args[0]
+        self.assertEqual(
+            command[-5:],
+            ["pip", "index", "versions", "--ignore-requires-python", "requests"],
+        )
+        self.assertNotIn("download", command)
+        self.assertIn("Available versions: 2.32.5, 2.32.4", stdout.getvalue())
+        self.assertIn("Target Python version is missing", stdout.getvalue())
+        self.assertIn("No packages were downloaded", stdout.getvalue())
+
+    def test_missing_python_never_runs_pip(self) -> None:
+        stdout = io.StringIO()
+        with (
+            mock.patch.object(download_package.subprocess, "run") as run,
+            redirect_stdout(stdout),
+        ):
+            result = download_package.main(
+                ["--package", "requests", "--version", "2.32.5"]
+            )
+
+        self.assertEqual(result, 0)
+        run.assert_not_called()
+        self.assertIn("Target Python version is missing", stdout.getvalue())
+        self.assertIn("No packages were downloaded", stdout.getvalue())
+
+    def test_missing_package_version_lists_versions_without_downloading(self) -> None:
+        query_result = subprocess.CompletedProcess(
+            [], 0, stdout="Available versions: 2.32.5, 2.32.4\n", stderr=""
+        )
+        stdout = io.StringIO()
+        with (
+            mock.patch.object(
+                download_package.subprocess, "run", return_value=query_result
+            ) as run,
+            redirect_stdout(stdout),
+        ):
+            result = download_package.main(
+                ["--package", "requests", "--python-version", "3.11"]
+            )
+
+        self.assertEqual(result, 0)
+        self.assertNotIn("download", run.call_args.args[0])
+        self.assertIn("Available versions: 2.32.5, 2.32.4", stdout.getvalue())
+        self.assertIn("No packages were downloaded", stdout.getvalue())
+
+    def test_version_lookup_failure_does_not_download(self) -> None:
+        query_result = subprocess.CompletedProcess(
+            [],
+            1,
+            stdout="",
+            stderr="ERROR: No matching distribution found for unknown-package",
+        )
+        stderr = io.StringIO()
+        with (
+            mock.patch.object(
+                download_package.subprocess, "run", return_value=query_result
+            ) as run,
+            redirect_stderr(stderr),
+        ):
+            result = download_package.main(["--package", "unknown-package"])
+
+        self.assertEqual(result, 2)
+        self.assertNotIn("download", run.call_args.args[0])
+        self.assertIn("Could not list versions", stderr.getvalue())
+
+    def test_invalid_supplied_version_values_do_not_query_or_download(self) -> None:
+        cases = (
+            ["--package", "requests", "--version", "latest"],
+            ["--package", "requests", "--python-version", "3.11.5"],
+        )
         with mock.patch.object(download_package.subprocess, "run") as run:
-            for arguments in (missing_python, missing_package_version):
-                with self.subTest(arguments=arguments):
-                    with redirect_stderr(io.StringIO()), self.assertRaises(SystemExit):
-                        download_package.main(arguments)
+            for arguments in cases:
+                with self.subTest(arguments=arguments), redirect_stderr(io.StringIO()):
+                    self.assertEqual(download_package.main(arguments), 2)
             run.assert_not_called()
 
     def test_requires_python_minor_version_line(self) -> None:

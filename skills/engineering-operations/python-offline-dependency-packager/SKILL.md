@@ -1,6 +1,6 @@
 ---
 name: python-offline-dependency-packager
-description: Download an exact Python package version for an explicitly supplied target Python minor-version line, including all transitive dependencies, and generate standalone PowerShell and POSIX-shell offline installers. Use when preparing a reproducible dependency bundle for an offline or restricted-network machine; do not use when the package version or target Python X.Y or X.Y.x value is missing.
+description: Interactively collect a Python dependency name, show versions visible from the configured pip index when the exact dependency version is missing, and download only after an exact package version and target Python minor-version line are explicitly supplied. Use when preparing a reproducible dependency bundle for an offline or restricted-network machine.
 ---
 
 # Python Offline Dependency Packager
@@ -9,8 +9,15 @@ Use `scripts/download_package.py` to resolve one pinned package, download its fu
 
 ## Workflow
 
-1. Require the user to supply all three values: package name, exact package version, and target Python version in `X.Y` or `X.Y.x` form. Never infer the target Python version from the current interpreter. If either version is missing or ambiguous, ask for it and do not run the downloader. Normalize `X.Y.x` to the `X.Y` compatibility line.
-2. From the repository root, run the downloader with the repository Python launcher:
+1. Collect the package name interactively. If it was not supplied in the request, run the script without `--package` and let it prompt with `Dependency name:`.
+2. Require an exact package version and a target Python version in `X.Y` or `X.Y.x` form before downloading. Never infer the target Python version from the current interpreter. When the package version is missing, the script runs `pip index versions --ignore-requires-python` against the configured index, shows the visible versions without filtering them against the current interpreter, and stops. When the target Python version is missing, it explains the accepted format and stops. Neither incomplete path downloads package files.
+3. From the repository root, run the downloader with the repository Python launcher. For discovery:
+
+   ```powershell
+   .\scripts\run-python.ps1 .\skills\engineering-operations\python-offline-dependency-packager\scripts\download_package.py
+   ```
+
+   For a complete download request:
 
    ```powershell
    .\scripts\run-python.ps1 .\skills\engineering-operations\python-offline-dependency-packager\scripts\download_package.py `
@@ -19,13 +26,13 @@ Use `scripts/download_package.py` to resolve one pinned package, download its fu
 
    `--python-version 3.11.x` is equivalent and is normalized to `3.11` before pip runs.
 
-3. Deliver the generated directory under `output/python-offline-dependency-packager/`. It contains:
+4. Deliver the generated directory under `output/python-offline-dependency-packager/`. It contains:
    - `packages/`: the pinned package and every dependency selected by pip.
    - `requirements.txt`: the exact requested root requirement.
    - `bundle-manifest.json`: target metadata plus SHA-256 hashes for downloaded files.
    - `install.ps1`: one-click PowerShell installer.
    - `install.sh`: one-click POSIX-shell installer.
-4. On the offline machine, extract or copy the complete directory, then run one installer:
+5. On the offline machine, extract or copy the complete directory, then run one installer:
 
    ```powershell
    powershell -ExecutionPolicy Bypass -File .\install.ps1
@@ -35,7 +42,7 @@ Use `scripts/download_package.py` to resolve one pinned package, download its fu
    sh ./install.sh
    ```
 
-5. Verify the package after installation with the target interpreter, using the import name supplied by the user when it differs from the distribution name.
+6. Verify the package after installation with the target interpreter, using the import name supplied by the user when it differs from the distribution name.
 
 ## Target Compatibility
 
