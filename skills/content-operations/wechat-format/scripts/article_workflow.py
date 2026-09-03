@@ -22,6 +22,10 @@ REPO_ROOT = SKILL_DIR.parents[2]
 WECHAT_COVER_DIR = SKILL_DIR.parent / "wechat-cover"
 DEFAULT_RECOMMEND = ["apple-code", "github", "bytedance", "sspai"]
 LOCAL_IMAGE_SUFFIXES = {".avif", ".bmp", ".gif", ".jpeg", ".jpg", ".png", ".svg", ".webp"}
+POLISH_STYLES = {
+    "professional": "专业文章",
+    "popular-science": "科普文章",
+}
 
 
 def parse_args() -> argparse.Namespace:
@@ -71,6 +75,11 @@ def parse_args() -> argparse.Namespace:
         help="Skip the terminology-polish step and start from the source article directly",
     )
     parser.add_argument(
+        "--polish-style",
+        choices=POLISH_STYLES,
+        help="Required writing style for AI polishing: professional or popular-science. No default is inferred.",
+    )
+    parser.add_argument(
         "--auto-accept-terminology",
         action="store_true",
         help="Do not pause for manual confirmation after terminology polishing",
@@ -118,6 +127,45 @@ def parse_args() -> argparse.Namespace:
         help="Reuse an existing workflow directory instead of archiving it first",
     )
     return parser.parse_args()
+
+
+def prompt_for_polish_style() -> str:
+    prompt = (
+        "Choose the article polishing style (no default):\n"
+        "1. professional - 专业文章：保留专业深度与术语，表达严谨克制\n"
+        "2. popular-science - 科普文章：降低理解门槛，解释必要术语\n"
+        "> "
+    )
+    aliases = {
+        "1": "professional",
+        "professional": "professional",
+        "专业": "professional",
+        "专业文章": "professional",
+        "2": "popular-science",
+        "popular-science": "popular-science",
+        "科普": "popular-science",
+        "科普文章": "popular-science",
+    }
+    while True:
+        choice = input(prompt).strip().lower()
+        selected = aliases.get(choice)
+        if selected:
+            return selected
+        print("A polishing style is required. Enter 1/professional or 2/popular-science.")
+
+
+def resolve_polish_style(args: argparse.Namespace) -> str | None:
+    needs_polishing = not (args.skip_ai or args.preserve_content or args.skip_terminology)
+    if not needs_polishing:
+        return None
+    if args.polish_style:
+        return args.polish_style
+    if args.non_interactive:
+        raise SystemExit(
+            "Article polishing style is required. Pass --polish-style professional or "
+            "--polish-style popular-science. No default is used."
+        )
+    return prompt_for_polish_style()
 
 
 def slugify(name: str) -> str:
@@ -233,10 +281,32 @@ Source article:
     return system_prompt, user_prompt
 
 
-def build_terminology_prompts(title: str, content: str) -> tuple[str, str]:
+def build_terminology_prompts(title: str, content: str, polish_style: str) -> tuple[str, str]:
+    if polish_style == "professional":
+        audience_guidance = (
+            "Write for readers with relevant domain knowledge. Preserve necessary technical depth and standard terminology. "
+            "Prefer precise, concise, restrained professional expression; do not dilute concepts into vague everyday language."
+        )
+        style_task = (
+            "Polish as a professional article: retain domain terminology and technical depth, while improving rigor, "
+            "clarity, consistency, and sentence flow."
+        )
+    elif polish_style == "popular-science":
+        audience_guidance = (
+            "Write for interested non-specialists. Reduce avoidable jargon and briefly explain unavoidable technical terms in context. "
+            "Prefer concrete, readable transitions, but do not add unsupported facts, examples, analogies, or conclusions."
+        )
+        style_task = (
+            "Polish as a popular-science article: lower the reading barrier, clarify necessary terms, and improve readability "
+            "without weakening factual accuracy or expanding the source."
+        )
+    else:
+        raise ValueError(f"Unsupported polish style: {polish_style}")
+
     system_prompt = (
         "You polish Chinese technical articles when terminology accuracy matters. "
         "Preserve the author's meaning, keep Markdown structure usable, and check terms in context. "
+        f"{audience_guidance} "
         "Return valid JSON only with keys: polished_markdown, terminology_changes, uncertain_terms. "
         "terminology_changes must be an array of objects with keys original, revised, reason. "
         "uncertain_terms must be an array of strings."
@@ -244,7 +314,7 @@ def build_terminology_prompts(title: str, content: str) -> tuple[str, str]:
     user_prompt = f"""Article title: {title}
 
 Task:
-1. Polish the article for terminology accuracy, consistency, and professional clarity.
+1. {style_task}
 2. Preserve headings, lists, links, code blocks, and the author's technical position.
 3. Keep changes conservative and traceable.
 4. Record every meaningful terminology or expression correction in terminology_changes.
@@ -617,6 +687,7 @@ def write_manifest(path: Path, payload: dict) -> None:
 
 def main() -> None:
     args = parse_args()
+    polish_style = resolve_polish_style(args)
     config = load_config(SKILL_DIR)
 
     input_path = Path(args.input).expanduser().resolve()
@@ -676,8 +747,8 @@ def main() -> None:
         polished_content = original_content
     else:
         ai_config = require_ai_config(config)
-        system_prompt, user_prompt = build_terminology_prompts(title, original_content)
-        print("Generating terminology-polished Markdown...")
+        system_prompt, user_prompt = build_terminology_prompts(title, original_content, polish_style)
+        print(f"Generating {POLISH_STYLES[polish_style]} terminology-polished Markdown...")
         terminology_result = parse_terminology_payload(
             call_chat_completion(ai_config, system_prompt, user_prompt)
         )
@@ -793,6 +864,7 @@ def main() -> None:
         "title": title,
         "input": str(input_path),
         "preserve_content": preserve_content,
+        "polish_style": polish_style,
         "workflow_root": str(workflow_root),
         "source_copy": str(source_copy),
         "source_notes_input": str(source_notes_input) if source_notes_input else None,

@@ -9,6 +9,8 @@ import sys
 import tempfile
 import unittest
 from pathlib import Path
+from types import SimpleNamespace
+from unittest import mock
 
 
 SKILL_DIR = Path(__file__).resolve().parents[1]
@@ -18,6 +20,55 @@ SPEC = importlib.util.spec_from_file_location("wechat_article_workflow", SCRIPT_
 assert SPEC and SPEC.loader
 WORKFLOW = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(WORKFLOW)
+
+
+class PolishStyleTests(unittest.TestCase):
+    def test_non_interactive_polishing_requires_explicit_style(self) -> None:
+        args = SimpleNamespace(
+            skip_ai=False,
+            preserve_content=False,
+            skip_terminology=False,
+            polish_style=None,
+            non_interactive=True,
+        )
+
+        with self.assertRaisesRegex(SystemExit, "No default is used"):
+            WORKFLOW.resolve_polish_style(args)
+
+    def test_interactive_prompt_rejects_blank_until_user_selects(self) -> None:
+        args = SimpleNamespace(
+            skip_ai=False,
+            preserve_content=False,
+            skip_terminology=False,
+            polish_style=None,
+            non_interactive=False,
+        )
+
+        with mock.patch("builtins.input", side_effect=["", "invalid", "2"]) as mocked_input:
+            selected = WORKFLOW.resolve_polish_style(args)
+
+        self.assertEqual(selected, "popular-science")
+        self.assertEqual(mocked_input.call_count, 3)
+
+    def test_skipped_polishing_does_not_require_style(self) -> None:
+        for skipped in ("skip_ai", "preserve_content", "skip_terminology"):
+            values = {
+                "skip_ai": False,
+                "preserve_content": False,
+                "skip_terminology": False,
+                "polish_style": None,
+                "non_interactive": True,
+            }
+            values[skipped] = True
+            self.assertIsNone(WORKFLOW.resolve_polish_style(SimpleNamespace(**values)))
+
+    def test_polish_styles_produce_distinct_audience_guidance(self) -> None:
+        professional = WORKFLOW.build_terminology_prompts("Title", "Body", "professional")
+        popular_science = WORKFLOW.build_terminology_prompts("Title", "Body", "popular-science")
+
+        self.assertIn("domain knowledge", professional[0])
+        self.assertIn("non-specialists", popular_science[0])
+        self.assertNotEqual(professional, popular_science)
 
 
 class StageMarkdownAssetsTests(unittest.TestCase):

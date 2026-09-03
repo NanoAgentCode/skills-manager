@@ -89,7 +89,23 @@ $Python = Join-Path $env:USERPROFILE ".cache\codex-runtimes\codex-primary-runtim
 
 ### 完整工作流
 
-#### 第 0 步：依赖检测
+#### 第 0 步：先选择简单润色类型（强制门禁）
+
+只要本次流程会执行文章简单润色，就必须先让用户二选一：
+
+1. **专业文章**（`professional`）：面向具备相关背景的读者，保留专业深度和标准术语，表达严谨、简洁、克制。
+2. **科普文章**（`popular-science`）：面向感兴趣的非专业读者，降低术语密度，对无法避免的术语做简短语境解释，提升可读性但不扩写事实。
+
+这是一个无默认值的阻塞选择：
+
+- 不根据文章题材、用户身份或历史偏好自行推断。
+- 不把任一选项标为默认或推荐项。
+- 用户未明确选择时，不读取正文、不检测依赖、不创建输出目录，也不进入结构化、增强、选主题、封面或发布步骤；只询问这一个选择并等待回复。
+- 用户选择后，把结果通过 `--polish-style professional` 或 `--polish-style popular-science` 传给 `article_workflow.py`。
+- 如果使用 `--non-interactive`，必须同时显式提供 `--polish-style`，否则脚本立即失败。
+- `--skip-ai`、`--preserve-content` 或 `--skip-terminology` 明确跳过简单润色时，不要求此选择。
+
+#### 第 0.5 步：依赖检测
 
 首次使用，或用户环境不确定时，先检测依赖：
 
@@ -165,26 +181,28 @@ python3 {baseDir}/scripts/check_dependencies.py --install
 
 PowerShell：
 
+以下命令以用户已选择“专业文章”为例；选择“科普文章”时改为 `--polish-style popular-science`，不得把示例值当作默认值。
+
 ```powershell
 $Python = Join-Path $env:USERPROFILE ".cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe"
 $env:PYTHONIOENCODING = 'utf-8'
-& $Python {baseDir}/scripts/article_workflow.py --input "文章路径.md" --bytedance-preview --cover
+& $Python {baseDir}/scripts/article_workflow.py --input "文章路径.md" --polish-style professional --bytedance-preview --cover
 ```
 
 Portable shell：
 
 ```bash
-PYTHONIOENCODING=utf-8 python3 {baseDir}/scripts/article_workflow.py --input "文章路径.md" --bytedance-preview --cover
+PYTHONIOENCODING=utf-8 python3 {baseDir}/scripts/article_workflow.py --input "文章路径.md" --polish-style professional --bytedance-preview --cover
 ```
 
 常用变体：
 
 ```powershell
 # 已知主题，跳过交互式主题选择
-& $Python {baseDir}/scripts/article_workflow.py --input "文章路径.md" --theme apple-code
+& $Python {baseDir}/scripts/article_workflow.py --input "文章路径.md" --polish-style professional --theme apple-code
 
 # 不打开浏览器窗口，适合远程或批处理环境
-& $Python {baseDir}/scripts/article_workflow.py --input "文章路径.md" --theme apple-code --no-open
+& $Python {baseDir}/scripts/article_workflow.py --input "文章路径.md" --polish-style professional --theme apple-code --no-open
 
 # 没有 ai.url / ai.api_key / ai.model 时，只运行确定性的后续排版步骤
 & $Python {baseDir}/scripts/article_workflow.py --input "文章路径.md" --skip-ai
@@ -450,6 +468,7 @@ python3 {baseDir}/scripts/publish.py \
 
 **article_workflow.py**：
 - `--input` / `-i`：Markdown 文件路径（必须）
+- `--polish-style`：简单润色类型；执行 AI 润色时必须由用户显式选择 `professional`（专业文章）或 `popular-science`（科普文章），无默认值
 - `--output-root` / `-o`：workflow 输出根目录（默认 `{repoRoot}/output/wechat-format/article-workflows`）
 - `--theme`：最终主题 ID；省略时打开 gallery 并在终端提示选择
 - `--recommend`：gallery 中高亮推荐的主题 ID 列表，默认推荐技术产品主题
