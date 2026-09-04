@@ -13,6 +13,8 @@ Use this group when the request is about turning media, notes, drafts, or archiv
 - `skills/content-operations/wechat-format/SKILL.md`: WeChat official-account packaging through `scripts/article_workflow.py`, including upstream source-note and visual-plan handoff, local asset staging, terminology/structure processing, a 26-theme gallery, themed outputs, optional covers, and draft publishing.
 - `skills/content-operations/wechat-history-article-archive/SKILL.md`: authorized historical WeChat article backup from lawful `mp.weixin.qq.com/s?...` URL sources, with Markdown, metadata, indexes, and local images by default.
 - `skills/content-operations/wechat-cover/SKILL.md`: cover-image generation for WeChat articles; installed alongside `wechat-format` and reuses its image-generation script.
+- `skills/content-operations/office-cli-skill/SKILL.md`: structured DOCX, XLSX, and PPTX creation, inspection, validation, proofreading, and editing with an installed `officecli` executable, including template-based PowerPoint reconstruction guidance.
+- `skills/content-operations/gongwen-format-pro/SKILL.md`: Markdown, TXT, or DOCX conversion into Chinese party-and-government official-document Word layouts based on the bundled GB/T 9704-2012 formatting summary.
 
 ## Knowledge Structuring And Visualization
 
