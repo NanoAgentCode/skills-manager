@@ -4,6 +4,7 @@ import base64
 import importlib.util
 import json
 import os
+import re
 import subprocess
 import sys
 import tempfile
@@ -20,6 +21,21 @@ SPEC = importlib.util.spec_from_file_location("wechat_article_workflow", SCRIPT_
 assert SPEC and SPEC.loader
 WORKFLOW = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(WORKFLOW)
+
+FORMAT_SPEC = importlib.util.spec_from_file_location("wechat_format", SCRIPT_DIR / "format.py")
+assert FORMAT_SPEC and FORMAT_SPEC.loader
+FORMAT = importlib.util.module_from_spec(FORMAT_SPEC)
+FORMAT_SPEC.loader.exec_module(FORMAT)
+
+
+def contrast_ratio(foreground: str, background: str) -> float:
+    def luminance(color: str) -> float:
+        channels = [int(color[index:index + 2], 16) / 255 for index in (1, 3, 5)]
+        linear = [value / 12.92 if value <= 0.04045 else ((value + 0.055) / 1.055) ** 2.4 for value in channels]
+        return 0.2126 * linear[0] + 0.7152 * linear[1] + 0.0722 * linear[2]
+
+    lighter, darker = sorted((luminance(foreground), luminance(background)), reverse=True)
+    return (lighter + 0.05) / (darker + 0.05)
 
 
 class PolishStyleTests(unittest.TestCase):
@@ -69,6 +85,33 @@ class PolishStyleTests(unittest.TestCase):
         self.assertIn("domain knowledge", professional[0])
         self.assertIn("non-specialists", popular_science[0])
         self.assertNotEqual(professional, popular_science)
+
+
+class WechatCompatibilityTests(unittest.TestCase):
+    def render_bytedance_sample(self) -> str:
+        markdown = "# Title\n\nBody.\n\n![Diagram](https://example.com/diagram.png)\n\n*Caption.*\n"
+        html = FORMAT.md_to_html(markdown)
+        html = FORMAT.inject_inline_styles(html, FORMAT.load_theme("bytedance"))
+        return FORMAT.convert_image_captions(html)
+
+    def test_bytedance_render_has_no_gradient_backgrounds(self) -> None:
+        self.assertNotIn("gradient(", self.render_bytedance_sample())
+
+    def test_bytedance_body_accents_meet_normal_text_contrast(self) -> None:
+        theme = FORMAT.load_theme("bytedance")
+        for style_name in ("strong", "em", "a"):
+            with self.subTest(style=style_name):
+                color = theme["styles"][style_name]["color"]
+                self.assertGreaterEqual(contrast_ratio(color, "#ffffff"), 4.5)
+
+    def test_styled_image_caption_is_centered_without_body_indent(self) -> None:
+        rendered = self.render_bytedance_sample()
+        caption = re.search(r'<p style="([^"]+)"[^>]*>Caption\.</p>', rendered)
+
+        self.assertIsNotNone(caption)
+        self.assertIn("text-align:center", caption.group(1))
+        self.assertNotIn("text-indent", caption.group(1))
+        self.assertIn('data-darkmode-color="#a0a0a0"', caption.group(0))
 
 
 class StageMarkdownAssetsTests(unittest.TestCase):

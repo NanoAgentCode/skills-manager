@@ -1489,17 +1489,21 @@ def generate_preview(article_html: str, footnote_html: str, theme: dict,
 def convert_image_captions(html: str) -> str:
     """将图片后紧跟的斜体段落转为图说样式"""
     caption_style = "text-align:center;font-size:13px;color:#999999;margin-top:-8px;margin-bottom:16px;font-style:normal"
-    # 匹配 img wrapper (</section>) 后面紧跟的 <p><em>xxx</em></p>
+    caption_replacement = rf'\1<p style="{caption_style}" data-darkmode-color="#a0a0a0">\2</p>'
+    # 样式注入在图说转换之前执行，因此 em 可能已经带有 style 和 darkmode 属性。
+    # 匹配 img wrapper (</section>) 后面紧跟的斜体图说。
     html = re.sub(
-        r'(</section>\s*)<p[^>]*><em>(.*?)</em></p>',
-        rf'\1<p style="{caption_style}">\2</p>',
-        html
+        r'(</section>\s*)<p[^>]*><em[^>]*>(.*?)</em></p>',
+        caption_replacement,
+        html,
+        flags=re.DOTALL,
     )
-    # 同时匹配 </p>（CDN/外链图片）后面的斜体图说
+    # 同时匹配 </p>（CDN/外链图片）后面的斜体图说。
     html = re.sub(
-        r'(</p>\s*)<p[^>]*><em>(.*?)</em></p>',
-        rf'\1<p style="{caption_style}">\2</p>',
-        html
+        r'(</p>\s*)<p[^>]*><em[^>]*>(.*?)</em></p>',
+        caption_replacement,
+        html,
+        flags=re.DOTALL,
     )
     return html
 
