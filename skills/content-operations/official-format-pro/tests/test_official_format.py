@@ -9,7 +9,7 @@ import unittest
 from pathlib import Path
 
 
-SCRIPT = Path(__file__).resolve().parents[1] / "scripts" / "gongwen_format.py"
+SCRIPT = Path(__file__).resolve().parents[1] / "scripts" / "official_format.py"
 
 
 def find_officecli():

@@ -4,9 +4,9 @@
 支持多种输入格式：Markdown(.md)、纯文本(.txt)、Word(.docx)、直接文本
 
 用法:
-    python3 gongwen_format.py --title "标题" --input content.md --output output.docx
-    python3 gongwen_format.py --title "标题" --input content.txt --output output.docx --author "XX镇人民政府" --date "2026-04-16"
-    python3 gongwen_format.py --title "标题" --input content.txt --output output.docx --print-author "XX镇人民政府办公室" --print-date "2026-04-17"
+    python3 official_format.py --title "标题" --input content.md --output output.docx
+    python3 official_format.py --title "标题" --input content.txt --output output.docx --author "XX镇人民政府" --date "2026-04-16"
+    python3 official_format.py --title "标题" --input content.txt --output output.docx --print-author "XX镇人民政府办公室" --print-date "2026-04-17"
 """
 
 import re

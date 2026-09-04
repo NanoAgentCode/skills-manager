@@ -43,7 +43,7 @@
 - 技术文章视觉策划：[`skills/content-operations/technical-article-visual-director`](skills/content-operations/technical-article-visual-director/SKILL.md)
 - 微信公众号排版：[`skills/content-operations/wechat-format`](skills/content-operations/wechat-format/SKILL.md)
 - Office 文档 CLI：[`skills/content-operations/office-cli-skill`](skills/content-operations/office-cli-skill/SKILL.md)
-- 党政机关公文排版：[`skills/content-operations/gongwen-format-pro`](skills/content-operations/gongwen-format-pro/SKILL.md)
+- 党政机关公文排版：[`skills/content-operations/official-format-pro`](skills/content-operations/official-format-pro/SKILL.md)
 - Obsidian 外部记忆：[`skills/knowledge-visualization/obsidian-memory`](skills/knowledge-visualization/obsidian-memory/SKILL.md)，支持多关键词 All/Any 匹配与相关度排序
 - 技术认知框架：[`skills/knowledge-visualization/technical-cognition-framework`](skills/knowledge-visualization/technical-cognition-framework/SKILL.md)
 - Dify Console API：[`skills/ai-application-delivery/dify-console-admin-api`](skills/ai-application-delivery/dify-console-admin-api/SKILL.md)

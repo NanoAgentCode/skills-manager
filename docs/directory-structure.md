@@ -12,7 +12,7 @@ skills/
     technical-source-to-public-article/
     video-transcriber/
     office-cli-skill/
-    gongwen-format-pro/
+    official-format-pro/
     wechat-cover/
     wechat-format/
     wechat-history-article-archive/

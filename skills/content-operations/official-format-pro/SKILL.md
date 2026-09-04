@@ -1,5 +1,5 @@
 ---
-name: gongwen-format-pro
+name: official-format-pro
 description: Convert Markdown, plain text, or DOCX content into a Chinese party-and-government official-document DOCX following the layout rules summarized from GB/T 9704-2012. Use for 公文排版, 红头文件, 发文字号, 版记, 请示, 通知, 报告, 函, 会议纪要, or other requests that explicitly require formal Chinese government-document formatting; do not trigger for generic Word creation without that formatting requirement.
 ---
 
@@ -20,10 +20,10 @@ Read [references/gb9704-2012.md](references/gb9704-2012.md) when choosing page, 
 3. Generate a DOCX with the repository launcher:
 
    ```powershell
-   .\scripts\run-python.ps1 .\skills\content-operations\gongwen-format-pro\scripts\gongwen_format.py `
+   .\scripts\run-python.ps1 .\skills\content-operations\official-format-pro\scripts\official_format.py `
      --title "公文标题" `
-     --input .\output\gongwen-format-pro\content.md `
-     --output .\output\gongwen-format-pro\output.docx
+     --input .\output\official-format-pro\content.md `
+     --output .\output\official-format-pro\output.docx
    ```
 
 4. Add only user-confirmed optional flags. Run `--help` for the complete parameter list.
@@ -35,4 +35,4 @@ PDF output additionally requires LibreOffice. If it is unavailable, deliver the 
 
 - Automatic formatting does not establish a document's official status, authenticity, secrecy classification, or approval.
 - Font fallback can change pagination. Visually verify on the target system, especially when 方正小标宋简体, 仿宋, 楷体, or 黑体 is unavailable.
-- Keep generated artifacts under `output/gongwen-format-pro/` unless the user gives another path.
+- Keep generated artifacts under `output/official-format-pro/` unless the user gives another path.

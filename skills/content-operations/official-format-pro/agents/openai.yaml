@@ -1,0 +1,4 @@
+interface:
+  display_name: "公文排版 Pro"
+  short_description: "按 GB/T 9704-2012 生成正式公文 Word"
+  default_prompt: "Use $official-format-pro to format this content as a Chinese official-document Word file, using only the official elements I provide and validating the output before delivery."
