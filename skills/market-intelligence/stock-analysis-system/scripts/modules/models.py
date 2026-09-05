@@ -67,6 +67,8 @@ class StockReport(BaseModel):
     data_end_date: str = Field(..., description="实际数据结束日期")
     latest_data_date: str = Field(..., description="最新行情数据日期")
     data_freshness_days: int = Field(..., description="最新行情数据距分析日的天数")
+    data_source: str = Field(..., description="实际行情来源或回退路径")
+    data_quality_note: Optional[str] = Field(None, description="数据口径或回退限制")
 
 
 class AnalysisResponse(BaseModel):

@@ -57,6 +57,8 @@ The script catches mechanical failures. Always add a short judgment pass:
 - Configuration examples should be safe to commit. Real tokens, passwords, API keys, local private endpoints, and generated outputs should stay ignored.
 - Repository catalog updates should describe user-facing capability, not internal implementation trivia.
 
+For a release-sized change, also run the small request-to-skill acceptance set in [references/acceptance-scenarios.md](references/acceptance-scenarios.md). It checks that ordinary user wording routes to the intended skill and that its stated output contract is observable; this complements structural linting rather than replacing it.
+
 ## Script Behavior
 
 `scripts/lint_skill.py` checks:

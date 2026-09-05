@@ -10,6 +10,22 @@ from pathlib import Path
 from typing import Any
 
 
+REQUIRED_SECTIONS = ("executive_summary", "indices", "sectors", "core_factors", "ai_capex_analysis", "geopolitics_dollar_gold", "us_interpretation", "hong_kong_impact", "a_share_impact", "scenarios", "sources")
+
+
+def validate_report_data(data: Any) -> dict[str, Any]:
+    if not isinstance(data, dict):
+        raise ValueError("Report input must be a JSON object.")
+    missing = [field for field in ("title", "session_date", *REQUIRED_SECTIONS) if not data.get(field)]
+    if missing:
+        raise ValueError(f"Report is incomplete; missing required data: {', '.join(missing)}")
+    if not isinstance(data["indices"], list) or not {"Nasdaq Composite", "Nasdaq 100"}.issubset({str(item.get("name")) for item in data["indices"] if isinstance(item, dict)}):
+        raise ValueError("Report indices must include Nasdaq Composite and Nasdaq 100.")
+    if not all(isinstance(item, dict) and item.get("url") and item.get("used_for") for item in data["sources"]):
+        raise ValueError("Each report source must include url and used_for.")
+    return data
+
+
 def esc(value: Any) -> str:
     if value is None:
         return ""
@@ -657,7 +673,7 @@ def main() -> int:
 
     input_path = Path(args.input)
     output_path = Path(args.output)
-    data = json.loads(input_path.read_text(encoding="utf-8"))
+    data = validate_report_data(json.loads(input_path.read_text(encoding="utf-8")))
     output_path.parent.mkdir(parents=True, exist_ok=True)
     output_path.write_text(render_report(data), encoding="utf-8")
     print(f"Wrote {output_path}")

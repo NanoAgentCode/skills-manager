@@ -61,6 +61,7 @@ Produce a current, citation-backed Chinese investment research report from overn
    - Build a JSON payload that follows `references/report-schema.md`.
    - Run `scripts/render_investment_bank_html.py` to create the HTML page.
    - If the user specified an output path, use it. Otherwise write the JSON payload and rendered HTML under the repository root `output/us-sector-index-impact-report/`, for example `output/us-sector-index-impact-report/us-sector-impact-report-YYYY-MM-DD.html`.
+   - The renderer rejects incomplete reports: title, session date, both Nasdaq indices, every required analysis section, and traceable sources are mandatory. Treat rejected input as an unfinished research draft, not a deliverable.
 
 ## Data Standards
 

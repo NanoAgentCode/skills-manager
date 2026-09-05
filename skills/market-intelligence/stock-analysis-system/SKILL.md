@@ -97,7 +97,7 @@ Historical period example:
 7. Interpret the response.
    - Use `report.score`, `report.recommendation`, `report.price`, `report.price_change`, `report.ma_trend`, `report.rsi`, `report.macd_signal`, and `report.volume_status` as the main summary.
    - Use `technical_summary.trend`, `technical_summary.volatility`, `technical_summary.volume_trend`, and `technical_summary.rsi_level` for a compact indicator read.
-   - Use `report.data_points`, `report.data_start_date`, `report.data_end_date`, `report.latest_data_date`, and `report.data_freshness_days` to judge data quality.
+- Use `report.data_points`, `report.data_start_date`, `report.data_end_date`, `report.latest_data_date`, `report.data_freshness_days`, `report.data_source`, and `report.data_quality_note` to judge data quality and whether a NAV fallback was used.
    - Use `recent_data` only as supporting evidence; do not paste all rows unless the user asks.
 
 ## Data Standards

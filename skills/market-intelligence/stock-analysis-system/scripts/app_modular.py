@@ -105,7 +105,9 @@ async def analyze_stock(request: StockAnalysisRequest, auth_token: str = Depends
             'data_start_date': pd.to_datetime(data_start).strftime('%Y-%m-%d'),
             'data_end_date': pd.to_datetime(data_end).strftime('%Y-%m-%d'),
             'latest_data_date': latest_data_date.strftime('%Y-%m-%d'),
-            'data_freshness_days': data_freshness_days
+            'data_freshness_days': data_freshness_days,
+            'data_source': stock_data.attrs.get('data_source', 'AKShare'),
+            'data_quality_note': stock_data.attrs.get('data_quality_note')
         }
         
         # 获取近14天交易数据

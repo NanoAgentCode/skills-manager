@@ -28,12 +28,10 @@ description: 根据用户需求设计并生成 Dify 应用 DSL，创建或更新
 
 ## 参数收集
 
-开始执行前确认这些参数：
+先确认操作类型：创建应用、更新应用、只生成 DSL。
 
-- `DIFY_BASE_URL`：例如 `http://127.0.0.1:5001`。
-- `ADMIN_API_KEY`：服务端配置的 admin key。
-- `WORKSPACE_ID`：目标 workspace 的 `tenants.id`。
-- 操作类型：创建应用、更新应用、只生成 DSL。
+- **只生成 DSL**：只收集需求、应用模式、目标 Dify 版本或参考 DSL、输出路径；不要求 Dify 地址、workspace 或管理员密钥。
+- **创建或更新应用**：再收集 `DIFY_BASE_URL`、`ADMIN_API_KEY` 与 `WORKSPACE_ID`，并遵循 Console Admin API skill。
 
 按操作类型继续确认：
 
@@ -71,6 +69,8 @@ description: 根据用户需求设计并生成 Dify 应用 DSL，创建或更新
 5. 重新导出该应用 DSL，验证远端内容包含关键节点、变量和输出。
 
 ## 验证要求
+
+只生成 DSL 时，先运行 `quick_validate.py --input <dsl路径>`。它会检查节点/edge ID、连接端点、edge 的源/目标类型、必填 handle，以及变量选择器引用；这项静态检查不等同于远端导入或运行验证。
 
 更新完成后至少验证：
 

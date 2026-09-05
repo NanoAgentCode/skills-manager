@@ -63,6 +63,8 @@ class StockService:
             
             # 数据预处理
             df = self._preprocess_data(df, market_type)
+            df.attrs.setdefault('data_source', f'AKShare {market_type} OHLCV')
+            df.attrs.setdefault('data_quality_note', None)
             
             # 验证数据完整性
             self._validate_data_integrity(df)
@@ -277,6 +279,8 @@ class StockService:
         df['high'] = df['close']
         df['low'] = df['close']
         df['volume'] = 0
+        df.attrs['data_source'] = 'AKShare open-fund NAV fallback'
+        df.attrs['data_quality_note'] = 'Fund NAV was mapped to OHLC; volume is synthetic zero and volume-based signals are not comparable.'
 
         logger.info(f"净值走势接口成功获取基金数据 {stock_code}，共 {len(df)} 条记录")
         return df[['date', 'open', 'close', 'high', 'low', 'volume']]
