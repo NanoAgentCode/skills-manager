@@ -32,7 +32,7 @@ For an unfamiliar relational database, discover structure in this order: schemas
 
 ## Safety Rules
 
-- Default to read-only SQL. The script blocks write statements unless `--allow-write` is explicitly passed.
+- Default to read-only SQL. The script blocks write statements, multi-statements, `SELECT ... INTO`, and state-changing SQLite pragmas unless `--allow-write` is explicitly passed. It rolls back read-only queries and opens a read-only transaction where the server supports one; use a database account with only the permissions it needs, especially for SQL Server.
 - Do not print passwords, tokens, DSNs with credentials, or full config contents in final answers.
 - Prefer credential environment-variable references over literal secrets in config.
 - Ask before running potentially expensive queries, broad table scans, or write operations.

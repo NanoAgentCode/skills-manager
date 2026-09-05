@@ -30,7 +30,7 @@ READ_ONLY_PREFIXES = (
 )
 
 BLOCKED_WORDS = re.compile(
-    r"\b(insert|update|delete|drop|alter|create|truncate|merge|grant|revoke|vacuum|replace)\b",
+    r"\b(insert|update|delete|drop|alter|create|truncate|merge|grant|revoke|vacuum|replace|attach|detach|load_extension|commit)\b",
     re.IGNORECASE,
 )
 
@@ -277,10 +277,18 @@ def assert_query_allowed(sql: str, allow_write: bool) -> None:
     stripped = strip_sql_comments(sql).strip().lower()
     if not stripped:
         raise SystemExit("SQL is empty.")
-    if not stripped.startswith(READ_ONLY_PREFIXES):
+    # A terminal semicolon is harmless, but accepting multiple statements turns a
+    # read-only prefix check into a write primitive. Drivers differ in whether
+    # they accept multiple statements, so reject them before connecting.
+    statement = stripped[:-1].rstrip() if stripped.endswith(";") else stripped
+    if ";" in statement:
+        raise SystemExit("Blocked multiple SQL statements. Submit one read-only statement at a time.")
+    if not statement.startswith(READ_ONLY_PREFIXES):
         raise SystemExit("Blocked non-read-only SQL. Pass --allow-write only after explicit user approval.")
-    if BLOCKED_WORDS.search(stripped):
+    if BLOCKED_WORDS.search(statement) or re.search(r"\bselect\b[\s\S]*\binto\b", statement):
         raise SystemExit("Blocked SQL containing write or DDL keyword. Pass --allow-write only after explicit user approval.")
+    if statement.startswith("pragma") and ("=" in statement or re.search(r"\b(writable_schema|journal_mode|foreign_keys)\b", statement)):
+        raise SystemExit("Blocked state-changing PRAGMA. Pass --allow-write only after explicit user approval.")
 
 
 def strip_sql_comments(sql: str) -> str:
@@ -524,18 +532,45 @@ def build_oracle_dsn(driver_module, config: dict[str, Any]) -> str:
     raise SystemExit("Oracle config requires 'service_name', 'sid', or 'dsn'.")
 
 
-def execute_query(conn, sql: str, params: dict[str, Any] | list[Any] | None, limit: int | None):
+def execute_query(conn, sql: str, params: dict[str, Any] | list[Any] | None, limit: int | None, allow_write: bool = False):
     cur = conn.cursor()
     cur.execute(sql, params or {})
     if cur.description is None:
-        try:
+        if allow_write:
             conn.commit()
-        except Exception:
-            pass
+        else:
+            conn.rollback()
         return [], []
     columns = [col[0] for col in cur.description]
     rows = cur.fetchmany(limit) if limit else cur.fetchall()
+    if not allow_write:
+        try:
+            conn.rollback()
+        except Exception:
+            pass
     return columns, normalize_rows(rows, columns)
+
+
+def begin_read_only_session(conn, dialect: str, enabled: bool) -> None:
+    """Ask engines that support it to enforce a read-only transaction server-side."""
+    if not enabled or dialect in {"sqlite", "sqlserver"}:
+        return
+    statements = {
+        "postgres": "SET TRANSACTION READ ONLY",
+        "mysql": "SET SESSION TRANSACTION READ ONLY",
+        "oracle": "SET TRANSACTION READ ONLY",
+    }
+    statement = statements.get(dialect)
+    if not statement:
+        return
+    cursor = conn.cursor()
+    try:
+        cursor.execute(statement)
+    finally:
+        try:
+            cursor.close()
+        except Exception:
+            pass
 
 
 def execute_explain(
@@ -820,7 +855,12 @@ def main() -> int:
         params = parse_params(args.params)
         conn = connect(config)
         try:
-            columns, rows = execute_explain(conn, normalized_db_type(config), sql, params, args.limit)
+            dialect = normalized_db_type(config)
+            # Oracle EXPLAIN PLAN writes a session-local PLAN_TABLE entry and
+            # rolls it back in execute_explain, so a read-only transaction would
+            # make that supported inspection path fail.
+            begin_read_only_session(conn, dialect, dialect != "oracle")
+            columns, rows = execute_explain(conn, dialect, sql, params, args.limit)
             write_output(rows, columns, args)
         finally:
             conn.close()
@@ -831,7 +871,8 @@ def main() -> int:
     params = parse_params(args.params)
     conn = connect(config)
     try:
-        columns, rows = execute_query(conn, sql, params, args.limit)
+        begin_read_only_session(conn, normalized_db_type(config), not args.allow_write)
+        columns, rows = execute_query(conn, sql, params, args.limit, allow_write=args.allow_write)
         write_output(rows, columns, args)
     finally:
         conn.close()

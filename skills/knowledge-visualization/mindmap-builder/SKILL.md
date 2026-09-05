@@ -37,7 +37,7 @@ Prefer offline local HTML generation for desktop/client use. The skill bundles m
    - Save generated Markdown and HTML under the repository root `output/mindmap-builder/` by default, unless the user specifies another path.
    - Save the Markdown next to the desired output when useful for iteration.
    - Prefer `scripts/render_offline_mindmap.ps1 -InputMarkdown input.md -OutputHtml output/mindmap-builder/output.html`.
-   - This script runs `markmap`, copies bundled assets to `markmap-assets/`, and replaces CDN URLs with local paths.
+   - This script runs `markmap`, copies bundled assets to `markmap-assets/`, replaces compatible CDN URLs with local paths, and fails if external asset URLs remain.
    - Give the user the local HTML path and note that the sibling `markmap-assets/` folder must stay with it.
 6. Verify outputs:
    - Confirm the `.html` file exists and has non-trivial size.

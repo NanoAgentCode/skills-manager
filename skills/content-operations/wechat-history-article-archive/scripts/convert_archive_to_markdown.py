@@ -48,6 +48,7 @@ def main() -> int:
     archive_dir = Path(args.archive_dir)
     records = json.loads((archive_dir / "index.json").read_text(encoding="utf-8"))
     converted = 0
+    invalid = 0
 
     for record in records:
         if record.get("status") != "ok":
@@ -59,13 +60,18 @@ def main() -> int:
             continue
 
         metadata = json.loads(meta_path.read_text(encoding="utf-8"))
-        metadata = export_article_markdown(
-            article_dir=article_dir,
-            html_text=html_path.read_text(encoding="utf-8"),
-            metadata=metadata,
-            user_agent=args.user_agent,
-            timeout=args.timeout,
-        )
+        try:
+            metadata = export_article_markdown(
+                article_dir=article_dir,
+                html_text=html_path.read_text(encoding="utf-8"),
+                metadata=metadata,
+                user_agent=args.user_agent,
+                timeout=args.timeout,
+            )
+        except ValueError as exc:
+            record.update({"status": "invalid_article", "error": str(exc)})
+            invalid += 1
+            continue
         meta_path.write_text(json.dumps(metadata, ensure_ascii=False, indent=2), encoding="utf-8")
         if args.delete_html and html_path.exists():
             html_path.unlink()
@@ -82,8 +88,8 @@ def main() -> int:
 
     (archive_dir / "index.json").write_text(json.dumps(records, ensure_ascii=False, indent=2), encoding="utf-8")
     update_index_csv(archive_dir, records)
-    print(f"Converted {converted} article(s) into Markdown under {archive_dir}")
-    return 0
+    print(f"Converted {converted} article(s) into Markdown under {archive_dir}; {invalid} invalid article(s)")
+    return 1 if invalid else 0
 
 
 if __name__ == "__main__":

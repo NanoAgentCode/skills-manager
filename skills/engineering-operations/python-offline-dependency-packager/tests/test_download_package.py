@@ -63,7 +63,7 @@ class DownloadPackageTests(unittest.TestCase):
             self.assertEqual(manifest["target"]["requested_python_version"], "3.11.x")
             self.assertEqual(manifest["target"]["python_version"], "3.11")
 
-    def test_allow_source_removes_wheel_only_flag(self) -> None:
+    def test_allow_source_is_rejected_for_cross_target_bundle(self) -> None:
         args = download_package.parse_args(
             [
                 "--package",
@@ -75,8 +75,9 @@ class DownloadPackageTests(unittest.TestCase):
                 "--allow-source",
             ]
         )
-        command = download_package.build_download_command(args, "demo==1.0", Path("packages"))
-        self.assertNotIn("--only-binary=:all:", command)
+        with self.assertRaises(SystemExit) as error:
+            download_package.build_download_command(args, "demo==1.0", Path("packages"))
+        self.assertIn("matching target environment", str(error.exception))
 
     def test_rejects_unpinned_or_unsafe_input(self) -> None:
         with self.assertRaises(ValueError):

@@ -107,7 +107,7 @@ def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
     parser.add_argument(
         "--allow-source",
         action="store_true",
-        help="Allow source distributions; the offline target may need build tools",
+        help="Deprecated: rejected for reproducible cross-target bundles; build wheels in the target environment first",
     )
     return parser.parse_args(argv)
 
@@ -193,6 +193,12 @@ def sha256_file(path: Path) -> str:
 
 def build_download_command(args: argparse.Namespace, requirement: str, package_dir: Path) -> list[str]:
     python_version = normalized_python_version(args.python_version)
+    if args.allow_source:
+        raise SystemExit(
+            "--allow-source is not supported for reproducible cross-target bundles. "
+            "pip requires --only-binary=:all: when target Python/platform selectors are used. "
+            "Build source distributions in a matching target environment, then package the resulting wheels."
+        )
     command = [
         sys.executable,
         "-m",
@@ -202,8 +208,7 @@ def build_download_command(args: argparse.Namespace, requirement: str, package_d
         "--dest",
         str(package_dir),
     ]
-    if not args.allow_source:
-        command.append("--only-binary=:all:")
+    command.append("--only-binary=:all:")
     for flag, value in (
         ("--platform", args.platform),
         ("--python-version", python_version),

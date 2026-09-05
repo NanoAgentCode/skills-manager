@@ -29,6 +29,8 @@ Read [references/gb9704-2012.md](references/gb9704-2012.md) when choosing page, 
 4. Add only user-confirmed optional flags. Run `--help` for the complete parameter list.
 5. Open or render the result with an available Word-document workflow and check content completeness, hierarchy, page layout, fonts/fallbacks, page numbers, and requested official elements before delivery.
 
+For DOCX input, paragraphs and tables are preserved in source order. Tables are converted into clearly marked text rows for formal-document review; review the result when a source contains complex merged cells, images, charts, or text boxes.
+
 PDF output additionally requires LibreOffice. If it is unavailable, deliver the DOCX and clearly report that PDF conversion was not completed.
 
 ## Important limits

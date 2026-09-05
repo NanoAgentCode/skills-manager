@@ -19,6 +19,7 @@ STYLE_TAG_RE = re.compile(r"<style\b[^>]*>.*?</style>", re.IGNORECASE | re.DOTAL
 TAG_RE = re.compile(r"<[^>]+>")
 WHITESPACE_RE = re.compile(r"[ \t\r\f\v]+")
 BLANK_LINES_RE = re.compile(r"\n{3,}")
+VOID_TAGS = {"area", "base", "br", "col", "embed", "hr", "img", "input", "link", "meta", "param", "source", "track", "wbr"}
 
 
 def clean_inline_text(text: str) -> str:
@@ -63,6 +64,7 @@ class WeChatMarkdownParser(HTMLParser):
     def __init__(self) -> None:
         super().__init__(convert_charrefs=True)
         self.in_content = False
+        self.content_found = False
         self.depth = 0
         self.parts: list[str] = []
         self.images: list[dict[str, str]] = []
@@ -124,10 +126,12 @@ class WeChatMarkdownParser(HTMLParser):
         if not self.in_content:
             if attrs.get("id") == "js_content":
                 self.in_content = True
+                self.content_found = True
                 self.depth = 1
             return
 
-        self.depth += 1
+        if tag not in VOID_TAGS:
+            self.depth += 1
         if tag in {"script", "style"}:
             self.skip_depth += 1
             return
@@ -190,6 +194,8 @@ class WeChatMarkdownParser(HTMLParser):
 
     def handle_endtag(self, tag: str) -> None:
         if not self.in_content:
+            return
+        if tag in VOID_TAGS:
             return
         if tag in {"script", "style"} and self.skip_depth:
             self.skip_depth -= 1
@@ -256,6 +262,11 @@ def export_article_markdown(article_dir: Path, html_text: str, metadata: dict, u
     parser = WeChatMarkdownParser()
     parser.feed(SCRIPT_TAG_RE.sub("", STYLE_TAG_RE.sub("", html_text)))
     content_md, images = parser.render()
+    if not parser.content_found:
+        raise ValueError("Article body #js_content was not found; the response may be a verification, login, or error page.")
+    text_only = re.sub(r"!\[[^\]]*\]\([^)]*\)", "", content_md).strip()
+    if not text_only and not images:
+        raise ValueError("Article body #js_content contains no text or images; the response was not archived as an article.")
 
     images_dir = article_dir / "images"
     images_dir.mkdir(parents=True, exist_ok=True)

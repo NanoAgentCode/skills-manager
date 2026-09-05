@@ -71,8 +71,25 @@ $destinationDir = Join-Path $staticRootPath $Slug
 $destinationAssets = Join-Path $destinationDir "markmap-assets"
 New-Item -ItemType Directory -Force -Path $destinationAssets | Out-Null
 
+$requiredAssets = @("d3.min.js", "markmap-view.js", "markmap-toolbar.js", "markmap-toolbar.css")
+foreach ($asset in $requiredAssets) {
+    $sourceAsset = Join-Path $sourceAssets $asset
+    if (-not (Test-Path -LiteralPath $sourceAsset -PathType Leaf)) {
+        throw "Missing required source asset: $sourceAsset"
+    }
+    Copy-Item -LiteralPath $sourceAsset -Destination (Join-Path $destinationAssets $asset) -Force
+}
+
+foreach ($asset in $requiredAssets) {
+    $publishedAsset = Join-Path $destinationAssets $asset
+    if (-not (Test-Path -LiteralPath $publishedAsset -PathType Leaf)) {
+        throw "Failed to publish required asset: $publishedAsset"
+    }
+}
+
+# Publish the entrypoint only after all assets are in place. LiteralPath does not
+# expand wildcards, so enumerate the fixed offline asset contract explicitly.
 Copy-Item -LiteralPath $sourcePath -Destination (Join-Path $destinationDir "index.html") -Force
-Copy-Item -LiteralPath (Join-Path $sourceAssets "*") -Destination $destinationAssets -Force
 
 $url = "$normalizedBase$normalizedPrefix/$Slug/index.html"
 

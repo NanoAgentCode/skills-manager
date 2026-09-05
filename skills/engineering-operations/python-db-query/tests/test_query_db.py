@@ -67,6 +67,20 @@ class MetadataSqlTests(unittest.TestCase):
                 self.assertIn("kcu.table_name = tc.table_name", sql)
 
 
+class ReadOnlyGuardTests(unittest.TestCase):
+    def test_blocks_side_effects_that_start_with_select_or_pragma(self):
+        for sql in (
+            "select * into copied_users from users",
+            "select 1; commit",
+            "pragma user_version = 123",
+        ):
+            with self.subTest(sql=sql), self.assertRaises(SystemExit):
+                query_db.assert_query_allowed(sql, allow_write=False)
+
+    def test_allows_one_select_with_a_terminal_semicolon(self):
+        query_db.assert_query_allowed("select 1;", allow_write=False)
+
+
 class SqliteEndToEndTests(unittest.TestCase):
     def setUp(self):
         self.temp_dir = tempfile.TemporaryDirectory()

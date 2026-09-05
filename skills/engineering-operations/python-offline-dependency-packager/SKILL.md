@@ -56,6 +56,6 @@ For another platform, pass the target selector explicitly:
   --platform win_amd64
 ```
 
-Wheel-only mode is the default because it produces installation-ready bundles. Use `--allow-source` only when the offline machine has the required compilers and build tooling. Pip configuration and environment variables may be used for approved private indexes; never embed credentials in the bundle or command examples.
+Wheel-only mode is required because this skill targets a specific Python and platform and must produce installation-ready bundles. `--allow-source` is rejected: build source distributions in a matching target environment first, then package the resulting wheels. Pip configuration and environment variables may be used for approved private indexes; never embed credentials in the bundle or command examples.
 
 The downloader refuses to overwrite an existing output directory. Choose a new `--output` path or remove the old bundle only after confirming it is safe to do so.

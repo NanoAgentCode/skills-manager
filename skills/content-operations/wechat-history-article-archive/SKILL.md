@@ -108,6 +108,7 @@ If the archive already contains `article.html` files, convert them afterward:
 For failed links:
 
 - Check whether the URL is expired, deleted, malformed, or requires login.
+- A response without a valid `#js_content` body or without text/images is recorded as a failure, not an empty successful archive. Keep the URL and error from `index.json` for follow-up.
 - Reduce request speed if there are transient failures.
 - Do not try to bypass verification, risk control, login restrictions, or non-public interfaces.
 

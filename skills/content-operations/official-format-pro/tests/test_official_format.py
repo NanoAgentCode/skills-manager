@@ -51,6 +51,27 @@ class PureHelperTests(unittest.TestCase):
 
 @unittest.skipUnless(importlib.util.find_spec("docx"), "python-docx is not installed")
 class DocumentGenerationTests(unittest.TestCase):
+    def test_docx_input_preserves_table_cells_in_document_order(self):
+        from docx import Document
+
+        spec = importlib.util.spec_from_file_location("official_format", SCRIPT)
+        module = importlib.util.module_from_spec(spec)
+        assert spec and spec.loader
+        spec.loader.exec_module(module)
+        with tempfile.TemporaryDirectory() as tmp:
+            source = Path(tmp) / "source.docx"
+            doc = Document()
+            doc.add_paragraph("前置正文")
+            table = doc.add_table(rows=1, cols=2)
+            table.cell(0, 0).text = "姓名"
+            table.cell(0, 1).text = "张三"
+            doc.add_paragraph("后置正文")
+            doc.save(source)
+            content, is_markdown = module.read_input(source)
+            self.assertFalse(is_markdown)
+            self.assertLess(content.index("前置正文"), content.index("【原文表格】"))
+            self.assertIn("姓名 | 张三", content)
+            self.assertLess(content.index("【原文表格结束】"), content.index("后置正文"))
     def test_generates_docx_with_title_and_body(self):
         from docx import Document
 

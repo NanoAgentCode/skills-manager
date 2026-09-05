@@ -582,7 +582,23 @@ def read_input(filepath):
     ext = os.path.splitext(filepath)[1].lower()
     if ext == '.docx':
         doc = Document(filepath)
-        lines = [para.text.strip() for para in doc.paragraphs if para.text.strip()]
+        lines = []
+        paragraph_by_element = {paragraph._element: paragraph for paragraph in doc.paragraphs}
+        table_by_element = {table._element: table for table in doc.tables}
+        for child in doc.element.body.iterchildren():
+            if child.tag.endswith('}p'):
+                paragraph = paragraph_by_element.get(child)
+                if paragraph and paragraph.text.strip():
+                    lines.append(paragraph.text.strip())
+            elif child.tag.endswith('}tbl'):
+                table = table_by_element.get(child)
+                if not table:
+                    continue
+                lines.append('【原文表格】')
+                for row in table.rows:
+                    cells = [cell.text.strip().replace('\n', ' ') for cell in row.cells]
+                    lines.append(' | '.join(cells))
+                lines.append('【原文表格结束】')
         return normalize_content('\n'.join(lines)), False
     with open(filepath, 'r', encoding='utf-8') as f:
         content = f.read()
@@ -758,7 +774,7 @@ def main():
     if out_dir:
         os.makedirs(out_dir, exist_ok=True)
     doc.save(args.output)
-    print(f"✅ 公文已生成: {args.output}")
+    print(f"公文已生成: {args.output}")
 
     # PDF 导出
     if args.format == 'pdf':
@@ -770,15 +786,15 @@ def main():
                 capture_output=True, text=True, timeout=30
             )
             if result.returncode == 0 and os.path.exists(pdf_output):
-                print(f"✅ PDF已生成: {pdf_output}")
+                print(f"PDF已生成: {pdf_output}")
             else:
-                print(f"❌ PDF转换失败: {result.stderr.strip() or '未知错误'}")
+                print(f"PDF转换失败: {result.stderr.strip() or '未知错误'}")
                 print(f"   提示: 请确保已安装 LibreOffice (sudo apt install libreoffice-writer)")
         except FileNotFoundError:
-            print("❌ PDF转换失败: 未找到 LibreOffice")
+            print("PDF转换失败: 未找到 LibreOffice")
             print("   请安装: sudo apt install libreoffice-writer")
         except subprocess.TimeoutExpired:
-            print("❌ PDF转换超时（30秒），文件可能过大")
+            print("PDF转换超时（30秒），文件可能过大")
 
 
 if __name__ == '__main__':

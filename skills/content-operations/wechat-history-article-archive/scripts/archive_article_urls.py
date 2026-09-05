@@ -134,8 +134,6 @@ def main() -> int:
                 "publish_ct": extract(CT_RE, html_text),
                 "status_code": status_code,
             }
-            html_path = article_dir / "article.html"
-            html_path.write_text(html_text, encoding="utf-8")
             metadata = export_article_markdown(
                 article_dir=article_dir,
                 html_text=html_text,
@@ -144,8 +142,8 @@ def main() -> int:
                 timeout=args.timeout,
             )
             (article_dir / "meta.json").write_text(json.dumps(metadata, ensure_ascii=False, indent=2), encoding="utf-8")
-            if not args.keep_html and html_path.exists():
-                html_path.unlink()
+            if args.keep_html:
+                (article_dir / "article.html").write_text(html_text, encoding="utf-8")
 
             record.update(
                 {

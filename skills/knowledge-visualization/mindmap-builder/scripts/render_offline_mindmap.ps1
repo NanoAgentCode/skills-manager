@@ -45,10 +45,13 @@ Copy-Item -LiteralPath (Join-Path $sourceAssetsDir "markmap-toolbar.js") -Destin
 Copy-Item -LiteralPath (Join-Path $sourceAssetsDir "markmap-toolbar.css") -Destination (Join-Path $targetAssetsDir "markmap-toolbar.css") -Force
 
 $html = Get-Content -LiteralPath $outputPath -Raw -Encoding UTF8
-$html = $html.Replace("https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js", "./markmap-assets/d3.min.js")
-$html = $html.Replace("https://cdn.jsdelivr.net/npm/markmap-view@0.18.10/dist/browser/index.js", "./markmap-assets/markmap-view.js")
-$html = $html.Replace("https://cdn.jsdelivr.net/npm/markmap-toolbar@0.18.10/dist/index.js", "./markmap-assets/markmap-toolbar.js")
-$html = $html.Replace("https://cdn.jsdelivr.net/npm/markmap-toolbar@0.18.10/dist/style.css", "./markmap-assets/markmap-toolbar.css")
+$html = $html -replace 'https?://cdn\.jsdelivr\.net/npm/d3@[^/]+/dist/d3(?:\.min)?\.js', './markmap-assets/d3.min.js'
+$html = $html -replace 'https?://cdn\.jsdelivr\.net/npm/markmap-view@[^/]+/dist/browser/index\.js', './markmap-assets/markmap-view.js'
+$html = $html -replace 'https?://cdn\.jsdelivr\.net/npm/markmap-toolbar@[^/]+/dist/index\.js', './markmap-assets/markmap-toolbar.js'
+$html = $html -replace 'https?://cdn\.jsdelivr\.net/npm/markmap-toolbar@[^/]+/dist/style\.css', './markmap-assets/markmap-toolbar.css'
+if ($html -match 'https?://[^"''\s>]+') {
+    throw "Generated HTML still contains an external URL. The installed markmap-cli output is not compatible with the bundled offline assets."
+}
 Set-Content -LiteralPath $outputPath -Value $html -Encoding UTF8
 
 Write-Output $outputPath
