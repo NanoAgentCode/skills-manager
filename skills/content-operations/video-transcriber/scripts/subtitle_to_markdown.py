@@ -7,21 +7,23 @@ import argparse
 import html
 import json
 import re
+import xml.etree.ElementTree as ET
 from pathlib import Path
 
 
 TIMESTAMP_LINE = re.compile(
-    r"(?P<start>\d{2}:\d{2}:\d{2}[,.]\d{3})\s+-->\s+"
-    r"(?P<end>\d{2}:\d{2}:\d{2}[,.]\d{3})"
+    r"(?P<start>(?:\d{1,2}:)?\d{2}:\d{2}[,.]\d{2,3})\s+-->\s+"
+    r"(?P<end>(?:\d{1,2}:)?\d{2}:\d{2}[,.]\d{2,3})"
 )
-INLINE_TIMESTAMP = re.compile(r"<\d{2}:\d{2}:\d{2}[.]\d{3}>")
+INLINE_TIMESTAMP = re.compile(r"<(?:\d{1,2}:)?\d{2}:\d{2}[.]\d{2,3}>")
 HTML_TAG = re.compile(r"<[^>]+>")
 SRT_INDEX = re.compile(r"^\d+$")
+ASS_OVERRIDE_TAG = re.compile(r"\{[^}]*\}")
 
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Convert .srt, .vtt, or Bilibili .json subtitles to Markdown.")
-    parser.add_argument("input", help="Input subtitle file (.srt/.vtt/.json).")
+    parser = argparse.ArgumentParser(description="Convert SRT, VTT, ASS/SSA, TTML, Bilibili JSON, or YouTube json3 subtitles to Markdown.")
+    parser.add_argument("input", help="Input subtitle file (.srt/.vtt/.ass/.ssa/.ttml/.json/.json3).")
     parser.add_argument("--output", help="Output Markdown file. Defaults beside the input.")
     parser.add_argument(
         "--merge-window",
@@ -38,7 +40,13 @@ def parse_args() -> argparse.Namespace:
 
 
 def timestamp_to_seconds(value: str) -> int:
-    hours, minutes, seconds = value.replace(",", ".").split(":")
+    parts = value.replace(",", ".").split(":")
+    if len(parts) == 2:
+        hours, minutes, seconds = "0", *parts
+    elif len(parts) == 3:
+        hours, minutes, seconds = parts
+    else:
+        raise ValueError(f"Unsupported subtitle timestamp: {value}")
     return int(hours) * 3600 + int(minutes) * 60 + int(float(seconds))
 
 
@@ -113,10 +121,85 @@ def read_bilibili_json_cues(path: Path) -> list[tuple[int, str]]:
     return cues
 
 
+def read_youtube_json3_cues(path: Path) -> list[tuple[int, str]]:
+    data = json.loads(path.read_text(encoding="utf-8-sig"))
+    events = data.get("events")
+    if not isinstance(events, list):
+        raise SystemExit(f"Unsupported YouTube json3 subtitle shape: {path}")
+    cues: list[tuple[int, str]] = []
+    for event in events:
+        if not isinstance(event, dict):
+            continue
+        segments = event.get("segs")
+        if not isinstance(segments, list):
+            continue
+        text = clean_text("".join(str(segment.get("utf8", "")) for segment in segments if isinstance(segment, dict)))
+        if text:
+            cues.append((int(event.get("tStartMs", 0)) // 1000, text))
+    return cues
+
+
+def read_ass_cues(path: Path) -> list[tuple[int, str]]:
+    cues: list[tuple[int, str]] = []
+    for raw_line in path.read_text(encoding="utf-8-sig").splitlines():
+        if not raw_line.lstrip().lower().startswith("dialogue:"):
+            continue
+        fields = raw_line.split(":", 1)[1].split(",", 9)
+        if len(fields) < 10:
+            continue
+        try:
+            start = timestamp_to_seconds(fields[1].strip())
+        except ValueError:
+            continue
+        text = ASS_OVERRIDE_TAG.sub("", fields[9]).replace("\\N", " ").replace("\\n", " ")
+        text = clean_text(text)
+        if text:
+            cues.append((start, text))
+    return cues
+
+
+def ttml_time_to_seconds(value: str) -> int:
+    value = value.strip()
+    if value.endswith("s") and ":" not in value:
+        return int(float(value[:-1]))
+    return timestamp_to_seconds(value)
+
+
+def read_ttml_cues(path: Path) -> list[tuple[int, str]]:
+    root = ET.fromstring(path.read_text(encoding="utf-8-sig"))
+    cues: list[tuple[int, str]] = []
+    for element in root.iter():
+        if element.tag.rsplit("}", 1)[-1] != "p":
+            continue
+        begin = element.attrib.get("begin")
+        if not begin:
+            continue
+        try:
+            start = ttml_time_to_seconds(begin)
+        except ValueError:
+            continue
+        text = clean_text(" ".join(element.itertext()))
+        if text:
+            cues.append((start, text))
+    return cues
+
+
 def read_cues(path: Path) -> list[tuple[int, str]]:
-    if path.suffix.lower() == ".json":
-        return read_bilibili_json_cues(path)
-    return read_text_cues(path)
+    suffix = path.suffix.lower()
+    if suffix in {".srt", ".vtt"}:
+        return read_text_cues(path)
+    if suffix in {".ass", ".ssa"}:
+        return read_ass_cues(path)
+    if suffix in {".ttml", ".xml"}:
+        return read_ttml_cues(path)
+    if suffix in {".json", ".json3"}:
+        data = json.loads(path.read_text(encoding="utf-8-sig"))
+        if isinstance(data.get("body"), list):
+            return read_bilibili_json_cues(path)
+        if isinstance(data.get("events"), list):
+            return read_youtube_json3_cues(path)
+        raise SystemExit(f"Unsupported JSON subtitle shape: {path}. Expected Bilibili body[] or YouTube json3 events[].")
+    raise SystemExit(f"Unsupported subtitle format: {path.suffix}. Supported: .srt, .vtt, .ass, .ssa, .ttml, .json, .json3")
 
 
 def dedupe_cues(cues: list[tuple[int, str]]) -> list[tuple[int, str]]:
@@ -178,8 +261,10 @@ def main() -> int:
         if args.output
         else input_path.with_suffix(".md")
     )
-    output_path.parent.mkdir(parents=True, exist_ok=True)
     cues = dedupe_cues(read_cues(input_path))
+    if not cues:
+        raise SystemExit(f"No usable subtitle cues found: {input_path}. Check the selected subtitle track or use ASR.")
+    output_path.parent.mkdir(parents=True, exist_ok=True)
     output_path.write_text(
         render_markdown(args.title, cues, args.merge_window),
         encoding="utf-8",

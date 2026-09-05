@@ -27,6 +27,7 @@ Use this skill to turn subtitles, local media, or user-authorized online media i
    - if a local media file has sidecar subtitles with the same stem, use them first
    - if the online platform exposes captions, download captions before downloading media
    - if multiple caption tracks exist, prefer human/original-language captions, then translated captions, then auto-generated captions
+   - treat a subtitle as usable only when conversion produces one or more text cues; an empty track is a failed subtitle route, not a transcript
 4. Only when subtitles are absent, incomplete, wrong-language, or explicitly rejected by the user, extract audio and run ASR.
 5. For local files, check whether the input file exists and identify its extension. Common media inputs include `.mp4`, `.mov`, `.mkv`, `.avi`, `.webm`, `.mp3`, `.m4a`, `.wav`, `.aac`, and `.flac`.
 6. Check local tools before asking the user to install anything:
@@ -74,6 +75,21 @@ yt-dlp --skip-download --write-subs --write-auto-subs --sub-langs "en.*,zh.*,en,
 ```
 
 If this produces a usable `.vtt` or `.srt`, convert it to Markdown and stop before downloading video/audio. Run ASR only if the subtitle track is missing, empty, badly misaligned, or not in a usable language.
+
+### Subtitle format support
+
+`subtitle_to_markdown.py` supports these local caption inputs directly:
+
+| Format | Support | Notes |
+|---|---|---|
+| `.srt` / `.vtt` | Direct | Supports `HH:MM:SS.mmm` and short `MM:SS.mmm` timestamps. |
+| `.ass` / `.ssa` | Direct | Reads dialogue events and removes ASS override tags. |
+| `.ttml` | Direct | Reads timed `<p begin="...">` cues. |
+| Bilibili subtitle `.json` | Direct | Requires a `body[]` array with `from` and `content`. |
+| YouTube `.json3` / `.json` | Direct | Requires `events[]` with `tStartMs` and `segs[].utf8`. |
+| Other caption JSON/XML formats | Convert first | Convert to SRT/VTT, or use ASR when no supported caption export exists. |
+
+The converter exits with a clear failure when no usable text cues are found and does not write an empty Markdown transcript. Do not send that failed output to polishing or formatting; select another caption track or continue with the ASR fallback.
 
 ## Online Video Sources
 
