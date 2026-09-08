@@ -22,7 +22,7 @@
 | 场景 | 目录 | 主要能力 |
 |---|---|---|
 | 内容运营 | `skills/content-operations/` | 转写、技术来源成文、文章润色、视觉策划、Office 文档处理、公文排版、公众号排版、封面与历史文章归档 |
-| 知识可视化 | `skills/knowledge-visualization/` | 支持多关键词相关度检索的 Obsidian 外部记忆、技术认知框架、draw.io、Excalidraw、离线思维导图与静态发布 |
+| 知识可视化 | `skills/knowledge-visualization/` | 支持检索、候选归档和全量语义清洗的 Obsidian 外部记忆、技术认知框架、draw.io、Excalidraw、离线思维导图与静态发布 |
 | AI 应用交付 | `skills/ai-application-delivery/` | Dify 应用创建、DSL 设计、导入、更新与验证 |
 | 工程运维 | `skills/engineering-operations/` | Python 依赖版本交互查询与离线打包、数据库安全查询、Windows/Linux MinIO 对象检查、元数据/执行计划检查、后端日志与数据契约追踪 |
 | 市场研究 | `skills/market-intelligence/` | 股票技术分析、美股行业复盘与跨市场影响研究 |
@@ -45,6 +45,7 @@
 - Office 文档 CLI：[`skills/content-operations/office-cli-skill`](skills/content-operations/office-cli-skill/SKILL.md)
 - 党政机关公文排版：[`skills/content-operations/official-format-pro`](skills/content-operations/official-format-pro/SKILL.md)
 - Obsidian 外部记忆：[`skills/knowledge-visualization/obsidian-memory`](skills/knowledge-visualization/obsidian-memory/SKILL.md)，支持多关键词 All/Any 匹配与相关度排序
+- Obsidian 记忆清洗：[`skills/knowledge-visualization/obsidian-memory-cleanup`](skills/knowledge-visualization/obsidian-memory-cleanup/SKILL.md)，支持正式记忆去重、碎片合并、事实核验、分类调整和索引验收
 - 技术认知框架：[`skills/knowledge-visualization/technical-cognition-framework`](skills/knowledge-visualization/technical-cognition-framework/SKILL.md)
 - Dify Console API：[`skills/ai-application-delivery/dify-console-admin-api`](skills/ai-application-delivery/dify-console-admin-api/SKILL.md)
 - Dify DSL Builder：[`skills/ai-application-delivery/dify-dsl-app-builder`](skills/ai-application-delivery/dify-dsl-app-builder/SKILL.md)

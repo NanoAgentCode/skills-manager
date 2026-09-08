@@ -22,6 +22,7 @@ skills/
     mindmap-builder/
     mindmap-publisher/
     obsidian-memory/
+    obsidian-memory-cleanup/
     technical-cognition-framework/
   ai-application-delivery/
     dify-console-admin-api/
