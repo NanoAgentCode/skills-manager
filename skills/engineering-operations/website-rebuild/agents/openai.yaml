@@ -1,0 +1,4 @@
+interface:
+  display_name: "Website Rebuild"
+  short_description: "Rebuild authorized creative websites with evidence-based parity gates"
+  default_prompt: "Use $website-rebuild to classify this authorized public website, confirm the reconstruction scope and endpoint, then build and verify the requested private reconstruction."

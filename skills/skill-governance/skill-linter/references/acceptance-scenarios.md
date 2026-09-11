@@ -9,6 +9,7 @@ Use these scenarios after changes that affect a skill's trigger, handoff, or fin
 | “把这个 Markdown 做成可双击打开的思维导图。” | `mindmap-builder` | HTML plus sibling `markmap-assets/`, without external CDN links. |
 | “我只想生成一个 Dify DSL，暂时没有管理员权限。” | `dify-dsl-app-builder` | Local DSL and static validation, without collecting remote credentials. |
 | “查一下库里有哪些表，不要改数据。” | `python-db-query` | Metadata output through a read-only path. |
+| “把这个我有权使用的 WebGL 活动站离线存档，并验证断网可运行。” | `website-rebuild` | Confirmed page scope and L1 endpoint, immutable mirror plus manifest, and evidence from mirror, offline, CLEAN, and zero-external-request gates; no public deployment. |
 | “把已有技术文章排成微信公众号 HTML。” | `wechat-format` | Final manifest and preview/article HTML. |
 
 Record failures as one of: incorrect routing, missing input contract, missing output artifact, unsafe default, or unverifiable completion. Keep individual scenario fixtures small and free of credentials or user data.

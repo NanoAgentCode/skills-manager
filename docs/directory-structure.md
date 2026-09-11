@@ -33,6 +33,7 @@ skills/
     backend-log-contract-trace/
     python-offline-dependency-packager/
     python-db-query/
+    website-rebuild/
   market-intelligence/
     stock-analysis-system/
     us-sector-index-impact-report/
@@ -49,7 +50,7 @@ Generated artifacts do not live under `skills/`. Put them in `output/<skill-name
 | `content-operations` | Turn source media, drafts, and archived material into publication-ready content. | A transcript can flow to technical polishing and then WeChat formatting. |
 | `knowledge-visualization` | Turn technical topics, systems, or documents into cognition frameworks, external memory, diagrams, mindmaps, and publishable knowledge artifacts. | Obsidian Memory preserves reviewable long-term context; visual skills turn structures into diagrams or offline views. |
 | `ai-application-delivery` | Design, create, import, update, and verify Dify applications and DSL. | DSL App Builder uses Console Admin API for remote delivery work. |
-| `engineering-operations` | Package development dependencies, query operational data safely, and trace backend failures through code and data contracts. | A Python package bundle can be transferred to an offline host; a log trace may use read-only database evidence when authorized. |
+| `engineering-operations` | Reconstruct authorized public websites with evidence and parity gates, package development dependencies, query operational data safely, and trace backend failures through code and data contracts. | A website rebuild progresses from a verified immutable mirror to a traceable port; a Python package bundle can be transferred to an offline host; a log trace may use read-only database evidence when authorized. |
 | `market-intelligence` | Run technical market analysis and produce cross-market impact research. | Structured market data is rendered into a standalone research report. |
 | `skill-governance` | Validate skill structure, metadata, references, compatibility, and secret hygiene. | Run before committing, installing, or releasing a skill. |
 
