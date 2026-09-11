@@ -28,7 +28,7 @@
   <rect width="1680" height="944" fill="url(#dots)"/>
 
   <text x="80" y="68" class="title">Skills Manager · 工作场景全景图</text>
-  <text x="82" y="112" class="subtitle">23 Skills · 6 Work Scenarios · 从输入、理解、生产到交付与治理</text>
+  <text x="82" y="112" class="subtitle">25 Skills · 6 Work Scenarios · 从输入、理解、生产到交付与治理</text>
   <g transform="translate(1330 24)">
     <rect width="324" height="96" rx="18" fill="#fff" stroke="#173f72" stroke-width="2" stroke-dasharray="8 6"/>
     <path d="M20 32 H88" class="flow"/>
@@ -68,15 +68,18 @@
   <circle cx="626" cy="174" r="20" fill="#18a6b8"/><text x="626" y="175" class="badge">2</text>
   <text x="660" y="183" class="section section-compact" fill="#1497aa">知识构建与可视化 Knowledge Visualization</text>
   <g fill="#fff" stroke="#18a6b8" stroke-width="1.7">
-    <rect x="684" y="205" width="336" height="44" rx="7"/><rect x="684" y="280" width="336" height="48" rx="7"/>
-    <rect x="590" y="380" width="160" height="46" rx="7"/><rect x="772" y="380" width="160" height="46" rx="7"/>
-    <rect x="954" y="380" width="160" height="46" rx="7"/><rect x="954" y="458" width="160" height="46" rx="7"/>
+    <rect x="684" y="205" width="336" height="40" rx="7"/><rect x="684" y="267" width="336" height="40" rx="7"/>
+    <rect x="684" y="329" width="336" height="40" rx="7"/>
+    <rect x="590" y="392" width="160" height="42" rx="7"/><rect x="772" y="392" width="160" height="42" rx="7"/>
+    <rect x="954" y="392" width="160" height="42" rx="7"/><rect x="954" y="464" width="160" height="42" rx="7"/>
   </g>
-  <text x="852" y="227" class="skill">obsidian-memory</text><text x="852" y="304" class="skill">technical-cognition-framework</text>
-  <text x="670" y="403" class="skill">drawio-skill</text><text x="852" y="403" class="skill">excalidraw</text>
-  <text x="1034" y="403" class="skill">mindmap-builder</text><text x="1034" y="481" class="skill">mindmap-publisher</text>
-  <path d="M852 249 V279" class="flow"/><path d="M780 328 L700 379" class="flow"/><path d="M852 328 V379" class="flow"/>
-  <path d="M924 328 L1005 379" class="flow"/><path d="M1034 426 V457" class="flow"/>
+  <text x="852" y="225" class="skill">obsidian-memory</text><text x="852" y="287" class="skill">obsidian-memory-cleanup</text>
+  <text x="852" y="349" class="skill">technical-cognition-framework</text>
+  <text x="670" y="413" class="skill">drawio-skill</text><text x="852" y="413" class="skill">excalidraw</text>
+  <text x="1034" y="413" class="skill">mindmap-builder</text><text x="1034" y="485" class="skill">mindmap-publisher</text>
+  <path d="M852 245 V266" class="handoff"/><path d="M852 307 V328" class="flow"/>
+  <path d="M780 369 L700 391" class="flow"/><path d="M852 369 V391" class="flow"/>
+  <path d="M924 369 L1005 391" class="flow"/><path d="M1034 434 V463" class="flow"/>
 
   <!-- AI Application Delivery -->
   <g filter="url(#shadow)"><rect x="1160" y="142" width="496" height="382" rx="16" fill="#fff" stroke="#efa100" stroke-width="2"/></g>
@@ -93,11 +96,13 @@
   <circle cx="82" cy="580" r="20" fill="#1473e6"/><text x="82" y="581" class="badge">4</text>
   <text x="116" y="589" class="section" fill="#1268cf">工程运维 Engineering Operations</text>
   <g fill="#fff" stroke="#1473e6" stroke-width="1.7">
-    <rect x="78" y="620" width="412" height="42" rx="7"/><rect x="78" y="681" width="412" height="42" rx="7"/><rect x="78" y="742" width="412" height="42" rx="7"/>
+    <rect x="44" y="630" width="230" height="50" rx="7"/><rect x="294" y="630" width="230" height="50" rx="7"/>
+    <rect x="44" y="714" width="230" height="50" rx="7"/><rect x="294" y="714" width="230" height="50" rx="7"/>
   </g>
-  <text x="284" y="641" class="skill skill-sm">python-offline-dependency-packager</text>
-  <text x="284" y="702" class="skill">backend-log-contract-trace</text><text x="284" y="763" class="skill">python-db-query</text>
-  <path d="M284 723 V741" class="flow"/>
+  <text x="159" y="655" class="skill">website-rebuild</text>
+  <text x="409" y="648" class="skill skill-sm"><tspan x="409" dy="0">python-offline-</tspan><tspan x="409" dy="17">dependency-packager</tspan></text>
+  <text x="159" y="739" class="skill skill-sm">backend-log-contract-trace</text><text x="409" y="739" class="skill">python-db-query</text>
+  <path d="M274 739 H293" class="flow"/>
 
   <!-- Market Intelligence -->
   <g filter="url(#shadow)"><rect x="568" y="548" width="568" height="250" rx="16" fill="#fff" stroke="#8b58c4" stroke-width="2"/></g>
